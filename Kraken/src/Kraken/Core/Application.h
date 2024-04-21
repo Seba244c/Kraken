@@ -12,16 +12,24 @@ namespace Kraken {
         std::string Version;
     };
     
+    struct AppCommandlineArguments {
+        int argc;
+        char **argv;
+    };
+    
     class Application {
     public:
         explicit Application(const ApplicationInfo& applicationInfo);
 
+        void Run();
+
         [[nodiscard]] const ApplicationInfo& GetApplicationInfo() const { return m_ApplicationInfo; }
     private:
         ApplicationInfo m_ApplicationInfo;
+        Application* s_Instance = nullptr;
     };
 
-    Application* CreateApplication(); // Will be defined by the program
+    Application* CreateApplication(AppCommandlineArguments cmdlineArguments); // Will be defined by the program
 } // Kraken
 
 #endif //KR_APPLICATION_H

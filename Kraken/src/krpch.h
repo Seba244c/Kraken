@@ -12,6 +12,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <filesystem>
 
 #ifdef KR_PLATFORM_WIN
     #include <windows.h>

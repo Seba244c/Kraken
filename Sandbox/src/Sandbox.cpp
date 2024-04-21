@@ -11,7 +11,7 @@ public:
     }
 };
 
-Kraken::Application *Kraken::CreateApplication() {
+Kraken::Application *Kraken::CreateApplication(AppCommandlineArguments cmdlineArguments) {
     ApplicationInfo info;
     info.Name = "Kraken Sandbox";
     info.Author = "ssnoer";

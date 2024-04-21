@@ -7,19 +7,20 @@
 #include "Application.h"
 
 // ReSharper disable once CppNonInlineFunctionDefinitionInHeaderFile
-int main(int argc, char *argv[]) {
+int main(int argc, char** argv) {
     Kraken::Log::Init();
     KRC_INFO("The Kraken awakes!");
+    KRC_INFO("Kraken Version: {}", KR_VERSION);
 
     // Create App
-    const auto app = Kraken::CreateApplication();
+    const auto app = Kraken::CreateApplication({argc, argv});
     KRC_TRACE("Application Info\n\tName: {}, Author: {}, Version: {}",
         app->GetApplicationInfo().Name,
         app->GetApplicationInfo().Author,
         app->GetApplicationInfo().Version);
 
     // Run application
-    //app->Run();
+    app->Run();
     
     // Delete app
     delete app;
