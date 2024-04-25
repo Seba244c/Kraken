@@ -10,7 +10,9 @@ add_library(Kraken STATIC
         src/Kraken/Core/Entrypoint.h
         src/Kraken/Core/Application.cpp
         src/Kraken/Core/Application.h
-        src/Kraken/Core/Assert.h)
+        src/Kraken/Core/Assert.h
+        src/Kraken/IO/GLFW.cpp
+        src/Kraken/IO/GLFW.h)
 target_include_directories(Kraken PUBLIC src)
 
 # Precompiled headers
@@ -37,6 +39,11 @@ endif ()
 # Dependencies
 ## spdlog
 add_subdirectory(vendor/spdlog)
+## GLFW
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+add_subdirectory(vendor/glfw)
 
 ## Link Dependencies
-target_link_libraries(Kraken PUBLIC spdlog::spdlog)
+target_link_libraries(Kraken PUBLIC spdlog::spdlog glfw)

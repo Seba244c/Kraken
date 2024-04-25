@@ -1,3 +1,6 @@
 [submodule "Kraken/vendor/spdlog"]
 	path = Kraken/vendor/spdlog
 	url = git@github.com:gabime/spdlog.git
+[submodule "Kraken/vendor/glfw"]
+	path = Kraken/vendor/glfw
+	url = git@github.com:glfw/glfw.git
