@@ -15,26 +15,35 @@ namespace Kraken {
 
         KRC_INFO("Appstate: Create Window");
         m_Window = new Window({.initializeFullscreen = false, .initializeHidden = true});
-        m_Window->SetEventCallback(KR_BIND_EVENT_FN(Application::OnEvent));
+        m_Window->SetEventCallback([this](Event* e){ m_EventsQueue.push(e); });
     }
 
-    void Application::OnEvent(Event &e) {
-		EventDispatcher dispatcher(e);
-        dispatcher.Dispatch<KeyPressedEvent>(KR_BIND_EVENT_FN(Application::OnKey));
-    }
-
-    bool Application::OnKey(KeyPressedEvent& e) {
-        if(e.KeyCode() == Key::ESCAPE) KRC_INFO("Pressed escape");
-        return false;
-    }
-    
     void Application::Run() {
         m_Window->Show();
         
         KRC_INFO("Appstate: Main loop");
-        while(!m_Window->ShouldClose()) {
+        while(!m_ShouldClose) {
             m_Window->PollEvents();
+
+            // Handle events
+            while(!m_EventsQueue.empty()) {
+                EventDispatcher dispatcher(m_EventsQueue.front());
+                m_EventsQueue.pop();
+                
+                dispatcher.Dispatch<KeyPressedEvent>(KR_BIND_EVENT_FN(Application::OnKey));
+                dispatcher.Dispatch<WindowCloseEvent>(KR_BIND_EVENT_FN(Application::OnWindowClose));
+            }
         }
+    }
+    
+    bool Application::OnKey(KeyPressedEvent& e) {
+        if(e.KeyCode() == Key::ESCAPE) m_ShouldClose = true;
+        return true;
+    }
+
+    bool Application::OnWindowClose(WindowCloseEvent& e) {
+        m_ShouldClose = true;
+        return true;
     }
 
     Application::~Application() {
@@ -42,5 +51,4 @@ namespace Kraken {
         delete m_Window;
         GLFW::Terminate();
     }
-
 } // Kraken

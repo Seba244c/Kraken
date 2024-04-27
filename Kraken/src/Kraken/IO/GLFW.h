@@ -24,7 +24,7 @@ namespace Kraken {
         
         bool ShouldClose();
 
-        using EventCallbackFn = std::function<void(Event&)>;
+        using EventCallbackFn = std::function<void(Event*)>;
         
         void SetEventCallback(const EventCallbackFn& callback) { m_State.EventCallback = callback; }
         void PollEvents();

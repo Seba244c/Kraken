@@ -10,11 +10,13 @@
 namespace Kraken {
     enum class EventType {
         None = 0,
+        WindowClose, WindowResize,
         KeyPressed, KeyReleased
     };
 
     enum EventCatagory {
         None = 0,
+        CatagoryApplication   = BIT(0),
         CatagoryInput         = BIT(1),
         CatagoryKeyboard      = BIT(2),
         CatagoryMouse         = BIT(3),
@@ -44,20 +46,25 @@ namespace Kraken {
 
     class EventDispatcher {
     public:
-        explicit EventDispatcher(Event& event)
+        explicit EventDispatcher(Event* event)
             : m_Event(event) {}
 		
         // F will be deduced by the compiler
         template<typename T, typename F>
         bool Dispatch(const F& func) {
-            if (m_Event.EventType() == T::GetStaticType()) {
-                m_Event.m_Handled |= func(static_cast<T&>(m_Event));
+            if (m_Event->EventType() == T::GetStaticType()) {
+                m_Event->m_Handled |= func(static_cast<T&>(*m_Event));
                 return true;
             }
             return false;
         }
+
+        ~EventDispatcher() {
+            delete m_Event;
+        };
+
     private:
-        Event& m_Event;
+        Event* m_Event;
     };
 
     inline std::ostream& operator<<(std::ostream& os, const Event& e) {

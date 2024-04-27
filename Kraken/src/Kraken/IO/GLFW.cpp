@@ -2,9 +2,11 @@
 // Created by sebsn on 22-04-2024.
 //
 
+// ReSharper disable CppUseStructuredBinding
 #include "GLFW.h"
 
 #include "Kraken/Core/Application.h"
+#include "Kraken/Events/ApplicationEvents.h"
 #include "Kraken/Events/KeyEvents.h"
 
 namespace Kraken {
@@ -54,31 +56,34 @@ namespace Kraken {
         glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
             KRC_TRACE("GLFW frameBufferSizeCallback: Width {} Height {}", width, height);
             WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
-            
             state.WidthFramebuffer = width;
             state.HeightFrameBuffer = height;
+
+            state.EventCallback(new WindowResizeEvent(width, height));
+        });
+
+        glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+            const WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
+            state.EventCallback(new WindowCloseEvent);
         });
         
         if(windowSpecs.initializeFullscreen) Fullscreen(true);
 
         // Temp input test
         glfwSetKeyCallback(m_Window, [](GLFWwindow *window, int key, int scancode, int action, int mods) {
-            WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
+            const WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
 
             switch (action) {
                 case GLFW_PRESS: {
-                    KeyPressedEvent event(key, false);
-                    state.EventCallback(event);
+                    state.EventCallback(new KeyPressedEvent(key, false));
                     break;
                 }
                 case GLFW_RELEASE: {
-                    KeyReleasedEvent event(key);
-                    state.EventCallback(event);
+                    state.EventCallback(new KeyReleasedEvent(key));
                     break;
                 }
                 case GLFW_REPEAT: {
-                    KeyPressedEvent event(key, true);
-                    state.EventCallback(event);
+                    state.EventCallback(new KeyPressedEvent(key, true));
                     break;
                 }
                 default: KRC_WARN("Unkown key action: " + action);
