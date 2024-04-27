@@ -12,7 +12,10 @@ add_library(Kraken STATIC
         src/Kraken/Core/Application.h
         src/Kraken/Core/Assert.h
         src/Kraken/IO/GLFW.cpp
-        src/Kraken/IO/GLFW.h)
+        src/Kraken/IO/GLFW.h
+        src/Kraken/Events/Event.h
+        src/Kraken/Events/KeyEvents.h
+        src/Kraken/IO/KeyCodes.h)
 target_include_directories(Kraken PUBLIC src)
 
 # Precompiled headers

@@ -5,24 +5,48 @@
 #ifndef KR_GLFW_H
 #define KR_GLFW_H
 #include "GLFW/glfw3.h"
+#include "Kraken/Events/Event.h"
 
 namespace Kraken {
     struct WindowSpecs {
         bool noResize = false;
         bool initializeFullscreen = false;
-        int width = 800;
-        int height = 600;
-        const char* title = nullptr;
+        bool initializeHidden = false;
+        int Width = 800;
+        int Height = 600;
+        std::string title;
     };
     
     class Window {
     public:
         explicit Window(const WindowSpecs& windowSpecs);
         ~Window();
+        
         bool ShouldClose();
+
+        using EventCallbackFn = std::function<void(Event&)>;
+        
+        void SetEventCallback(const EventCallbackFn& callback) { m_State.EventCallback = callback; }
         void PollEvents();
+        void Show();
+        void Fullscreen(bool fullscreen);
+
+        [[nodiscard]] unsigned int GetFBWidth() const { return m_State.WidthFramebuffer; }
+        [[nodiscard]] unsigned int GetFBHeight() const { return m_State.HeightFrameBuffer; }
+        [[nodiscard]] bool GetFullscreen() const { return m_State.Fullscreen; }
+        
+        [[nodiscard]] GLFWwindow* GetNativeWindow() const { return m_Window; }
     private:
-        GLFWwindow* window_;
+        struct WindowState {
+            std::string Title;
+            EventCallbackFn EventCallback;
+            unsigned int WidthFramebuffer, HeightFrameBuffer;
+            bool Fullscreen;
+        };
+        
+        WindowState m_State;
+        GLFWwindow* m_Window;
+        int m_storedX = 0, m_storedY = 0, m_storedW = 0, m_storedH = 0; // Used to save window state before entering fullscreen
     };
     
     class GLFW {

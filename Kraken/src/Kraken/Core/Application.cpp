@@ -4,6 +4,8 @@
 
 #include "Application.h"
 
+#include "Kraken/Events/KeyEvents.h"
+
 namespace Kraken {
 	Application* Application::s_Instance = nullptr;
     
@@ -12,10 +14,23 @@ namespace Kraken {
         s_Instance = this;
 
         KRC_INFO("Appstate: Create Window");
-        m_Window = new Window({.title = "Sandbox"});
+        m_Window = new Window({.initializeFullscreen = false, .initializeHidden = true});
+        m_Window->SetEventCallback(KR_BIND_EVENT_FN(Application::OnEvent));
     }
 
+    void Application::OnEvent(Event &e) {
+		EventDispatcher dispatcher(e);
+        dispatcher.Dispatch<KeyPressedEvent>(KR_BIND_EVENT_FN(Application::OnKey));
+    }
+
+    bool Application::OnKey(KeyPressedEvent& e) {
+        if(e.KeyCode() == Key::ESCAPE) KRC_INFO("Pressed escape");
+        return false;
+    }
+    
     void Application::Run() {
+        m_Window->Show();
+        
         KRC_INFO("Appstate: Main loop");
         while(!m_Window->ShouldClose()) {
             m_Window->PollEvents();
@@ -27,4 +42,5 @@ namespace Kraken {
         delete m_Window;
         GLFW::Terminate();
     }
+
 } // Kraken

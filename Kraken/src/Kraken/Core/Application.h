@@ -4,7 +4,8 @@
 
 #ifndef KR_APPLICATION_H
 #define KR_APPLICATION_H
-#include "../IO/GLFW.h"
+#include "Kraken/Events/KeyEvents.h"
+#include "Kraken/IO/GLFW.h"
 
 namespace Kraken {
     struct ApplicationInfo {
@@ -23,11 +24,14 @@ namespace Kraken {
         explicit Application(const ApplicationInfo& applicationInfo);
         ~Application();
 
+        void OnEvent(Event& e);
         void Run();
 
         [[nodiscard]] const ApplicationInfo& GetApplicationInfo() const { return m_ApplicationInfo; }
         static Application& GetInstance() { return *s_Instance; }
     private:
+        bool OnKey(KeyPressedEvent& e);
+        
         ApplicationInfo m_ApplicationInfo;
         static Application* s_Instance;
         Window* m_Window;
