@@ -4,3 +4,6 @@
 [submodule "Kraken/vendor/glfw"]
 	path = Kraken/vendor/glfw
 	url = git@github.com:glfw/glfw.git
+[submodule "Kraken/vendor/imgui"]
+	path = Kraken/vendor/imgui
+	url = git@github.com:ocornut/imgui.git

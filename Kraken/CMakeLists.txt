@@ -16,7 +16,16 @@ add_library(Kraken STATIC
         src/Kraken/Events/Event.h
         src/Kraken/Events/KeyEvents.h
         src/Kraken/IO/KeyCodes.h
-        src/Kraken/Events/ApplicationEvents.h)
+        src/Kraken/Events/ApplicationEvents.h
+        src/Kraken/Core/Layerstack.cpp
+        src/Kraken/Core/Layerstack.h
+        src/Kraken/Core/Layer.cpp
+        src/Kraken/Core/Layer.h
+        src/Kraken/Events/MouseEvents.h
+        src/Kraken/Debug/ImGuiLayer.cpp
+        src/Kraken/Debug/ImGuiLayer.h
+        src/Kraken/Platform/KRImGui.h
+        src/Kraken/Platform/KRImGui.cpp)
 target_include_directories(Kraken PUBLIC src)
 
 # Precompiled headers
@@ -24,6 +33,7 @@ target_precompile_headers(Kraken PRIVATE src/krpch.h)
 
 # Preprocessor Definitions
 target_compile_definitions(Kraken PUBLIC KR_VERSION="1.0.0")
+target_compile_definitions(Kraken PUBLIC GLFW_INCLUDE_NONE) # Force GLFW not to include GL, for everybodys sake
 if(WIN32)
     target_compile_definitions(Kraken PUBLIC KR_PLATFORM_WIN)
 elseif(APPLE)
@@ -48,6 +58,10 @@ set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(vendor/glfw)
+# OpenGL
+add_subdirectory(vendor/GLAD)
+# dear ImGui
+add_subdirectory(vendor/imgui)
 
 ## Link Dependencies
-target_link_libraries(Kraken PUBLIC spdlog::spdlog glfw)
+target_link_libraries(Kraken PUBLIC spdlog::spdlog glfw glad imgui)

@@ -4,7 +4,10 @@
 
 #include "Application.h"
 
+#include "Kraken/Debug/ImGuiLayer.h"
 #include "Kraken/Events/KeyEvents.h"
+
+#include "glad/gl.h"
 
 namespace Kraken {
 	Application* Application::s_Instance = nullptr;
@@ -14,8 +17,12 @@ namespace Kraken {
         s_Instance = this;
 
         KRC_INFO("Appstate: Create Window");
-        m_Window = new Window({.initializeFullscreen = false, .initializeHidden = true});
+        m_Window = CreateScope<Window>(WindowSpecs({.initializeFullscreen = false, .initializeHidden = true}));
         m_Window->SetEventCallback([this](Event* e){ m_EventsQueue.push(e); });
+        
+
+        // Add Debug overlay
+        PushOverlay(new ImGuiLayer());
     }
 
     void Application::Run() {
@@ -27,28 +34,55 @@ namespace Kraken {
 
             // Handle events
             while(!m_EventsQueue.empty()) {
-                EventDispatcher dispatcher(m_EventsQueue.front());
+                const auto e = m_EventsQueue.front();
+                EventDispatcher dispatcher(e);
                 m_EventsQueue.pop();
                 
                 dispatcher.Dispatch<KeyPressedEvent>(KR_BIND_EVENT_FN(Application::OnKey));
                 dispatcher.Dispatch<WindowCloseEvent>(KR_BIND_EVENT_FN(Application::OnWindowClose));
+
+                for (auto it = m_Layerstack.end(); it != m_Layerstack.begin();) {
+                    if(e->Handled) break;
+                    (*--it)->OnEvent(*e);
+                }
             }
+
+            // Update layers
+            glClearColor(1, 0, 1, 1);
+            glClear(GL_COLOR_BUFFER_BIT);
+            for(Layer* layer : m_Layerstack)
+                layer->OnUpdate();
+
+            // Swap buffers
+            m_Window->SwapBuffers();
         }
     }
-    
+
+    void Application::Stop() {
+        m_ShouldClose = true;
+    }
+
     bool Application::OnKey(KeyPressedEvent& e) {
-        if(e.KeyCode() == Key::ESCAPE) m_ShouldClose = true;
+        if(e.KeyCode() == Key::ESCAPE) Stop();
         return true;
     }
 
     bool Application::OnWindowClose(WindowCloseEvent& e) {
-        m_ShouldClose = true;
+        Stop();
         return true;
     }
 
     Application::~Application() {
         KRC_INFO("Appstate: Cleanup");
-        delete m_Window;
-        GLFW::Terminate();
+    }
+
+    void Application::PushLayer(Layer* layer) {
+        m_Layerstack.PushLayer(layer);
+        layer->OnAttach();
+    }
+
+    void Application::PushOverlay(Layer* layer) {
+        m_Layerstack.PushOverlay(layer);
+        layer->OnAttach();
     }
 } // Kraken

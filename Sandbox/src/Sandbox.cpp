@@ -4,10 +4,24 @@
 
 #include "Kraken.h"
 
+class SandboxLayer : public Kraken::Layer {
+public:
+    SandboxLayer() : Layer("Sandbox") {};
+
+    void OnUpdate() override {
+        
+    }
+
+    void OnEvent(Kraken::Event &event) override {
+        KR_TRACE("{0}", event.ToString());
+    }
+};
+
 class Sandbox : public Kraken::Application {
 public:
     explicit Sandbox(const Kraken::ApplicationInfo &applicationInfo)
         : Application(applicationInfo) {
+        PushLayer(new SandboxLayer());
     }
 };
 

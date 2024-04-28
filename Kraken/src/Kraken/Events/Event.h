@@ -10,8 +10,9 @@
 namespace Kraken {
     enum class EventType {
         None = 0,
-        WindowClose, WindowResize,
-        KeyPressed, KeyReleased
+        WindowClose, WindowResize, /* WindowFocus, WindowLostFocus, WindowMoved, */
+        KeyPressed, KeyReleased, /* KeyTyped */
+        /*ButtonPressed, ButtonReleased,*/ MouseMoved, /*MouseSrolled,*/
     };
 
     enum EventCatagory {
@@ -30,9 +31,9 @@ namespace Kraken {
                                 [[nodiscard]] const char* Name() const override { return #type; }
     
     class Event {
-        friend class EventDispatcher;
     public:
         virtual ~Event() = default;
+        bool Handled = false;
 
         [[nodiscard]] virtual EventType EventType() const = 0;
         [[nodiscard]] virtual const char* Name() const = 0;
@@ -40,8 +41,6 @@ namespace Kraken {
         [[nodiscard]] virtual std::string ToString() const { return Name(); };
 
         [[nodiscard]] inline bool IsInCategory(EventCatagory category) const { return Category() & category; }
-    protected:
-        bool m_Handled = false;
     };
 
     class EventDispatcher {
@@ -53,7 +52,7 @@ namespace Kraken {
         template<typename T, typename F>
         bool Dispatch(const F& func) {
             if (m_Event->EventType() == T::GetStaticType()) {
-                m_Event->m_Handled |= func(static_cast<T&>(*m_Event));
+                m_Event->Handled |= func(static_cast<T&>(*m_Event));
                 return true;
             }
             return false;

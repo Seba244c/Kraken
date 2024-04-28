@@ -4,6 +4,7 @@
 
 #ifndef KR_APPLICATION_H
 #define KR_APPLICATION_H
+#include "Layerstack.h"
 #include "Kraken/Events/ApplicationEvents.h"
 #include "Kraken/Events/KeyEvents.h"
 #include "Kraken/IO/GLFW.h"
@@ -25,9 +26,14 @@ namespace Kraken {
         explicit Application(const ApplicationInfo& applicationInfo);
         ~Application();
 
+        void PushLayer(Layer* layer);
+        void PushOverlay(Layer* layer);
+        
         void Run();
-
+        void Stop();
+        
         [[nodiscard]] const ApplicationInfo& GetApplicationInfo() const { return m_ApplicationInfo; }
+        [[nodiscard]] Window& GetWindow() const { return *m_Window; }
         static Application& GetInstance() { return *s_Instance; }
     private:
         bool m_ShouldClose = false;
@@ -38,7 +44,8 @@ namespace Kraken {
         
         ApplicationInfo m_ApplicationInfo;
         static Application* s_Instance;
-        Window* m_Window;
+        Scope<Window> m_Window;
+        Layerstack m_Layerstack;
     };
 
     Application* CreateApplication(AppCommandlineArguments cmdlineArguments); // Will be defined by the program

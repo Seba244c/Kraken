@@ -4,6 +4,7 @@
 
 #ifndef KR_GLFW_H
 #define KR_GLFW_H
+
 #include "GLFW/glfw3.h"
 #include "Kraken/Events/Event.h"
 
@@ -28,6 +29,7 @@ namespace Kraken {
         
         void SetEventCallback(const EventCallbackFn& callback) { m_State.EventCallback = callback; }
         void PollEvents();
+        void SwapBuffers();
         void Show();
         void Fullscreen(bool fullscreen);
 
@@ -42,6 +44,8 @@ namespace Kraken {
             EventCallbackFn EventCallback;
             unsigned int WidthFramebuffer, HeightFrameBuffer;
             bool Fullscreen;
+
+            float MouseX, MouseY;
         };
         
         WindowState m_State;

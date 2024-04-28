@@ -8,10 +8,12 @@
 #include "Kraken/Core/Application.h"
 #include "Kraken/Events/ApplicationEvents.h"
 #include "Kraken/Events/KeyEvents.h"
+#include "Kraken/Events/MouseEvents.h"
+
+#include "glad/gl.h"
 
 namespace Kraken {
 	static uint8_t s_GLFWWindowCount = 0;
-
     
     Window::Window(const WindowSpecs& windowSpecs) {
         if(s_GLFWWindowCount++ == 0) {
@@ -50,9 +52,17 @@ namespace Kraken {
             return;
         }
         
+        // OpenGL support
+        glfwMakeContextCurrent(m_Window);
+        if(!gladLoadGL(glfwGetProcAddress)) {
+            KRC_CRITICAL("ERR::GL::Failed to load GLAD");
+            KRC_ASSERT(false, "Failed to initializee GLAD");
+            return;
+        }
+        
         glfwSetWindowUserPointer(m_Window, &m_State);
 
-        // Resize and move window
+        // Callbacks
         glfwSetFramebufferSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
             KRC_TRACE("GLFW frameBufferSizeCallback: Width {} Height {}", width, height);
             WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
@@ -67,9 +77,6 @@ namespace Kraken {
             state.EventCallback(new WindowCloseEvent);
         });
         
-        if(windowSpecs.initializeFullscreen) Fullscreen(true);
-
-        // Temp input test
         glfwSetKeyCallback(m_Window, [](GLFWwindow *window, int key, int scancode, int action, int mods) {
             const WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
 
@@ -89,9 +96,17 @@ namespace Kraken {
                 default: KRC_WARN("Unkown key action: " + action);
             }
         });
+
+        glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xPos, double yPos) {
+            WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
+            const float dx = static_cast<float>(xPos) - state.MouseX;
+            const float dy = static_cast<float>(yPos) - state.MouseY;
+            state.MouseX = static_cast<float>(xPos);
+            state.MouseY = static_cast<float>(yPos);
+            state.EventCallback(new MouseMovedEvent(state.MouseX, state.MouseY, dx, dy));
+        });
         
-        // 
-        glfwMakeContextCurrent(m_Window);
+        if(windowSpecs.initializeFullscreen) Fullscreen(true);
     }
 
     Window::~Window() {
@@ -109,6 +124,10 @@ namespace Kraken {
 
     void Window::PollEvents() {
         glfwPollEvents();
+    }
+
+    void Window::SwapBuffers() {
+        glfwSwapBuffers(m_Window);
     }
 
     void Window::Show() {
