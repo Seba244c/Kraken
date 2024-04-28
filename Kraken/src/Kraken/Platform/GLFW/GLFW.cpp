@@ -15,7 +15,7 @@
 namespace Kraken {
 	static uint8_t s_GLFWWindowCount = 0;
     
-    Window::Window(const WindowSpecs& windowSpecs) {
+    GLFWWindow::GLFWWindow(const WindowSpecs& windowSpecs) {
         if(s_GLFWWindowCount++ == 0) {
             KRC_TRACE("GLFWWindowCount was 0");
             if(!GLFW::InitGlfw()) {
@@ -44,7 +44,7 @@ namespace Kraken {
         
         // Create window
         KRC_INFO("GLFW: Creating Window, Name: {}, Fullscreen {}, NoResize {}, Size {}x{}", m_State.Title, windowSpecs.initializeFullscreen, windowSpecs.noResize, windowSpecs.Width, windowSpecs.Height);
-        m_Window = glfwCreateWindow(windowSpecs.Width, windowSpecs.Height, m_State.Title.c_str(), nullptr, nullptr);
+        m_Window = glfwCreateWindow(static_cast<int>(windowSpecs.Width), static_cast<int>(windowSpecs.Height), m_State.Title.c_str(), nullptr, nullptr);
         
         if(m_Window == nullptr) {
             const char* errorDescription;
@@ -105,11 +105,44 @@ namespace Kraken {
             state.MouseY = static_cast<float>(yPos);
             state.EventCallback(new MouseMovedEvent(state.MouseX, state.MouseY, dx, dy));
         });
+
+        glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+            const WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
+            
+            switch (action) {
+                case GLFW_PRESS: {
+                    state.EventCallback(new ButtonPressedEvent(button));
+                    break;
+                }
+                case GLFW_RELEASE: {
+                    state.EventCallback(new ButtonReleasedEvent(button));
+                    break;
+                }
+                default: KRC_WARN("Unkown mouse action: " + action);
+            }
+        });
+
+        glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xOffset, double yOffset) {
+            const WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
+            state.EventCallback(new MouseScrolledEvent(static_cast<float>(xOffset), static_cast<float>(yOffset)));
+        });
         
-        if(windowSpecs.initializeFullscreen) Fullscreen(true);
+        if(windowSpecs.initializeFullscreen) GLFWWindow::Fullscreen(true);
     }
 
-    Window::~Window() {
+    void GLFWWindow::PollEvents() {
+        glfwPollEvents();
+    }
+
+    void GLFWWindow::SwapBuffers() {
+        glfwSwapBuffers(m_Window);
+    }
+
+    void GLFWWindow::Show() {
+        glfwShowWindow(m_Window);
+    }
+
+    GLFWWindow::~GLFWWindow() {
         glfwDestroyWindow(m_Window);
         
         if(++s_GLFWWindowCount == 0) {
@@ -118,23 +151,8 @@ namespace Kraken {
         }
     }
 
-    bool Window::ShouldClose() {
-        return glfwWindowShouldClose(m_Window) == GLFW_TRUE;
-    }
 
-    void Window::PollEvents() {
-        glfwPollEvents();
-    }
-
-    void Window::SwapBuffers() {
-        glfwSwapBuffers(m_Window);
-    }
-
-    void Window::Show() {
-        glfwShowWindow(m_Window);
-    }
-
-    void Window::Fullscreen(const bool fullscreen) {
+    void GLFWWindow::Fullscreen(const bool fullscreen) {
         GLFWmonitor* monitor = glfwGetWindowMonitor(m_Window);
         if((monitor != nullptr) == fullscreen) return;
         m_State.Fullscreen = fullscreen;

@@ -51,6 +51,18 @@ namespace Kraken {
 
         EVENT_CLASS_TYPE(KeyReleased)
     };
+
+    class KeyTypedEvent : public KeyEvent {
+    public:
+        explicit KeyTypedEvent(const Key::KeyCode keycode) : KeyEvent(KeyCode()) {};
+        
+        [[nodiscard]] std::string ToString() const override {
+            std::stringstream ss;
+            ss << "KeyTypedEvent: " << m_KeyCode;
+            return ss.str();
+        }
+        EVENT_CLASS_TYPE(KeyTyped)
+    };
 }
 
 #endif //KR_KEYEVENTS_H

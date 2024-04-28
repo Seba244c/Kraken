@@ -6,6 +6,9 @@
 #define KR_IMGUILAYER_H
 
 #include "Kraken/Core/Layer.h"
+#include "Kraken/Events/ApplicationEvents.h"
+#include "Kraken/Events/MouseEvents.h"
+#include "Kraken/Events/KeyEvents.h"
 
 namespace Kraken {
     class ImGuiLayer : public Layer {
@@ -19,7 +22,6 @@ namespace Kraken {
         void OnEvent(Event &event) override;
         
 		void SetDarkThemeColors();
-    private:
     };
 }
 

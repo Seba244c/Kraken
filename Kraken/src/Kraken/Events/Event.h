@@ -11,8 +11,8 @@ namespace Kraken {
     enum class EventType {
         None = 0,
         WindowClose, WindowResize, /* WindowFocus, WindowLostFocus, WindowMoved, */
-        KeyPressed, KeyReleased, /* KeyTyped */
-        /*ButtonPressed, ButtonReleased,*/ MouseMoved, /*MouseSrolled,*/
+        KeyPressed, KeyReleased, KeyTyped,
+        ButtonPressed, ButtonReleased, MouseMoved, MouseSrolled,
     };
 
     enum EventCatagory {
@@ -57,11 +57,6 @@ namespace Kraken {
             }
             return false;
         }
-
-        ~EventDispatcher() {
-            delete m_Event;
-        };
-
     private:
         Event* m_Event;
     };

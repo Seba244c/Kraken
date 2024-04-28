@@ -7,7 +7,7 @@
 #include "Layerstack.h"
 #include "Kraken/Events/ApplicationEvents.h"
 #include "Kraken/Events/KeyEvents.h"
-#include "Kraken/IO/GLFW.h"
+#include "Kraken/IO/Window.h"
 
 namespace Kraken {
     struct ApplicationInfo {

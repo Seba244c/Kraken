@@ -11,8 +11,8 @@ add_library(Kraken STATIC
         src/Kraken/Core/Application.cpp
         src/Kraken/Core/Application.h
         src/Kraken/Core/Assert.h
-        src/Kraken/IO/GLFW.cpp
-        src/Kraken/IO/GLFW.h
+        src/Kraken/Platform/GLFW/GLFW.cpp
+        src/Kraken/Platform/GLFW/GLFW.h
         src/Kraken/Events/Event.h
         src/Kraken/Events/KeyEvents.h
         src/Kraken/IO/KeyCodes.h
@@ -25,7 +25,13 @@ add_library(Kraken STATIC
         src/Kraken/Debug/ImGuiLayer.cpp
         src/Kraken/Debug/ImGuiLayer.h
         src/Kraken/Platform/KRImGui.h
-        src/Kraken/Platform/KRImGui.cpp)
+        src/Kraken/Platform/KRImGui.cpp
+        src/Kraken/IO/MouseCodes.h
+        src/Kraken/IO/Input.cpp
+        src/Kraken/IO/Input.h
+        src/Kraken/IO/Window.cpp
+        src/Kraken/IO/Window.h
+)
 target_include_directories(Kraken PUBLIC src)
 
 # Precompiled headers

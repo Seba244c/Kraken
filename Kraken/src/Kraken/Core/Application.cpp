@@ -8,6 +8,7 @@
 #include "Kraken/Events/KeyEvents.h"
 
 #include "glad/gl.h"
+#include "Kraken/IO/Input.h"
 
 namespace Kraken {
 	Application* Application::s_Instance = nullptr;
@@ -17,10 +18,10 @@ namespace Kraken {
         s_Instance = this;
 
         KRC_INFO("Appstate: Create Window");
-        m_Window = CreateScope<Window>(WindowSpecs({.initializeFullscreen = false, .initializeHidden = true}));
-        m_Window->SetEventCallback([this](Event* e){ m_EventsQueue.push(e); });
         
-
+        m_Window = Window::Create(WindowSpecs({.initializeFullscreen = false, .initializeHidden = true}));
+        m_Window->SetEventCallback([this](Event* e){ m_EventsQueue.push(e); }); // Here the applications takes ownership of the event
+        
         // Add Debug overlay
         PushOverlay(new ImGuiLayer());
     }
@@ -45,6 +46,10 @@ namespace Kraken {
                     if(e->Handled) break;
                     (*--it)->OnEvent(*e);
                 }
+
+                Input::Event(*e);
+
+                delete e;
             }
 
             // Update layers

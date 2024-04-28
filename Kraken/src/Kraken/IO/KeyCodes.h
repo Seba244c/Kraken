@@ -131,7 +131,11 @@ namespace Kraken::Key {
         RIGHT_ALT = 346,
         RIGHT_SUPER = 347,
         MENU = 348,
+
+        LAST = MENU,
     };
 }
+
+#define KR_KEY_LAST 348
 
 #endif //KR_KEYCODES_H

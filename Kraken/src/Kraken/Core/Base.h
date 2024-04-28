@@ -26,6 +26,7 @@
 #define EXPAND_MACRO(x) x
 #define STRINGIFY_MACRO(x) #x
 #define KR_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+#define KR_BIND_EVENT_STATIC_FN(fn) [](auto&&... args) -> decltype(auto) { return fn(std::forward<decltype(args)>(args)...); }
 
 namespace Kraken {
     template<typename T>

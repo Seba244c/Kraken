@@ -9,11 +9,11 @@ public:
     SandboxLayer() : Layer("Sandbox") {};
 
     void OnUpdate() override {
-        
+        if(Kraken::Input::IsKeyPressed(Kraken::Key::SPACE)) KR_INFO("SPAACE");
     }
 
     void OnEvent(Kraken::Event &event) override {
-        KR_TRACE("{0}", event.ToString());
+        
     }
 };
 

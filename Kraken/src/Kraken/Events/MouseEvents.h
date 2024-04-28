@@ -6,6 +6,7 @@
 #define KR_MOUSEEVENTS_H
 
 #include "Event.h"
+#include "Kraken/IO/MouseCodes.h"
 
 namespace Kraken {
     class MouseMovedEvent final : public Event {
@@ -27,6 +28,64 @@ namespace Kraken {
         EVENT_CLASS_CATEGORY(CatagoryMouse | CatagoryInput);
     private:
         float m_MouseX, m_MouseY, m_DeltaX, m_DeltaY;
+    };
+
+    class MouseScrolledEvent : public Event {
+    public:
+        MouseScrolledEvent(const float xOffset, const float yOffset) : m_OffsetX(xOffset), m_OffsetY(yOffset) {}
+
+        [[nodiscard]] float XOffset() const { return m_OffsetX; }
+        [[nodiscard]] float YOffset() const { return m_OffsetY; }
+        
+        [[nodiscard]] std::string ToString() const override {
+            std::stringstream ss;
+            ss << "MouseScrolledEvent: " << XOffset() << ", " << YOffset();
+            return ss.str();
+        }
+        
+        EVENT_CLASS_TYPE(MouseSrolled);
+        EVENT_CLASS_CATEGORY(CatagoryMouse | CatagoryInput);
+    private:
+        const float m_OffsetX, m_OffsetY;
+    };
+
+    class MouseButtonEvent : public Event {
+    public:
+        [[nodiscard]] Mouse::MouseCode MouseButton() const { return m_Button; }
+
+        EVENT_CLASS_CATEGORY(CatagoryMouse | CatagoryInput | CatagoryMouseButton);
+    protected:
+        explicit MouseButtonEvent(const Mouse::MouseCode button) : m_Button(button) {}
+        
+        Mouse::MouseCode m_Button;
+    };
+
+    class ButtonPressedEvent final : public MouseButtonEvent {
+    public:
+        explicit ButtonPressedEvent(const Mouse::MouseCode button)
+            : MouseButtonEvent(button) {}
+
+        [[nodiscard]] std::string ToString() const override {
+            std::stringstream ss;
+			ss << "ButtonPressedEvent: " << m_Button;
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(ButtonPressed)
+    };
+
+    class ButtonReleasedEvent final : public MouseButtonEvent {
+    public:
+        explicit ButtonReleasedEvent(const Mouse::MouseCode button)
+            : MouseButtonEvent(button) {}
+
+        [[nodiscard]] std::string ToString() const override {
+            std::stringstream ss;
+            ss << "ButtonReleasedEvent: " << m_Button;
+            return ss.str();
+        }
+
+        EVENT_CLASS_TYPE(ButtonReleased)
     };
 }
 

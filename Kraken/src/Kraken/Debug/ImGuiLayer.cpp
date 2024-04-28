@@ -34,14 +34,7 @@ namespace Kraken {
     }
 
     void ImGuiLayer::OnEvent(Event &event) {
-        ImGuiIO& io = ImGui::GetIO();
-        event.Handled |= event.IsInCategory(CatagoryMouse) & io.WantCaptureMouse;
-        event.Handled |= event.IsInCategory(CatagoryKeyboard) & io.WantCaptureKeyboard;
-
-        if(event.EventType() == EventType::WindowResize) {
-            const auto e = dynamic_cast<WindowResizeEvent&>(event);
-            io.DisplaySize = ImVec2(static_cast<float>(e.GetWidth()), static_cast<float>(e.GetHeight()));
-        }
+        KRImGui::OnEvent(event);
     }
 
     void ImGuiLayer::OnUpdate() {
