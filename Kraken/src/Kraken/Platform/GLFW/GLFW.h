@@ -8,6 +8,7 @@
 #include "Kraken/IO/Window.h"
 #include "GLFW/glfw3.h"
 #include "Kraken/Events/Event.h"
+#include "Kraken/Graphics/GraphicsContext.h"
 
 namespace Kraken {
     class GLFWWindow : public Window {
@@ -39,6 +40,7 @@ namespace Kraken {
         WindowState m_State;
         GLFWwindow* m_Window;
         int m_storedX = 0, m_storedY = 0, m_storedW = 0, m_storedH = 0; // Used to save window state before entering fullscreen
+        Scope<GraphicsContext> m_GraphicsContext;
     };
     
     class GLFW {

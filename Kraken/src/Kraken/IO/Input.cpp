@@ -9,7 +9,7 @@
 namespace Kraken {
     static std::bitset<KR_KEY_LAST+1> s_KeyDown;
     static std::bitset<KR_MOUSE_LAST+1> s_MouseDown;
-    static float s_MouseX, s_MouseY;
+    static glm::vec2 s_Mouse;
     
     bool Input::IsKeyPressed(const Key::KeyCode key) {
         return s_KeyDown[key];
@@ -19,12 +19,16 @@ namespace Kraken {
         return s_MouseDown[button];
     }
 
+    glm::vec2 Input::GetMousePosition() {
+        return s_Mouse;
+    }
+
     float Input::GetMouseX() {
-        return s_MouseX;
+        return s_Mouse.x;
     }
 
     float Input::GetMouseY() {
-        return s_MouseY;
+        return s_Mouse.y;
     }
 
     void Input::Event(Kraken::Event &e) {
@@ -48,8 +52,8 @@ namespace Kraken {
     }
 
     bool Input::OnMouseMoved(const MouseMovedEvent &e) {
-        s_MouseX = e.X();
-        s_MouseY = e.Y();
+        s_Mouse.x = e.X();
+        s_Mouse.y = e.Y();
         return false;
     }
 

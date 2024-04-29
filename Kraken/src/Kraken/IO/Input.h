@@ -16,7 +16,7 @@ namespace Kraken {
         static bool IsKeyPressed(Key::KeyCode key);
 
         static bool IsMouseButtonPressed(Mouse::MouseCode button);
-        //static glm::vec2 GetMousePosition();
+        static glm::vec2 GetMousePosition();
         static float GetMouseX();
         static float GetMouseY();
 

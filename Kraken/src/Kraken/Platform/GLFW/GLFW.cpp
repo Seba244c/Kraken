@@ -52,14 +52,6 @@ namespace Kraken {
             return;
         }
         
-        // OpenGL support
-        glfwMakeContextCurrent(m_Window);
-        if(!gladLoadGL(glfwGetProcAddress)) {
-            KRC_CRITICAL("ERR::GL::Failed to load GLAD");
-            KRC_ASSERT(false, "Failed to initializee GLAD");
-            return;
-        }
-        
         glfwSetWindowUserPointer(m_Window, &m_State);
 
         // Callbacks
@@ -128,6 +120,10 @@ namespace Kraken {
         });
         
         if(windowSpecs.initializeFullscreen) GLFWWindow::Fullscreen(true);
+        
+        // GraphicsContext
+        m_GraphicsContext = GraphicsContext::Create(m_Window);
+        m_GraphicsContext->Init();
     }
 
     void GLFWWindow::PollEvents() {
@@ -135,7 +131,7 @@ namespace Kraken {
     }
 
     void GLFWWindow::SwapBuffers() {
-        glfwSwapBuffers(m_Window);
+        m_GraphicsContext->SwapBuffers();
     }
 
     void GLFWWindow::Show() {

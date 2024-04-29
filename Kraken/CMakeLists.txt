@@ -31,6 +31,12 @@ add_library(Kraken STATIC
         src/Kraken/IO/Input.h
         src/Kraken/IO/Window.cpp
         src/Kraken/IO/Window.h
+        src/Kraken/Graphics/GraphicsContext.cpp
+        src/Kraken/Graphics/GraphicsContext.h
+        src/Kraken/Graphics/Renderer.h
+        src/Kraken/Graphics/RendererAPI.h
+        src/Kraken/Platform/OpenGL/OpenGLContext.cpp
+        src/Kraken/Platform/OpenGL/OpenGLContext.h
 )
 target_include_directories(Kraken PUBLIC src)
 
@@ -68,6 +74,9 @@ add_subdirectory(vendor/glfw)
 add_subdirectory(vendor/GLAD)
 # dear ImGui
 add_subdirectory(vendor/imgui)
+# GLM
+set(GLM_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+add_subdirectory(vendor/glm)
 
 ## Link Dependencies
-target_link_libraries(Kraken PUBLIC spdlog::spdlog glfw glad imgui)
+target_link_libraries(Kraken PUBLIC spdlog::spdlog glm::glm glfw glad imgui)

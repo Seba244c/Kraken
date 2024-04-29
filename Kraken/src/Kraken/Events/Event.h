@@ -64,7 +64,6 @@ namespace Kraken {
     inline std::ostream& operator<<(std::ostream& os, const Event& e) {
         return os << e.ToString();
     }
-
 }
 
 #endif //KR_EVENT_H
