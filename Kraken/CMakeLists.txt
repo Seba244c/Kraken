@@ -37,6 +37,7 @@ add_library(Kraken STATIC
         src/Kraken/Graphics/RendererAPI.h
         src/Kraken/Platform/OpenGL/OpenGLContext.cpp
         src/Kraken/Platform/OpenGL/OpenGLContext.h
+        src/Kraken/Math/Color.h
 )
 target_include_directories(Kraken PUBLIC src)
 

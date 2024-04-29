@@ -40,5 +40,6 @@ namespace Kraken {
 
 #include "Assert.h"
 #include "Log.h"
+#include "Kraken/Math/Color.h"
 
 #endif //KR_BASE_H
