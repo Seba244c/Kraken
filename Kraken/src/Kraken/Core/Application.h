@@ -8,6 +8,7 @@
 #include "Kraken/Events/ApplicationEvents.h"
 #include "Kraken/Events/KeyEvents.h"
 #include "Kraken/IO/Window.h"
+#include "Kraken/Graphics/Shader.h"
 
 namespace Kraken {
     struct ApplicationInfo {
@@ -46,6 +47,9 @@ namespace Kraken {
         static Application* s_Instance;
         Scope<Window> m_Window;
         Layerstack m_Layerstack;
+
+        unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+        Ref<Shader> m_Shader;
     };
 
     Application* CreateApplication(AppCommandlineArguments cmdlineArguments); // Will be defined by the program

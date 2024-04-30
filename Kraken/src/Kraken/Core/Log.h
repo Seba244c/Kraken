@@ -12,8 +12,8 @@ namespace Kraken {
     public:
         static void Init();
 
-        static std::shared_ptr<spdlog::logger>& GetLogger() { return s_Logger; }
-        static std::shared_ptr<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
+        static Ref<spdlog::logger>& GetLogger() { return s_Logger; }
+        static Ref<spdlog::logger>& GetCoreLogger() { return s_CoreLogger; }
     private:
         static std::shared_ptr<spdlog::logger> s_Logger;
         static std::shared_ptr<spdlog::logger> s_CoreLogger;
