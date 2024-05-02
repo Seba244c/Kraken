@@ -9,6 +9,7 @@
 #include "Kraken/Events/KeyEvents.h"
 #include "Kraken/IO/Window.h"
 #include "Kraken/Graphics/Shader.h"
+#include "Kraken/Graphics/Buffer.h"
 
 namespace Kraken {
     struct ApplicationInfo {
@@ -48,7 +49,9 @@ namespace Kraken {
         Scope<Window> m_Window;
         Layerstack m_Layerstack;
 
-        unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+        unsigned int m_VertexArray;
+        Ref<VertexBuffer> m_VertexBuffer;
+        Ref<IndexBuffer> m_IndexBuffer;
         Ref<Shader> m_Shader;
     };
 

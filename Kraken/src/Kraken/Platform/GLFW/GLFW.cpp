@@ -10,8 +10,6 @@
 #include "Kraken/Events/KeyEvents.h"
 #include "Kraken/Events/MouseEvents.h"
 
-#include "glad/gl.h"
-
 namespace Kraken {
 	static uint8_t s_GLFWWindowCount = 0;
     
@@ -27,15 +25,15 @@ namespace Kraken {
         
         // Window Hints
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         #ifdef KR_PLATFORM_OSX
             glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
         #endif
 
         // Window Hints pt. 2
-        glfwWindowHint(GLFW_RESIZABLE, windowSpecs.noResize ? GL_FALSE : GL_TRUE);
-        glfwWindowHint(GLFW_VISIBLE, windowSpecs.initializeHidden ? GL_FALSE : GL_TRUE);
+        glfwWindowHint(GLFW_RESIZABLE, windowSpecs.noResize ? GLFW_FALSE : GLFW_TRUE);
+        glfwWindowHint(GLFW_VISIBLE, windowSpecs.initializeHidden ? GLFW_FALSE : GLFW_TRUE);
 
         // Window state
         m_State.Title = (windowSpecs.title.empty()) ? Application::GetInstance().GetApplicationInfo().Name : windowSpecs.title;
