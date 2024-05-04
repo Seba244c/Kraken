@@ -13,10 +13,14 @@ namespace Kraken {
         OpenGLVertexBuffer(const float* vertices, uint32_t size);
         ~OpenGLVertexBuffer() override;
 
+        [[nodiscard]] const BufferLayout & GetLayout() const override { return m_Layout; }
+        void SetLayout(const BufferLayout &layout) override { m_Layout = layout; }
+
         void Bind() const override;
         void Unbind() const override;
     private:
         uint32_t m_RendererID;
+		BufferLayout m_Layout;
     };
 
     class OpenGLIndexBuffer : public IndexBuffer {
@@ -27,7 +31,7 @@ namespace Kraken {
         void Bind() const override;
         void Unbind() const override;
 
-        [[nodiscard]] virtual uint32_t GetCount() const { return m_Count; }
+        [[nodiscard]] uint32_t GetCount() const override { return m_Count; }
     private:
         uint32_t m_RendererID;
         uint32_t m_Count;

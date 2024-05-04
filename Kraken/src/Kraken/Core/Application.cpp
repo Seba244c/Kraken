@@ -12,6 +12,37 @@
 
 namespace Kraken {
 	Application* Application::s_Instance = nullptr;
+
+    static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
+        switch (type) {
+            case ShaderDataType::None:
+                return GL_FLOAT;
+            case ShaderDataType::Float:
+                return GL_FLOAT;
+            case ShaderDataType::Float2:
+                return GL_FLOAT;
+            case ShaderDataType::Float3:
+                return GL_FLOAT;
+            case ShaderDataType::Float4:
+                return GL_FLOAT;
+            case ShaderDataType::Mat3:
+                return GL_FLOAT;
+            case ShaderDataType::Mat4:
+                return GL_FLOAT;
+            case ShaderDataType::Int:
+                return GL_INT;
+            case ShaderDataType::Int2:
+                return GL_INT;
+            case ShaderDataType::Int3:
+                return GL_INT;
+            case ShaderDataType::Int4:
+                return GL_INT;
+            case ShaderDataType::Bool:
+                return GL_BOOL;
+        }
+
+        return GL_FLOAT;
+    }
     
     Application::Application(const ApplicationInfo &applicationInfo) : m_ApplicationInfo(applicationInfo) {
         KRC_ASSERT(s_Instance == nullptr, "Instance shouldn't already exist");
@@ -29,16 +60,34 @@ namespace Kraken {
         glGenVertexArrays(1, &m_VertexArray);
         glBindVertexArray(m_VertexArray);
 
-        constexpr float vertices[3*3] = {
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.0f, 0.5f, 0.0f
+        constexpr float vertices[3*3+4*3] = {
+            -0.5f, -0.5f, 0.0f,  0.8f, 0.2f, 0.8f, 1.0f,
+            0.5f,  -0.5f, 0.0f,  0.2f, 0.3f, 0.8f, 1.0f,
+            0.0f,   0.5f, 0.0f,  0.8f, 0.8f, 0.2f, 1.0f,
         };
 
         m_VertexBuffer = VertexBuffer::Create(vertices, sizeof(vertices));
 
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+        {
+            const BufferLayout layout = {
+                { ShaderDataType::Float3, "a_Position" },
+                { ShaderDataType::Float4, "a_Color"}
+            };
+            m_VertexBuffer->SetLayout(layout);
+        }
+
+        uint32_t i = 0;
+        const auto& layout = m_VertexBuffer->GetLayout();
+        for(const auto& element : layout) {
+            glEnableVertexAttribArray(i);
+            glVertexAttribPointer(i,
+                element.GetComponentCount(),
+                ShaderDataTypeToOpenGLBaseType(element.Type),
+                element.Normalized ? GL_TRUE : GL_FALSE,
+                layout.GetStride(),
+                reinterpret_cast<const void *>(element.Offset));
+            i++;
+        }
 
         constexpr uint32_t indicies[3] = { 0, 1, 2 };
         m_IndexBuffer = IndexBuffer::Create(indicies, sizeof(indicies) / sizeof(uint32_t));
@@ -47,12 +96,13 @@ namespace Kraken {
 #version 450 core
 
 layout(location = 0) in vec3 a_Position;
+layout(location = 1) in vec4 a_Color;
 
-out vec3 v_Position;
+out vec4 v_Color;
 
 void main ()
 {
-    v_Position = a_Position;
+    v_Color = a_Color;
     gl_Position = vec4(a_Position, 1.0);
 }
 
@@ -63,11 +113,11 @@ void main ()
 
 layout(location = 0) out vec4 o_Color;
 
-in vec3 v_Position;
+in vec4 v_Color;
 
 void main ()
 {
-    o_Color = vec4(v_Position * 0.5 + 0.5, 1.0);
+    o_Color = v_Color;
 }
 
 )";
