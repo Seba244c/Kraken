@@ -48,10 +48,8 @@ add_library(Kraken STATIC
         src/Kraken/Platform/OpenGL/OpenGLRendererAPI.cpp
         src/Kraken/Platform/OpenGL/OpenGLRendererAPI.h
         src/Kraken/Graphics/Buffer.h
-        src/Kraken/Graphics/Buffer.cpp
         src/Kraken/Platform/OpenGL/OpenGLBuffer.h
         src/Kraken/Platform/OpenGL/OpenGLBuffer.cpp
-        src/Kraken/Graphics/VertexArray.cpp
         src/Kraken/Graphics/VertexArray.h
         src/Kraken/Platform/OpenGL/OpenGLVertexArray.cpp
         src/Kraken/Platform/OpenGL/OpenGLVertexArray.h

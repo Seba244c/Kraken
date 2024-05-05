@@ -18,16 +18,6 @@ namespace Kraken {
         return nullptr;
     }
 
-    Ref<Shader> Shader::Create(const std::string &vertexSrc, const std::string &fragmentSrc) {
-        switch (Renderer::GetAPI()) {
-            case RendererAPI::API::None:    KRC_ASSERT(false, "RenderAPI::None is currently not supported!"); return nullptr;
-            case RendererAPI::API::OpenGL:  return CreateRef<OpenGLShader>(vertexSrc, fragmentSrc);
-        }
-
-        KRC_ASSERT(false, "Unkown RenderAPI!");
-        return nullptr;
-    }
-
     void ShaderLibrary::Add(const std::string &name, const Ref<Shader> &shader) {
         KRC_ASSERT(!Exists(name), "Shader already exists");
         m_Shaders[name] = shader;

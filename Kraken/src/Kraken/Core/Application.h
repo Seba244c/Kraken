@@ -10,6 +10,7 @@
 #include "Kraken/IO/Window.h"
 #include "Kraken/Graphics/Shader.h"
 #include "Kraken/Graphics/Buffer.h"
+#include "Kraken/Graphics/RendererAPI.h"
 #include "Kraken/Graphics/VertexArray.h"
 
 namespace Kraken {
@@ -50,6 +51,7 @@ namespace Kraken {
         Scope<Window> m_Window;
         Layerstack m_Layerstack;
 
+        Ref<RendererAPI> m_RendererAPI;
         Ref<VertexArray> m_VertexArray;
         Ref<Shader> m_Shader;
     };

@@ -20,8 +20,6 @@ namespace Kraken {
 
         [[nodiscard]] virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const = 0;
         [[nodiscard]] virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
-
-		static Ref<VertexArray> Create();
     };
 } // Kraken
 

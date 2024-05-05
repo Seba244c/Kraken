@@ -26,6 +26,8 @@ namespace Kraken {
         PushOverlay(new ImGuiLayer());
 
         // Temp rendering
+        m_RendererAPI = RendererAPI::Create();
+        m_RendererAPI->SetClearColor(Colors::DarkGray);
         constexpr float vertices[4*3+4*4] = {
             -0.5f, -0.5f, 0.0f,   0.8f, 0.2f, 0.8f, 1.0f,
             0.5f,  -0.5f, 0.0f,   0.2f, 0.3f, 0.8f, 1.0f,
@@ -33,7 +35,7 @@ namespace Kraken {
             -0.5,   0.5f, 0.0f,   0.2f, 0.8f, 0.2f, 1.0f
         };
 
-        auto vb = VertexBuffer::Create(vertices, sizeof(vertices));
+        auto vb = m_RendererAPI->CreateVertexBuffer(vertices, sizeof(vertices));
         vb->SetLayout({
             { ShaderDataType::Float3, "a_Position" },
             { ShaderDataType::Float4, "a_Color"}
@@ -41,9 +43,9 @@ namespace Kraken {
 
 
         constexpr uint32_t indicies[6] = { 0, 1, 2, 2, 3, 0 };
-        auto ib = IndexBuffer::Create(indicies, sizeof(indicies) / sizeof(uint32_t));
+        auto ib = m_RendererAPI->CreateIndexBuffer(indicies, sizeof(indicies) / sizeof(uint32_t));
 
-        m_VertexArray = VertexArray::Create();
+        m_VertexArray = m_RendererAPI->CreateVertexArray();
         m_VertexArray->AddVertexBuffer(vb);
         m_VertexArray->SetIndexBuffer(ib);
 
@@ -77,7 +79,7 @@ void main ()
 
 )";
         
-        m_Shader = Shader::Create(vertexSrc, fragmentSrc);
+        m_Shader = m_RendererAPI->CreateShader(vertexSrc, fragmentSrc);
     }
 
     void Application::Run() {
@@ -107,7 +109,6 @@ void main ()
             }
 
             // Update layers
-            glClearColor(Colors::DarkGray.r, Colors::DarkGray.g, Colors::DarkGray.b, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
 
             m_Shader->Bind();
