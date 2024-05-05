@@ -12,37 +12,6 @@
 
 namespace Kraken {
 	Application* Application::s_Instance = nullptr;
-
-    static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {
-        switch (type) {
-            case ShaderDataType::None:
-                return GL_FLOAT;
-            case ShaderDataType::Float:
-                return GL_FLOAT;
-            case ShaderDataType::Float2:
-                return GL_FLOAT;
-            case ShaderDataType::Float3:
-                return GL_FLOAT;
-            case ShaderDataType::Float4:
-                return GL_FLOAT;
-            case ShaderDataType::Mat3:
-                return GL_FLOAT;
-            case ShaderDataType::Mat4:
-                return GL_FLOAT;
-            case ShaderDataType::Int:
-                return GL_INT;
-            case ShaderDataType::Int2:
-                return GL_INT;
-            case ShaderDataType::Int3:
-                return GL_INT;
-            case ShaderDataType::Int4:
-                return GL_INT;
-            case ShaderDataType::Bool:
-                return GL_BOOL;
-        }
-
-        return GL_FLOAT;
-    }
     
     Application::Application(const ApplicationInfo &applicationInfo) : m_ApplicationInfo(applicationInfo) {
         KRC_ASSERT(s_Instance == nullptr, "Instance shouldn't already exist");
@@ -57,40 +26,26 @@ namespace Kraken {
         PushOverlay(new ImGuiLayer());
 
         // Temp rendering
-        glGenVertexArrays(1, &m_VertexArray);
-        glBindVertexArray(m_VertexArray);
-
-        constexpr float vertices[3*3+4*3] = {
-            -0.5f, -0.5f, 0.0f,  0.8f, 0.2f, 0.8f, 1.0f,
-            0.5f,  -0.5f, 0.0f,  0.2f, 0.3f, 0.8f, 1.0f,
-            0.0f,   0.5f, 0.0f,  0.8f, 0.8f, 0.2f, 1.0f,
+        constexpr float vertices[4*3+4*4] = {
+            -0.5f, -0.5f, 0.0f,   0.8f, 0.2f, 0.8f, 1.0f,
+            0.5f,  -0.5f, 0.0f,   0.2f, 0.3f, 0.8f, 1.0f,
+            0.5f,   0.5f, 0.0f,   0.8f, 0.8f, 0.2f, 1.0f,
+            -0.5,   0.5f, 0.0f,   0.2f, 0.8f, 0.2f, 1.0f
         };
 
-        m_VertexBuffer = VertexBuffer::Create(vertices, sizeof(vertices));
+        auto vb = VertexBuffer::Create(vertices, sizeof(vertices));
+        vb->SetLayout({
+            { ShaderDataType::Float3, "a_Position" },
+            { ShaderDataType::Float4, "a_Color"}
+        });
 
-        {
-            const BufferLayout layout = {
-                { ShaderDataType::Float3, "a_Position" },
-                { ShaderDataType::Float4, "a_Color"}
-            };
-            m_VertexBuffer->SetLayout(layout);
-        }
 
-        uint32_t i = 0;
-        const auto& layout = m_VertexBuffer->GetLayout();
-        for(const auto& element : layout) {
-            glEnableVertexAttribArray(i);
-            glVertexAttribPointer(i,
-                element.GetComponentCount(),
-                ShaderDataTypeToOpenGLBaseType(element.Type),
-                element.Normalized ? GL_TRUE : GL_FALSE,
-                layout.GetStride(),
-                reinterpret_cast<const void *>(element.Offset));
-            i++;
-        }
+        constexpr uint32_t indicies[6] = { 0, 1, 2, 2, 3, 0 };
+        auto ib = IndexBuffer::Create(indicies, sizeof(indicies) / sizeof(uint32_t));
 
-        constexpr uint32_t indicies[3] = { 0, 1, 2 };
-        m_IndexBuffer = IndexBuffer::Create(indicies, sizeof(indicies) / sizeof(uint32_t));
+        m_VertexArray = VertexArray::Create();
+        m_VertexArray->AddVertexBuffer(vb);
+        m_VertexArray->SetIndexBuffer(ib);
 
         const std::string vertexSrc = R"(
 #version 450 core
@@ -156,8 +111,8 @@ void main ()
             glClear(GL_COLOR_BUFFER_BIT);
 
             m_Shader->Bind();
-            glBindVertexArray(m_VertexArray);
-            glDrawElements(GL_TRIANGLES, m_IndexBuffer->GetCount(), GL_UNSIGNED_INT, nullptr); // Index buffer is already attached to the vertex array
+            m_VertexArray->Bind();
+            glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr); // Index buffer is already attached to the vertex array
             
             for(Layer* layer : m_Layerstack)
                 layer->OnUpdate();
