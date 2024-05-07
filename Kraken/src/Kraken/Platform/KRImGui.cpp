@@ -7,10 +7,15 @@
 #include "Kraken/Core/Application.h"
 
 #include "imgui.h"
+#ifdef KR_SUPPORT_OPENGL
 #define IMGUI_IMPL_OPENGL_LOADER_GLAD
 #include "backends/imgui_impl_opengl3.h"
+#endif
+
+#ifdef KR_SUPPORT_GLFW
 #include "backends/imgui_impl_glfw.h"
 #include "GLFW/GLFW.h"
+#endif
 
 namespace Kraken {
     static unsigned int s_ImGuiConsumers  = 0;
@@ -21,27 +26,42 @@ namespace Kraken {
         ImGui::CreateContext();
         
         // Start the platform
+#ifdef KR_SUPPORT_GLFW
         ImGui_ImplGlfw_InitForOpenGL(static_cast<GLFWwindow*>(Application::GetInstance().GetWindow().GetNativeWindow()), false);
+#endif
+
+#ifdef KR_SUPPORT_OPENGL
         ImGui_ImplOpenGL3_Init("#version 410");
+#endif
     }
 
     void KRImGui::ShutdownPlatform() {
         KRC_TRACE("KRImGui: ShutdownPlatform");
+#ifdef KR_SUPPORT_GLFW
         ImGui_ImplOpenGL3_Shutdown();
+#endif
+#ifdef KR_SUPPORT_GLFW
         ImGui_ImplGlfw_Shutdown();
+#endif
         
         ImGui::DestroyContext();
     }
 
     void KRImGui::NewFrame() {
+#ifdef KR_SUPPORT_GLFW
         ImGui_ImplGlfw_NewFrame();
+#endif
+#ifdef KR_SUPPORT_GLFW
         ImGui_ImplOpenGL3_NewFrame();
+#endif
         ImGui::NewFrame();
     }
 
     void KRImGui::Render() {
         ImGui::Render();
+#ifdef KR_SUPPORT_GLFW
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+#endif
     }
 
     void KRImGui::RegisterConsumer() {

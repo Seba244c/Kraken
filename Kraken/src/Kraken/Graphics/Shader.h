@@ -21,8 +21,6 @@ namespace Kraken {
         virtual void SetFloat4(const std::string& name, const glm::vec4& value) = 0;
         virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
         virtual void SetColor(const std::string& name, const Color& value) = 0;
-
-        static Ref<Shader> Create(const std::string& filepath);
     };
 
     class ShaderLibrary

@@ -59,44 +59,64 @@ add_library(Kraken STATIC
         src/krpch.cpp
 )
 target_include_directories(Kraken PUBLIC src)
-
-# Precompiled headers
-target_precompile_headers(Kraken PRIVATE src/krpch.h)
-
-# Preprocessor Definitions
+target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers
 target_compile_definitions(Kraken PUBLIC KR_VERSION="1.0.0")
-target_compile_definitions(Kraken PUBLIC GLFW_INCLUDE_NONE) # Force GLFW not to include GL, for everybodys sake
-if(WIN32)
-    target_compile_definitions(Kraken PUBLIC KR_PLATFORM_WIN)
-elseif(APPLE)
-    target_compile_definitions(Kraken PUBLIC KR_PLATFORM_OSX)
-elseif(UNIX) # Automatically NOT APPLE
-    target_compile_definitions(Kraken PUBLIC KR_PLATFORM_UNIX)
-else ()
-    target_compile_definitions(Kraken PUBLIC KR_PLATFORM_UNKNOWN)
-endif()
 
+# Preprocessor build type definition
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions(Kraken PUBLIC KR_DEBUG)
 else ()
     target_compile_definitions(Kraken PUBLIC KR_RELEASE)
 endif ()
 
-# Dependencies
-## spdlog
-add_subdirectory(vendor/spdlog)
-## GLFW
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-add_subdirectory(vendor/glfw)
-# OpenGL
-add_subdirectory(vendor/GLAD)
-# dear ImGui
-add_subdirectory(vendor/imgui)
-# GLM
-set(GLM_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+# Universal Dependencies
+set(KR_LIBS spdlog::spdlog imgui glm::glm)
+
+add_subdirectory(vendor/spdlog) ## spdlog
+add_subdirectory(vendor/imgui) # dear ImGui
+set(GLM_BUILD_TESTS OFF CACHE BOOL "" FORCE) # GLM
 add_subdirectory(vendor/glm)
 
+### Platform Support
+if(WIN32)
+    target_compile_definitions(Kraken PUBLIC KR_PLATFORM_WIN)
+
+    set(support_glfw ON BOOL)
+    set(support_opengl ON BOOL)
+elseif(APPLE)
+    target_compile_definitions(Kraken PUBLIC KR_PLATFORM_OSX)
+
+    set(support_glfw OFF BOOL)
+    set(support_opengl OFF BOOL)
+elseif(UNIX) # Automatically NOT APPLE
+    target_compile_definitions(Kraken PUBLIC KR_PLATFORM_UNIX)
+
+    set(support_glfw OFF BOOL)
+    set(support_opengl OFF BOOL)
+else ()
+    target_compile_definitions(Kraken PUBLIC KR_PLATFORM_UNKNOWN)
+
+    set(support_glfw OFF BOOL)
+    set(support_opengl OFF BOOL)
+endif()
+
+# Add platform specific libraries
+if(support_opengl)
+    add_subdirectory(vendor/GLAD)
+
+    target_compile_definitions(Kraken PUBLIC KR_SUPPORT_OPENGL)
+    set(KR_LIBS ${KR_LIBS} glad)
+endif()
+if(support_glfw)
+    target_compile_definitions(Kraken PUBLIC GLFW_INCLUDE_NONE) # Force GLFW not to include GL, for everybodys sake
+    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    add_subdirectory(vendor/glfw)
+
+    target_compile_definitions(Kraken PUBLIC KR_SUPPORT_GLFW)
+    set(KR_LIBS ${KR_LIBS} glfw)
+endif()
+
 ## Link Dependencies
-target_link_libraries(Kraken PUBLIC spdlog::spdlog glm::glm glfw glad imgui)
+target_link_libraries(Kraken PUBLIC ${KR_LIBS})

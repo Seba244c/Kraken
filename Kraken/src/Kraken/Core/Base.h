@@ -11,6 +11,9 @@
     #elif defined(KR_PLATFORM_UNIX)
         #include <csignal>
         #define KR_DEBUGBREAK() raise(SIGTRAP)
+    #elif defined(KR_PLATFORM_OSX)
+        #include <csignal>
+        #define KR_DEBUGBREAK() raise(SIGTRAP)
     #else
         #error "Platform doesn't support debugbreak yet!"
     #endif
