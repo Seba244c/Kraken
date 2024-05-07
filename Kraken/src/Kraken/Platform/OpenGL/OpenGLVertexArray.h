@@ -2,13 +2,13 @@
 // Created by sebsn on 05-05-2024.
 //
 
-#ifndef KR_OPENGLVERTEXARRAY_H
-#define KR_OPENGLVERTEXARRAY_H
+#pragma once
+#include <krpch.h>
 
 #include "Kraken/Graphics/VertexArray.h"
 
 namespace Kraken {
-    class OpenGLVertexArray : public VertexArray {
+    class OpenGLVertexArray final : public VertexArray {
     public:
         OpenGLVertexArray();
         ~OpenGLVertexArray() override;
@@ -27,5 +27,3 @@ namespace Kraken {
         Ref<IndexBuffer> m_IndexBuffer;
     };
 } // Kraken
-
-#endif //KR_OPENGLVERTEXARRAY_H

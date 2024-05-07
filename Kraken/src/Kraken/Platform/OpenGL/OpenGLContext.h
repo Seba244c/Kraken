@@ -9,7 +9,7 @@
 struct GLFWwindow; //Just for simplicitys sake
 
 namespace Kraken {
-    class OpenGLContext : public GraphicsContext {
+    class OpenGLContext final : public GraphicsContext {
     public:
         explicit OpenGLContext(GLFWwindow* windowHandle);
         

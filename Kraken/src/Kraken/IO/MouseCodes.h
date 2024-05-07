@@ -2,8 +2,7 @@
 // Created by sebsn on 28-04-2024.
 //
 
-#ifndef KR_MOUSECODES_H
-#define KR_MOUSECODES_H
+#pragma once
 
 namespace Kraken::Mouse {
     using MouseCode = uint16_t;
@@ -25,5 +24,3 @@ namespace Kraken::Mouse {
 }
 
 #define KR_MOUSE_LAST 7
-
-#endif //KR_MOUSECODES_H

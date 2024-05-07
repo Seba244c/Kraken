@@ -2,13 +2,13 @@
 // Created by sebsn on 02-05-2024.
 //
 
-#ifndef KR_OPENGLBUFFER_H
-#define KR_OPENGLBUFFER_H
+#pragma once
+#include <krpch.h>
 
 #include "Kraken/Graphics/Buffer.h"
 
 namespace Kraken {
-    class OpenGLVertexBuffer : public VertexBuffer {
+    class OpenGLVertexBuffer final : public VertexBuffer {
     public:
         OpenGLVertexBuffer(const float* vertices, uint32_t size);
         ~OpenGLVertexBuffer() override;
@@ -23,7 +23,7 @@ namespace Kraken {
 		BufferLayout m_Layout;
     };
 
-    class OpenGLIndexBuffer : public IndexBuffer {
+    class OpenGLIndexBuffer final : public IndexBuffer {
     public:
         OpenGLIndexBuffer(const uint32_t* indices, uint32_t count);
         ~OpenGLIndexBuffer() override;
@@ -37,5 +37,3 @@ namespace Kraken {
         uint32_t m_Count;
     };
 }
-
-#endif //KR_OPENGLBUFFER_H

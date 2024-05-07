@@ -2,8 +2,8 @@
 // Created by sebsn on 28-04-2024.
 //
 
-#ifndef KR_KRIMGUI_H
-#define KR_KRIMGUI_H
+#pragma once
+#include <krpch.h>
 
 #include "Kraken/Events/Event.h"
 #include "Kraken/Events/KeyEvents.h"
@@ -32,5 +32,3 @@ namespace Kraken {
         static bool OnWindowResized(const WindowResizeEvent& e);
     };
 }
-
-#endif //KR_KRIMGUI_H

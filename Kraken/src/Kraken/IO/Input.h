@@ -2,8 +2,8 @@
 // Created by sebsn on 28-04-2024.
 //
 
-#ifndef KR_INPUT_H
-#define KR_INPUT_H
+#pragma once
+#include <krpch.h>
 #include "KeyCodes.h"
 #include "MouseCodes.h"
 #include "Kraken/Events/Event.h"
@@ -29,5 +29,3 @@ namespace Kraken {
         static bool OnKeyReleased(const KeyReleasedEvent& e);
     };
 } // Kraken
-
-#endif //KR_INPUT_H

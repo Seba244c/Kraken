@@ -2,8 +2,8 @@
 // Created by sebsn on 02-05-2024.
 //
 
-#ifndef KR_BUFFER_H
-#define KR_BUFFER_H
+#pragma once
+#include <krpch.h>
 
 namespace Kraken {
     enum class ShaderDataType {
@@ -107,5 +107,3 @@ namespace Kraken {
         [[nodiscard]] virtual uint32_t GetCount() const = 0;
     };
 }
-
-#endif //KR_BUFFER_H

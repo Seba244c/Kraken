@@ -2,9 +2,7 @@
 // Created by sebsn on 21-04-2024.
 //
 
-#ifndef KR_BASE_H
-#define KR_BASE_H
-
+#pragma once
 #include <memory>
 
 #ifdef KR_DEBUG
@@ -48,5 +46,3 @@ namespace Kraken {
 #include "Assert.h"
 #include "Log.h"
 #include "Kraken/Math/Color.h"
-
-#endif //KR_BASE_H

@@ -2,16 +2,14 @@
 // Created by sebsn on 28-04-2024.
 //
 
-#ifndef KR_IMGUILAYER_H
-#define KR_IMGUILAYER_H
+#pragma once
+#include <krpch.h>
 
 #include "Kraken/Core/Layer.h"
 #include "Kraken/Events/ApplicationEvents.h"
-#include "Kraken/Events/MouseEvents.h"
-#include "Kraken/Events/KeyEvents.h"
 
 namespace Kraken {
-    class ImGuiLayer : public Layer {
+    class ImGuiLayer final : public Layer {
     public:
         ImGuiLayer();
         ~ImGuiLayer() override;
@@ -24,5 +22,3 @@ namespace Kraken {
 		void SetDarkThemeColors();
     };
 }
-
-#endif //KR_IMGUILAYER_H

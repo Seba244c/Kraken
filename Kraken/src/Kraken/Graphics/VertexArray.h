@@ -2,9 +2,8 @@
 // Created by sebsn on 05-05-2024.
 //
 
-#ifndef KR_VERTEXARRAY_H
-#define KR_VERTEXARRAY_H
-
+#pragma once
+#include <krpch.h>
 #include "Kraken/Graphics/Buffer.h"
 
 namespace Kraken {
@@ -22,5 +21,3 @@ namespace Kraken {
         [[nodiscard]] virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
     };
 } // Kraken
-
-#endif //KR_VERTEXARRAY_H

@@ -2,8 +2,8 @@
 // Created by sebsn on 27-04-2024.
 //
 
-#ifndef KR_LAYER_H
-#define KR_LAYER_H
+#pragma once
+#include <krpch.h>
 #include "Kraken/Events/Event.h"
 
 namespace Kraken {
@@ -22,5 +22,3 @@ namespace Kraken {
         std::string m_Name;
     };
 } // Kraken
-
-#endif //KR_LAYER_H

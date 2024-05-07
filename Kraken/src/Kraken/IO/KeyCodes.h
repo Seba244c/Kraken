@@ -2,8 +2,7 @@
 // Created by sebsn on 27-04-2024.
 //
 
-#ifndef KR_KEYCODES_H
-#define KR_KEYCODES_H
+#pragma once
 
 namespace Kraken::Key {
     using KeyCode = uint16_t;
@@ -137,5 +136,3 @@ namespace Kraken::Key {
 }
 
 #define KR_KEY_LAST 348
-
-#endif //KR_KEYCODES_H

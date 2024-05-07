@@ -2,15 +2,13 @@
 // Created by sebsn on 21-04-2024.
 //
 
-#ifndef KR_APPLICATION_H
-#define KR_APPLICATION_H
+#pragma once
+#include <krpch.h>
 #include "Layerstack.h"
 #include "Kraken/Events/ApplicationEvents.h"
 #include "Kraken/Events/KeyEvents.h"
 #include "Kraken/IO/Window.h"
 #include "Kraken/Graphics/Shader.h"
-#include "Kraken/Graphics/Buffer.h"
-#include "Kraken/Graphics/RendererAPI.h"
 #include "Kraken/Graphics/VertexArray.h"
 
 namespace Kraken {
@@ -51,12 +49,9 @@ namespace Kraken {
         Scope<Window> m_Window;
         Layerstack m_Layerstack;
 
-        Ref<RendererAPI> m_RendererAPI;
         Ref<VertexArray> m_VertexArray;
         Ref<Shader> m_Shader;
     };
 
     Application* CreateApplication(AppCommandlineArguments cmdlineArguments); // Will be defined by the program
 } // Kraken
-
-#endif //KR_APPLICATION_H

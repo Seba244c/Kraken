@@ -2,16 +2,15 @@
 // Created by sebsn on 22-04-2024.
 //
 
-#ifndef KR_GLFW_H
-#define KR_GLFW_H
+#pragma once
+#include <krpch.h>
 
 #include "Kraken/IO/Window.h"
 #include "GLFW/glfw3.h"
-#include "Kraken/Events/Event.h"
 #include "Kraken/Graphics/GraphicsContext.h"
 
 namespace Kraken {
-    class GLFWWindow : public Window {
+    class GLFWWindow final : public Window {
     public:
         explicit GLFWWindow(const WindowSpecs& windowSpecs);
 		~GLFWWindow() override;
@@ -49,5 +48,3 @@ namespace Kraken {
         static void Terminate();
     };
 }
-
-#endif //KR_GLFW_H

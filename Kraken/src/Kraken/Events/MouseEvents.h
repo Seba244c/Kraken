@@ -2,8 +2,8 @@
 // Created by sebsn on 27-04-2024.
 //
 
-#ifndef KR_MOUSEEVENTS_H
-#define KR_MOUSEEVENTS_H
+#pragma once
+#include <krpch.h>
 
 #include "Event.h"
 #include "Kraken/IO/MouseCodes.h"
@@ -30,7 +30,7 @@ namespace Kraken {
         float m_MouseX, m_MouseY, m_DeltaX, m_DeltaY;
     };
 
-    class MouseScrolledEvent : public Event {
+    class MouseScrolledEvent final : public Event {
     public:
         MouseScrolledEvent(const float xOffset, const float yOffset) : m_OffsetX(xOffset), m_OffsetY(yOffset) {}
 
@@ -88,5 +88,3 @@ namespace Kraken {
         EVENT_CLASS_TYPE(ButtonReleased)
     };
 }
-
-#endif //KR_MOUSEEVENTS_H

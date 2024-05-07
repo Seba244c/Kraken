@@ -2,8 +2,8 @@
 // Created by sebsn on 28-04-2024.
 //
 
-#ifndef KR_WINDOW_H
-#define KR_WINDOW_H
+#pragma once
+#include <krpch.h>
 
 #include "Kraken/Events/Event.h"
 
@@ -39,5 +39,3 @@ namespace Kraken {
         static Scope<Window> Create(const WindowSpecs& specs = WindowSpecs());
     };
 }
-
-#endif //KR_WINDOW_H

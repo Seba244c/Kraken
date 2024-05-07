@@ -2,8 +2,7 @@
 // Created by sebsn on 21-04-2024.
 //
 
-#ifndef KR_LOG_H
-#define KR_LOG_H
+#pragma once
 
 #include <spdlog/spdlog.h>
 
@@ -33,5 +32,3 @@ namespace Kraken {
 #define KRC_WARN(...) ::Kraken::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define KRC_ERROR(...) ::Kraken::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define KRC_CRITICAL(...) ::Kraken::Log::GetCoreLogger()->critical(__VA_ARGS__)
-
-#endif //KR_LOG_H

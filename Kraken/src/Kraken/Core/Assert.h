@@ -2,8 +2,7 @@
 // Created by sebsn on 21-04-2024.
 //
 
-#ifndef KR_ASSERT_H
-#define KR_ASSERT_H
+#pragma once
 
 #ifdef KR_ENABLE_ASSERT
     #define KR_INTERNAL_ASSERT_IMPL(type, check, msg, ...) { if(!(check)) { KR##type##ERROR(msg, __VA_ARGS__); KR_DEBUGBREAK(); } }
@@ -19,5 +18,3 @@
     #define KR_ASSERT(...)
     #define KRC_ASSERT(...)
 #endif
-
-#endif //KR_ASSERT_H

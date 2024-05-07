@@ -2,8 +2,8 @@
 // Created by sebsn on 29-04-2024.
 //
 
-#ifndef KR_GRAPHICSCONTEXT_H
-#define KR_GRAPHICSCONTEXT_H
+#pragma once
+#include <krpch.h>
 
 namespace Kraken {
     class GraphicsContext {
@@ -15,5 +15,3 @@ namespace Kraken {
         static Scope<GraphicsContext> Create(void* window);
     };
 } // Kraken
-
-#endif //KR_GRAPHICSCONTEXT_H

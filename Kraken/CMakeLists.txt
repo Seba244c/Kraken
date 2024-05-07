@@ -53,6 +53,10 @@ add_library(Kraken STATIC
         src/Kraken/Graphics/VertexArray.h
         src/Kraken/Platform/OpenGL/OpenGLVertexArray.cpp
         src/Kraken/Platform/OpenGL/OpenGLVertexArray.h
+        src/Kraken/Graphics/RenderCommand.h
+        src/Kraken/Graphics/Renderer.cpp
+        src/Kraken/Graphics/RenderCommand.cpp
+        src/krpch.cpp
 )
 target_include_directories(Kraken PUBLIC src)
 

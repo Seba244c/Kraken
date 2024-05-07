@@ -2,8 +2,8 @@
 // Created by sebsn on 27-04-2024.
 //
 
-#ifndef KR_LAYERSTACK_H
-#define KR_LAYERSTACK_H
+#pragma once
+#include <krpch.h>
 
 #include "Layer.h"
 
@@ -36,5 +36,3 @@ namespace Kraken {
 		unsigned int m_LayerInsertIndex = 0;
     };
 } // Kraken
-
-#endif //KR_LAYERSTACK_H

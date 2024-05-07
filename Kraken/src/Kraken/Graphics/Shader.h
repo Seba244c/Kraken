@@ -2,10 +2,8 @@
 // Created by sebsn on 30-04-2024.
 //
 
-#ifndef KR_SHADER_H
-#define KR_SHADER_H
-
-#include "krpch.h"
+#pragma once
+#include <krpch.h>
 
 namespace Kraken {
     class Shader {
@@ -39,5 +37,3 @@ namespace Kraken {
         std::unordered_map<std::string, Ref<Shader>> m_Shaders;
     };
 }
-
-#endif //KR_SHADER_H

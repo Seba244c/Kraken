@@ -2,8 +2,7 @@
 // Created by sebsn on 29-04-2024.
 //
 
-#ifndef KR_COLOR_H
-#define KR_COLOR_H
+#pragma once
 
 namespace Kraken {
     struct Color {
@@ -29,5 +28,3 @@ namespace Kraken {
         static constexpr auto Wine = Color(0.5f, 0, 0);
     };
 }
-
-#endif //KR_COLOR_H

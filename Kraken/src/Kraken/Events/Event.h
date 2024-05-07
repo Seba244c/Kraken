@@ -2,10 +2,8 @@
 // Created by sebsn on 27-04-2024.
 //
 
-#ifndef KR_EVENT_H
-#define KR_EVENT_H
-
-#include "krpch.h"
+#pragma once
+#include <krpch.h>
 
 namespace Kraken {
     enum class EventType {
@@ -40,7 +38,7 @@ namespace Kraken {
         [[nodiscard]] virtual int Category() const = 0;
         [[nodiscard]] virtual std::string ToString() const { return Name(); };
 
-        [[nodiscard]] inline bool IsInCategory(EventCatagory category) const { return Category() & category; }
+        [[nodiscard]] inline bool IsInCategory(const EventCatagory category) const { return Category() & category; }
     };
 
     class EventDispatcher {
@@ -65,5 +63,3 @@ namespace Kraken {
         return os << e.ToString();
     }
 }
-
-#endif //KR_EVENT_H

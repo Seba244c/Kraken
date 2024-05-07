@@ -2,11 +2,12 @@
 // Created by sebsn on 21-04-2024.
 //
 
-#ifndef KR_ENTRYPOINT_H
-#define KR_ENTRYPOINT_H
+#pragma once
+#include <krpch.h>
 #include "Application.h"
 
 // ReSharper disable once CppNonInlineFunctionDefinitionInHeaderFile
+// ReSharper disable once CppParameterMayBeConst
 int main(int argc, char** argv) {
     Kraken::Log::Init();
     KRC_INFO("The Kraken awakes!");
@@ -27,5 +28,3 @@ int main(int argc, char** argv) {
     KRC_INFO("Goodbye");
     return 0;
 }
-
-#endif //KR_ENTRYPOINT_H

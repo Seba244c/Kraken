@@ -2,14 +2,15 @@
 // Created by sebsn on 30-04-2024.
 //
 
-#ifndef KR_OPENGLSHADER_H
-#define KR_OPENGLSHADER_H
+#pragma once
+#include <krpch.h>
+
 #include "Kraken/Graphics/Shader.h"
 
 namespace Kraken {
-    class OpenGLShader : public Shader{
+    class OpenGLShader final : public Shader{
     public:
-        OpenGLShader(const std::string& filepath);
+        explicit OpenGLShader(const std::string& filepath);
         OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
         ~OpenGLShader() override;
 
@@ -29,5 +30,3 @@ namespace Kraken {
         std::string m_FilePath;
     };
 } // Kraken
-
-#endif //KR_OPENGLSHADER_H

@@ -7,7 +7,8 @@
 #include "Kraken/Debug/ImGuiLayer.h"
 #include "Kraken/Events/KeyEvents.h"
 
-#include "glad/gl.h"
+#include "Kraken/Graphics/RenderCommand.h"
+#include "Kraken/Graphics/Renderer.h"
 #include "Kraken/IO/Input.h"
 
 namespace Kraken {
@@ -26,8 +27,7 @@ namespace Kraken {
         PushOverlay(new ImGuiLayer());
 
         // Temp rendering
-        m_RendererAPI = RendererAPI::Create();
-        m_RendererAPI->SetClearColor(Colors::DarkGray);
+        RenderCommand::SetClearColor(Colors::DarkGray);
         constexpr float vertices[4*3+4*4] = {
             -0.5f, -0.5f, 0.0f,   0.8f, 0.2f, 0.8f, 1.0f,
             0.5f,  -0.5f, 0.0f,   0.2f, 0.3f, 0.8f, 1.0f,
@@ -35,7 +35,7 @@ namespace Kraken {
             -0.5,   0.5f, 0.0f,   0.2f, 0.8f, 0.2f, 1.0f
         };
 
-        auto vb = m_RendererAPI->CreateVertexBuffer(vertices, sizeof(vertices));
+        auto vb = RenderCommand::CreateVertexBuffer(vertices, sizeof(vertices));
         vb->SetLayout({
             { ShaderDataType::Float3, "a_Position" },
             { ShaderDataType::Float4, "a_Color"}
@@ -43,9 +43,9 @@ namespace Kraken {
 
 
         constexpr uint32_t indicies[6] = { 0, 1, 2, 2, 3, 0 };
-        auto ib = m_RendererAPI->CreateIndexBuffer(indicies, sizeof(indicies) / sizeof(uint32_t));
+        auto ib = RenderCommand::CreateIndexBuffer(indicies, sizeof(indicies) / sizeof(uint32_t));
 
-        m_VertexArray = m_RendererAPI->CreateVertexArray();
+        m_VertexArray = RenderCommand::CreateVertexArray();
         m_VertexArray->AddVertexBuffer(vb);
         m_VertexArray->SetIndexBuffer(ib);
 
@@ -79,7 +79,7 @@ void main ()
 
 )";
         
-        m_Shader = m_RendererAPI->CreateShader(vertexSrc, fragmentSrc);
+        m_Shader = RenderCommand::CreateShader(vertexSrc, fragmentSrc);
     }
 
     void Application::Run() {
@@ -109,12 +109,13 @@ void main ()
             }
 
             // Update layers
-            glClear(GL_COLOR_BUFFER_BIT);
+            {
+                RenderCommand::Clear();
+                Renderer::BeginScene();
+                Renderer::Submit(m_Shader, m_VertexArray);
+                Renderer::EndScene();
+            }
 
-            m_Shader->Bind();
-            m_VertexArray->Bind();
-            glDrawElements(GL_TRIANGLES, m_VertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr); // Index buffer is already attached to the vertex array
-            
             for(Layer* layer : m_Layerstack)
                 layer->OnUpdate();
 

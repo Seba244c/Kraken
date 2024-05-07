@@ -2,8 +2,8 @@
 // Created by sebsn on 27-04-2024.
 //
 
-#ifndef KR_APPLICATIONEVENTS_H
-#define KR_APPLICATIONEVENTS_H
+#pragma once
+#include <krpch.h>
 
 #include "Event.h"
 
@@ -36,5 +36,3 @@ namespace Kraken {
         EVENT_CLASS_CATEGORY(CatagoryApplication)
     };
 }
-
-#endif //KR_APPLICATIONEVENTS_H

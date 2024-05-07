@@ -2,8 +2,8 @@
 // Created by sebsn on 27-04-2024.
 //
 
-#ifndef KR_KEYEVENTS_H
-#define KR_KEYEVENTS_H
+#pragma once
+#include <krpch.h>
 
 #include "Event.h"
 #include "Kraken/IO/KeyCodes.h"
@@ -52,9 +52,9 @@ namespace Kraken {
         EVENT_CLASS_TYPE(KeyReleased)
     };
 
-    class KeyTypedEvent : public KeyEvent {
+    class KeyTypedEvent final : public KeyEvent {
     public:
-        explicit KeyTypedEvent(const Key::KeyCode keycode) : KeyEvent(KeyCode()) {};
+        explicit KeyTypedEvent(const Key::KeyCode keycode) : KeyEvent(keycode) {};
         
         [[nodiscard]] std::string ToString() const override {
             std::stringstream ss;
@@ -64,5 +64,3 @@ namespace Kraken {
         EVENT_CLASS_TYPE(KeyTyped)
     };
 }
-
-#endif //KR_KEYEVENTS_H

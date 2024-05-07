@@ -2,8 +2,8 @@
 // Created by sebsn on 30-04-2024.
 //
 
-#ifndef KR_FILES_H
-#define KR_FILES_H
+#pragma once
+#include <krpch.h>
 
 namespace Kraken {
     class Files {
@@ -11,5 +11,3 @@ namespace Kraken {
         static std::string ReadFile(const std::string& filepath);
     };
 } // Kraken
-
-#endif //KR_FILES_H
