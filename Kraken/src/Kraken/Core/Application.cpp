@@ -4,7 +4,6 @@
 
 #include "Application.h"
 
-#include "glm/ext/matrix_clip_space.hpp"
 #include "Kraken/Debug/ImGuiLayer.h"
 #include "Kraken/Events/KeyEvents.h"
 
@@ -30,10 +29,10 @@ namespace Kraken {
         // Temp rendering
         RenderCommand::SetClearColor(Colors::DarkGray);
         constexpr float vertices[4*3+4*4] = {
-            -0.5f, -0.5f, 0.0f,   0.8f, 0.2f, 0.8f, 1.0f,
-            0.5f,  -0.5f, 0.0f,   0.2f, 0.3f, 0.8f, 1.0f,
-            0.5f,   0.5f, 0.0f,   0.8f, 0.8f, 0.2f, 1.0f,
-            -0.5,   0.5f, 0.0f,   0.2f, 0.8f, 0.2f, 1.0f
+            -1.0f, -1.0f, 0.0f,   0.8f, 0.2f, 0.8f, 1.0f,
+            1.0f,  -1.0f, 0.0f,   0.2f, 0.3f, 0.8f, 1.0f,
+            1.0f,   1.0f, 0.0f,   0.8f, 0.8f, 0.2f, 1.0f,
+            -1.0,   1.0f, 0.0f,   0.2f, 0.8f, 0.2f, 1.0f
         };
 
         auto vb = RenderCommand::CreateVertexBuffer(vertices, sizeof(vertices));
@@ -53,7 +52,7 @@ namespace Kraken {
         const std::string vertexSrc = R"(
 #version 450 core
 
-uniform mat4 u_mProjection;
+uniform mat4 u_mProjectionView;
 
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
@@ -63,7 +62,7 @@ out vec4 v_Color;
 void main ()
 {
     v_Color = a_Color;
-    gl_Position = u_mProjection * vec4(a_Position, 1.0);
+    gl_Position = u_mProjectionView * vec4(a_Position, 1.0);
 }
 
 )";
@@ -83,7 +82,7 @@ void main ()
 )";
         
         m_Shader = RenderCommand::CreateShader(vertexSrc, fragmentSrc);
-        m_Camera = CreateScope<Camera>(glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f));
+        m_Camera = CreateScope<OrthographicCamera>(-2.0f, 2.0f, -2.0f, 2.0f);
     }
 
     void Application::Run() {
@@ -98,20 +97,27 @@ void main ()
                 const auto e = m_EventsQueue.front();
                 EventDispatcher dispatcher(e);
                 m_EventsQueue.pop();
-                
-                dispatcher.Dispatch<KeyPressedEvent>(KR_BIND_EVENT_FN(Application::OnKey));
+
                 dispatcher.Dispatch<WindowCloseEvent>(KR_BIND_EVENT_FN(Application::OnWindowClose));
                 dispatcher.Dispatch<WindowResizeEvent>(KR_BIND_EVENT_FN(Application::OnWindowResize));
+                Input::Event(*e); // For all input events
 
                 for (auto it = m_Layerstack.end(); it != m_Layerstack.begin();) {
                     if(e->Handled) break;
                     (*--it)->OnEvent(*e);
                 }
 
-                Input::Event(*e);
-
                 delete e;
             }
+
+            // movement
+            auto direction = glm::vec3(0.0f);
+
+            if(Input::IsKeyPressed(Key::W)) direction.y += 1;
+            if(Input::IsKeyPressed(Key::S)) direction.y -= 1;
+            if(Input::IsKeyPressed(Key::D)) direction.x += 1;
+            if(Input::IsKeyPressed(Key::A)) direction.x -= 1;
+            m_Camera->SetPosition(m_Camera->GetPosition() + direction * 0.01f);
 
             // Update layers
             {
@@ -131,11 +137,6 @@ void main ()
 
     void Application::Stop() {
         m_ShouldClose = true;
-    }
-
-    bool Application::OnKey(KeyPressedEvent& e) {
-        if(e.KeyCode() == Key::ESCAPE) Stop();
-        return true;
     }
 
     bool Application::OnWindowClose(WindowCloseEvent& e) {

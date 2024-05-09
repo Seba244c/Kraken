@@ -25,7 +25,7 @@ namespace Kraken {
     private:
         struct RenderData
         {
-            glm::mat4 ProjectionMatrix;
+            glm::mat4 ViewProjectionMatrix;
         };
 
         static Scope<RenderData> s_RenderData;

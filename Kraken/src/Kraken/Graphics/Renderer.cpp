@@ -16,7 +16,7 @@ namespace Kraken {
     }
 
     void Renderer::BeginScene(const Camera& camera) {
-        s_RenderData->ProjectionMatrix = camera.GetProjection();
+        s_RenderData->ViewProjectionMatrix = camera.GetViewProjectionMatrix();
         //camera.GetFBO()->Bind();
     }
 
@@ -26,7 +26,7 @@ namespace Kraken {
 
     void Renderer::Submit(const Ref<Shader>& shader, const Ref<VertexArray> &vertexArray) {
         shader->Bind();
-        shader->SetMat4("u_mProjection", s_RenderData->ProjectionMatrix);
+        shader->SetMat4("u_mProjectionView", s_RenderData->ViewProjectionMatrix);
 
         RenderCommand::DrawIndexed(vertexArray);
     }

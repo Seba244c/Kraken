@@ -6,7 +6,6 @@
 #include <krpch.h>
 #include "Layerstack.h"
 #include "Kraken/Events/ApplicationEvents.h"
-#include "Kraken/Events/KeyEvents.h"
 #include "Kraken/Graphics/Camera.h"
 #include "Kraken/IO/Window.h"
 #include "Kraken/Graphics/Shader.h"
@@ -42,7 +41,6 @@ namespace Kraken {
         bool m_ShouldClose = false;
 
         std::queue<Event*> m_EventsQueue;
-        bool OnKey(KeyPressedEvent& e);
         bool OnWindowClose(WindowCloseEvent& e);
         bool OnWindowResize(const WindowResizeEvent& e);
 
@@ -53,7 +51,7 @@ namespace Kraken {
 
         Ref<VertexArray> m_VertexArray;
         Ref<Shader> m_Shader;
-        Scope<Camera> m_Camera;
+        Scope<OrthographicCamera> m_Camera;
     };
 
     Application* CreateApplication(AppCommandlineArguments cmdlineArguments); // Will be defined by the program
