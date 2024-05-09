@@ -6,7 +6,6 @@
 
 #include "Kraken/Core/Application.h"
 
-#include "imgui.h"
 #ifdef KR_SUPPORT_OPENGL
 #define IMGUI_IMPL_OPENGL_LOADER_GLAD
 #include "backends/imgui_impl_opengl3.h"
@@ -114,13 +113,13 @@ namespace Kraken {
 
     bool KRImGui::OnKeyPressed(const KeyPressedEvent &e) {
         ImGuiIO& io = ImGui::GetIO();
-        io.KeysDown[e.KeyCode()] = true;
+        io.AddKeyEvent(KeyToImGuiKey(e.KeyCode()), true);
         return io.WantCaptureKeyboard;
     }
 
     bool KRImGui::OnKeyReleased(const KeyReleasedEvent &e) {
         ImGuiIO& io = ImGui::GetIO();
-        io.KeysDown[e.KeyCode()] = false;
+        io.AddKeyEvent(KeyToImGuiKey(e.KeyCode()), false);
         return io.WantCaptureKeyboard;
     }
 

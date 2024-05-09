@@ -6,10 +6,7 @@
 #include <krpch.h>
 #include "Layerstack.h"
 #include "Kraken/Events/ApplicationEvents.h"
-#include "Kraken/Graphics/Camera.h"
 #include "Kraken/IO/Window.h"
-#include "Kraken/Graphics/Shader.h"
-#include "Kraken/Graphics/VertexArray.h"
 
 namespace Kraken {
     struct ApplicationInfo {
@@ -48,10 +45,6 @@ namespace Kraken {
         static Application* s_Instance;
         Scope<Window> m_Window;
         Layerstack m_Layerstack;
-
-        Ref<VertexArray> m_VertexArray;
-        Ref<Shader> m_Shader;
-        Scope<OrthographicCamera> m_Camera;
     };
 
     Application* CreateApplication(AppCommandlineArguments cmdlineArguments); // Will be defined by the program
