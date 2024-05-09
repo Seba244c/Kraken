@@ -18,6 +18,10 @@ namespace Kraken {
             s_RendererAPI->SetClearColor(color);
         }
 
+        static void SetViewport(const uint32_t x, const uint32_t y, const uint32_t width, const uint32_t height) {
+            s_RendererAPI->SetViewport(x, y, width, height);
+        }
+
         static void Clear() {
             s_RendererAPI->Clear();
         }

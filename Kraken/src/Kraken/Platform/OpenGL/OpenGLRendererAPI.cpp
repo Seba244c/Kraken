@@ -6,6 +6,7 @@
 
 #include "OpenGLRendererAPI.h"
 #include "OpenGLBuffer.h"
+#include "OpenGLFramebuffer.h"
 #include "OpenGLShader.h"
 
 namespace Kraken {
@@ -36,6 +37,10 @@ namespace Kraken {
         glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);
     }
 
+    void OpenGLRendererAPI::SetViewport(const uint32_t x, const uint32_t y, const uint32_t width, const uint32_t height) {
+        glViewport(x, y, width, height);
+    }
+
     Ref<VertexArray> OpenGLRendererAPI::CreateVertexArray() {
         return CreateRef<OpenGLVertexArray>();
     }
@@ -50,5 +55,9 @@ namespace Kraken {
 
     Ref<Shader> OpenGLRendererAPI::CreateShader(const std::string &vertexSrc, const std::string &fragmentSrc) {
         return CreateRef<OpenGLShader>(vertexSrc, fragmentSrc);
+    }
+
+    Ref<Framebuffer> OpenGLRendererAPI::CreateFramebuffer(const FramebufferSpecification &spec) {
+        return CreateRef<OpenGLFramebuffer>(spec);
     }
 } // Kraken

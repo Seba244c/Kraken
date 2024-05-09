@@ -57,6 +57,10 @@ add_library(Kraken STATIC
         src/Kraken/Graphics/Renderer.cpp
         src/Kraken/Graphics/RenderCommand.cpp
         src/krpch.cpp
+        src/Kraken/Graphics/Framebuffer.h
+        src/Kraken/Platform/OpenGL/OpenGLFramebuffer.cpp
+        src/Kraken/Platform/OpenGL/OpenGLFramebuffer.h
+        src/Kraken/Graphics/Camera.h
 )
 target_include_directories(Kraken PUBLIC src)
 target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers

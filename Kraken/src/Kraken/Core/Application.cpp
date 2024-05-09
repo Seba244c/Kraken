@@ -4,6 +4,7 @@
 
 #include "Application.h"
 
+#include "glm/ext/matrix_clip_space.hpp"
 #include "Kraken/Debug/ImGuiLayer.h"
 #include "Kraken/Events/KeyEvents.h"
 
@@ -52,6 +53,8 @@ namespace Kraken {
         const std::string vertexSrc = R"(
 #version 450 core
 
+uniform mat4 u_mProjection;
+
 layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
 
@@ -60,7 +63,7 @@ out vec4 v_Color;
 void main ()
 {
     v_Color = a_Color;
-    gl_Position = vec4(a_Position, 1.0);
+    gl_Position = u_mProjection * vec4(a_Position, 1.0);
 }
 
 )";
@@ -80,6 +83,7 @@ void main ()
 )";
         
         m_Shader = RenderCommand::CreateShader(vertexSrc, fragmentSrc);
+        m_Camera = CreateScope<Camera>(glm::ortho(-2.0f, 2.0f, -2.0f, 2.0f));
     }
 
     void Application::Run() {
@@ -97,6 +101,7 @@ void main ()
                 
                 dispatcher.Dispatch<KeyPressedEvent>(KR_BIND_EVENT_FN(Application::OnKey));
                 dispatcher.Dispatch<WindowCloseEvent>(KR_BIND_EVENT_FN(Application::OnWindowClose));
+                dispatcher.Dispatch<WindowResizeEvent>(KR_BIND_EVENT_FN(Application::OnWindowResize));
 
                 for (auto it = m_Layerstack.end(); it != m_Layerstack.begin();) {
                     if(e->Handled) break;
@@ -111,7 +116,7 @@ void main ()
             // Update layers
             {
                 RenderCommand::Clear();
-                Renderer::BeginScene();
+                Renderer::BeginScene(*m_Camera);
                 Renderer::Submit(m_Shader, m_VertexArray);
                 Renderer::EndScene();
             }
@@ -136,6 +141,11 @@ void main ()
     bool Application::OnWindowClose(WindowCloseEvent& e) {
         Stop();
         return true;
+    }
+
+    bool Application::OnWindowResize(const WindowResizeEvent &e) {
+        Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
+        return false;
     }
 
     Application::~Application() {
