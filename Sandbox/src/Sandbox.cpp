@@ -66,23 +66,22 @@ void main ()
         m_Camera = Kraken::CreateScope<Kraken::OrthographicCamera>(-2.0f, 2.0f, -2.0f, 2.0f);
     };
 
-    void OnUpdate() override {
+    void OnUpdate(const Kraken::Timestep ts) override {
         // movement
         auto direction = glm::vec3(0.0f);
+        float scaledSpeed = 6.0f * ts;
 
         if(Kraken::Input::IsKeyPressed(Kraken::Key::W)) direction.y += 1;
         if(Kraken::Input::IsKeyPressed(Kraken::Key::S)) direction.y -= 1;
         if(Kraken::Input::IsKeyPressed(Kraken::Key::D)) direction.x += 1;
         if(Kraken::Input::IsKeyPressed(Kraken::Key::A)) direction.x -= 1;
-        m_Camera->SetPosition(m_Camera->GetPosition() + direction * 0.01f);
+        if(length(direction) > 0)
+            m_Camera->SetPosition(m_Camera->GetPosition() + normalize(direction) * scaledSpeed);
 
-
-        {
-            Kraken::RenderCommand::Clear();
-            Kraken::Renderer::BeginScene(*m_Camera);
-            Kraken::Renderer::Submit(m_Shader, m_VertexArray);
-            Kraken::Renderer::EndScene();
-        }
+        Kraken::RenderCommand::Clear();
+        Kraken::Renderer::BeginScene(*m_Camera);
+        Kraken::Renderer::Submit(m_Shader, m_VertexArray);
+        Kraken::Renderer::EndScene();
     }
 
     void OnEvent(Kraken::Event &event) override {

@@ -10,18 +10,22 @@
 #include "Kraken/Graphics/Renderer.h"
 #include "Kraken/IO/Input.h"
 
+#include "Kraken/Platform/PlatformUtils.h"
+
 namespace Kraken {
 	Application* Application::s_Instance = nullptr;
     
-    Application::Application(const ApplicationInfo &applicationInfo) : m_ApplicationInfo(applicationInfo) {
+    Application::Application(const ApplicationInfo &applicationInfo) : m_LastFrameTime(TimeInstant(0.0f)),
+                                                                       m_ApplicationInfo(applicationInfo) {
         KRC_ASSERT(s_Instance == nullptr, "Instance shouldn't already exist");
         s_Instance = this;
 
         KRC_INFO("Appstate: Create Window");
-        
+
         m_Window = Window::Create(WindowSpecs({.initializeFullscreen = false, .initializeHidden = true}));
-        m_Window->SetEventCallback([this](Event* e){ m_EventsQueue.push(e); }); // Here the applications takes ownership of the event
-        
+        m_Window->SetEventCallback([this](Event *e) { m_EventsQueue.push(e); });
+        // Here the applications takes ownership of the event
+
         // Add Debug overlay
         PushOverlay(new ImGuiLayer());
     }
@@ -31,9 +35,9 @@ namespace Kraken {
         
         KRC_INFO("Appstate: Main loop");
         while(!m_ShouldClose) {
+            // Handle events
             m_Window->PollEvents();
 
-            // Handle events
             while(!m_EventsQueue.empty()) {
                 const auto e = m_EventsQueue.front();
                 EventDispatcher dispatcher(e);
@@ -51,9 +55,14 @@ namespace Kraken {
                 delete e;
             }
 
+            // Time
+            TimeInstant now = Time::Now();
+            const auto deltaTime = now - m_LastFrameTime;
+            m_LastFrameTime = now;
+
             // Update layers and render
             for(Layer* layer : m_Layerstack)
-                layer->OnUpdate();
+                layer->OnUpdate(deltaTime);
 
             m_Window->SwapBuffers();
         }

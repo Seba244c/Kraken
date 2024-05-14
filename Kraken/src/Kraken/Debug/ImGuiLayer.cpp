@@ -37,7 +37,7 @@ namespace Kraken {
         KRImGui::OnEvent(event);
     }
 
-    void ImGuiLayer::OnUpdate() {
+    void ImGuiLayer::OnUpdate(Timestep ts) {
         KRImGui::NewFrame();
 
         static bool show = true;

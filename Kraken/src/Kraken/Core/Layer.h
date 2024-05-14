@@ -4,6 +4,8 @@
 
 #pragma once
 #include <krpch.h>
+
+#include "Time.h"
 #include "Kraken/Events/Event.h"
 
 namespace Kraken {
@@ -14,7 +16,7 @@ namespace Kraken {
 
         virtual void OnAttach() {}
         virtual void OnDetach() {}
-        virtual void OnUpdate() {}
+        virtual void OnUpdate(Timestep ts) {}
         virtual void OnEvent(Event& event) {}
 
         [[nodiscard]] const std::string& Name() const { return m_Name; }

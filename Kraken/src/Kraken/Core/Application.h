@@ -6,6 +6,7 @@
 #include <krpch.h>
 #include "Layerstack.h"
 #include "Kraken/Events/ApplicationEvents.h"
+#include "Kraken/Core/Time.h"
 #include "Kraken/IO/Window.h"
 
 namespace Kraken {
@@ -40,6 +41,8 @@ namespace Kraken {
         std::queue<Event*> m_EventsQueue;
         bool OnWindowClose(WindowCloseEvent& e);
         bool OnWindowResize(const WindowResizeEvent& e);
+
+        TimeInstant m_LastFrameTime;
 
         ApplicationInfo m_ApplicationInfo;
         static Application* s_Instance;

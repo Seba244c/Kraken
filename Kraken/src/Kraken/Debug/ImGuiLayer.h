@@ -16,7 +16,7 @@ namespace Kraken {
 
         void OnAttach() override;
         void OnDetach() override;
-        void OnUpdate() override;
+        void OnUpdate(Timestep ts) override;
         void OnEvent(Event &event) override;
         
 		void SetDarkThemeColors();
