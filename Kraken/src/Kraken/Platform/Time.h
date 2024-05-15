@@ -10,9 +10,9 @@ namespace Kraken {
         explicit Timestep(const float time = 0.0f) : m_Time(time) {}
 
         [[nodiscard]] float GetSeconds() const { return m_Time; }
-        [[nodiscard]] float GetMilliseconds() const { return m_Time * 1000.0f; }
+        [[nodiscard]] float GetMilliseconds() const { return m_Time * 1000LL; }
 
-        operator const float() const { return m_Time; }
+        operator float() const { return m_Time; }
     private:
         float m_Time;
     };
@@ -55,5 +55,28 @@ namespace Kraken {
     private:
         TimeInstant m_TimeStart;
         TimeInstant m_TimeEnd;
+    };
+
+    class FPSTimer : public Timer {
+    public:
+        void Frame() {
+            if(Get().GetSeconds() > m_Seconds) {
+                m_FPS = m_CountFrames;
+                m_CountFrames = 0;
+
+                m_FrameTime = 1.0 / (m_FPS==0 ? 0.01 : m_FPS);
+                m_Seconds += 1;
+            }
+
+            m_CountFrames++;
+        }
+
+        [[nodiscard]] int FPS() const { return m_FPS; }
+        [[nodiscard]] float AverageFrameTime() const { return m_FrameTime; }
+    private:
+        int m_CountFrames = 0;
+        int m_Seconds = 0;
+        int m_FPS = 0;
+        float m_FrameTime = 0;
     };
 }

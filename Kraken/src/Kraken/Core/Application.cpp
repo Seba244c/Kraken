@@ -36,6 +36,7 @@ namespace Kraken {
 
     void Application::Run() {
         m_Window->Show();
+        FPSTimer::Start();
         
         KRC_INFO("Appstate: Main loop");
         while(!m_ShouldClose) {
@@ -60,6 +61,7 @@ namespace Kraken {
             }
 
             // Time
+            m_FPSTimer.Frame();
             TimeInstant now = Platform::Time::Now();
             const auto deltaTime = now - m_LastFrameTime;
             m_LastFrameTime = now;

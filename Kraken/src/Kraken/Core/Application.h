@@ -43,6 +43,7 @@ namespace Kraken {
         bool OnWindowResize(const WindowResizeEvent& e);
 
         Timer m_FullAppTimer;
+        FPSTimer m_FPSTimer;
         TimeInstant m_LastFrameTime;
 
         ApplicationInfo m_ApplicationInfo;

@@ -7,21 +7,19 @@
 
 namespace Kraken {
     LARGE_INTEGER TimeStart, TimeNow;
-    double Frequency;
+    LARGE_INTEGER Frequency;
+    float FrequencyRate;
 
     void PlatformInit::Init() {
-        LARGE_INTEGER queryFrequency;
-        const auto a = QueryPerformanceFrequency(&queryFrequency);
+        const auto a = QueryPerformanceFrequency(&Frequency);
         KRC_ASSERT(a, "QueryPerformanceFrequency failed");
-        Frequency = 1.0 / static_cast<double>(queryFrequency.QuadPart);
+        FrequencyRate = 1 / static_cast<float>(Frequency.QuadPart);
 
         QueryPerformanceCounter(&TimeStart);
     }
 
     float Platform::Time::GetTime() {
         QueryPerformanceCounter(&TimeNow);
-        const auto elapesed = (TimeNow.QuadPart - TimeStart.QuadPart) * Frequency;
-
-        return elapesed;
+        return (TimeNow.QuadPart - TimeStart.QuadPart) * FrequencyRate;
     }
 }
