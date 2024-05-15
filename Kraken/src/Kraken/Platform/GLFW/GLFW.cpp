@@ -5,7 +5,6 @@
 // ReSharper disable CppUseStructuredBinding
 #include "GLFW.h"
 
-#include "Kraken/Platform/PlatformUtils.h"
 #include "Kraken/Core/Application.h"
 #include "Kraken/Events/ApplicationEvents.h"
 #include "Kraken/Events/KeyEvents.h"
@@ -189,8 +188,4 @@ namespace Kraken {
         KRC_INFO("GLFW: Terminating");
         glfwTerminate();
     };
-
-    float Time::GetTime() {
-        return glfwGetTime();
-    }
 }

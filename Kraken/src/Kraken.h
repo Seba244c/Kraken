@@ -6,7 +6,6 @@
 #include "Kraken/Core/Base.h"
 #include "Kraken/Core/Application.h"
 #include "Kraken/Core/Layer.h"
-#include "Kraken/Core/Time.h"
 #include "Kraken/IO/Input.h"
 
 //--Graphics----------------------------------
@@ -21,5 +20,7 @@
 //-Entrypoint---------------------------------
 #include "Kraken/Core/Entrypoint.h"
 //--------------------------------------------
+
+#include "Kraken/Platform/PlatformUtils.h"
 
 #endif //KRAKEN_APP

@@ -5,7 +5,7 @@
 #pragma once
 #include <krpch.h>
 
-#include "Time.h"
+#include "Kraken/Platform/Time.h"
 #include "Kraken/Events/Event.h"
 
 namespace Kraken {

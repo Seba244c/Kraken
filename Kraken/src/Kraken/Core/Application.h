@@ -6,7 +6,7 @@
 #include <krpch.h>
 #include "Layerstack.h"
 #include "Kraken/Events/ApplicationEvents.h"
-#include "Kraken/Core/Time.h"
+#include "Kraken/Platform/Time.h"
 #include "Kraken/IO/Window.h"
 
 namespace Kraken {

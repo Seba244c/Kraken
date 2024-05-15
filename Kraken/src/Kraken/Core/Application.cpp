@@ -19,6 +19,7 @@ namespace Kraken {
                                                                        m_ApplicationInfo(applicationInfo) {
         KRC_ASSERT(s_Instance == nullptr, "Instance shouldn't already exist");
         s_Instance = this;
+        PlatformInit::Init();
 
         KRC_INFO("Appstate: Create Window");
 
@@ -56,7 +57,7 @@ namespace Kraken {
             }
 
             // Time
-            TimeInstant now = Time::Now();
+            TimeInstant now = Platform::Time::Now();
             const auto deltaTime = now - m_LastFrameTime;
             m_LastFrameTime = now;
 

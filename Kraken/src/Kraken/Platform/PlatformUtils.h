@@ -3,12 +3,10 @@
 //
 
 #pragma once
-#include "Kraken/Core/Time.h"
 
 namespace Kraken {
-    class Time {
+    class PlatformInit {
     public:
-        static float GetTime();
-        [[nodiscard]] static TimeInstant Now() { return TimeInstant(GetTime()); }
+        static void Init();
     };
 }

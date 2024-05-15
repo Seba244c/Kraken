@@ -62,8 +62,9 @@ add_library(Kraken STATIC
         src/Kraken/Platform/OpenGL/OpenGLFramebuffer.h
         src/Kraken/Graphics/Camera.h
         src/Kraken/Graphics/Camera.cpp
-        src/Kraken/Core/Time.h
         src/Kraken/Platform/PlatformUtils.h
+        src/Kraken/Platform/Windows/Windows.cpp
+        src/Kraken/Platform/Time.h
 )
 target_include_directories(Kraken PUBLIC src)
 target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers
