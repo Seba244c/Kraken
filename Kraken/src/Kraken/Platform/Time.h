@@ -41,8 +41,10 @@ namespace Kraken {
     }
 
     class Timer {
-        explicit Timer(const TimeInstant timeStart) : m_TimeStart(timeStart), m_TimeEnd(0) { }
     public:
+        Timer(): m_TimeStart(0), m_TimeEnd(0) {} ;
+        explicit Timer(const TimeInstant timeStart) : m_TimeStart(timeStart), m_TimeEnd(0) { }
+
         static Timer Start() { return Timer(Platform::Time::Now()); }
         void Stop() { m_TimeEnd = Platform::Time::Now(); }
 
@@ -51,7 +53,7 @@ namespace Kraken {
             return Platform::Time::Now() - m_TimeStart;
         };
     private:
-        const TimeInstant m_TimeStart;
+        TimeInstant m_TimeStart;
         TimeInstant m_TimeEnd;
     };
 }

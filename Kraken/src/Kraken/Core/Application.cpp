@@ -19,7 +19,10 @@ namespace Kraken {
                                                                        m_ApplicationInfo(applicationInfo) {
         KRC_ASSERT(s_Instance == nullptr, "Instance shouldn't already exist");
         s_Instance = this;
+
+        // Platform
         PlatformInit::Init();
+        m_FullAppTimer = Timer::Start();
 
         KRC_INFO("Appstate: Create Window");
 
@@ -85,6 +88,7 @@ namespace Kraken {
 
     Application::~Application() {
         KRC_INFO("Appstate: Cleanup");
+        KRC_INFO("App Timer: {0}s", m_FullAppTimer.Get());
     }
 
     void Application::PushLayer(Layer* layer) {
