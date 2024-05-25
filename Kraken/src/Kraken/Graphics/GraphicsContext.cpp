@@ -6,10 +6,6 @@
 
 #include "Renderer.h"
 
-#ifdef KR_SUPPORT_GLFW
-#include "GLFW/glfw3.h"
-#endif
-
 #ifdef KR_SUPPORT_OPENGL
 #include "Kraken/Platform/OpenGL/OpenGLContext.h"
 #endif

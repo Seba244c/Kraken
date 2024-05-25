@@ -1,0 +1,15 @@
+{
+  "dependencies": [
+    {
+      "name": "glad",
+      "features": [
+        "gl-api-46"
+      ]
+    },
+    "glfw3",
+    "glm",
+    "shaderc",
+    "spdlog",
+    "spirv-cross"
+  ]
+}

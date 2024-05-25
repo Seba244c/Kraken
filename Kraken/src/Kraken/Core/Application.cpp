@@ -4,7 +4,6 @@
 
 #include "Application.h"
 
-#include "Kraken/Debug/ImGuiLayer.h"
 #include "Kraken/Events/KeyEvents.h"
 
 #include "Kraken/Graphics/Renderer.h"
@@ -29,9 +28,6 @@ namespace Kraken {
         m_Window = Window::Create(WindowSpecs({.initializeFullscreen = false, .initializeHidden = true}));
         m_Window->SetEventCallback([this](Event *e) { m_EventsQueue.push(e); });
         // Here the applications takes ownership of the event
-
-        // Add Debug overlay
-        PushOverlay(new ImGuiLayer());
     }
 
     void Application::Run() {
@@ -90,7 +86,7 @@ namespace Kraken {
 
     Application::~Application() {
         KRC_INFO("Appstate: Cleanup");
-        KRC_INFO("App Timer: {0}s", m_FullAppTimer.Get());
+        KRC_INFO("App Timer: {0}s", m_FullAppTimer.Get().GetSeconds());
     }
 
     void Application::PushLayer(Layer* layer) {

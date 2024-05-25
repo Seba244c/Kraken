@@ -6,7 +6,6 @@
 #include <krpch.h>
 
 #include "Kraken/IO/Window.h"
-#include "GLFW/glfw3.h"
 #include "Kraken/Graphics/GraphicsContext.h"
 
 namespace Kraken {

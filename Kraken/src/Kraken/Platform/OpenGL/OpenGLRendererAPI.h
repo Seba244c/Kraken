@@ -23,5 +23,6 @@ namespace Kraken {
         Ref<IndexBuffer> CreateIndexBuffer(const uint32_t *indices, uint32_t count) override;
         Ref<Shader> CreateShader(const std::string &vertexSrc, const std::string &fragmentSrc) override;
         Ref<Framebuffer> CreateFramebuffer(const FramebufferSpecification &spec) override;
+        Ref<UniformBuffer> CreateUniformBuffer(uint32_t size, uint32_t binding) override;
     };
 } // Kraken

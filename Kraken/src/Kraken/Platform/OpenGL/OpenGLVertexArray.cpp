@@ -3,7 +3,6 @@
 //
 
 #include "OpenGLVertexArray.h"
-#include <glad/gl.h>
 
 namespace Kraken {
     static GLenum ShaderDataTypeToOpenGLBaseType(ShaderDataType type) {

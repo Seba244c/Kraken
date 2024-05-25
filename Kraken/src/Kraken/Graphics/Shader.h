@@ -5,8 +5,27 @@
 #pragma once
 #include <krpch.h>
 
+#include "Kraken/Core/Asset.h"
+#include <shaderc/shaderc.h>
+
 namespace Kraken {
-    class Shader {
+    enum ShaderType {
+        FRAGMENT_SHADER = 1,
+        VERTEX_SHADER,
+    };
+
+    class ShaderUtils {
+    public:
+        static shaderc_shader_kind ShaderTypeToShaderC(ShaderType t);
+        static const char* ShaderTypeCachedOpenGLFileExtension(ShaderType t);
+        static const char* ShaderTypeCachedVulkanFileExtension(ShaderType t);
+        static const char* ShaderTypeToShortString(ShaderType t);
+
+        static std::unordered_map<ShaderType, std::vector<uint32_t>> CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& shaderSources, Identifier identifier);
+        static std::unordered_map<ShaderType, std::vector<uint32_t>> CompileOrGetOpenGLBinaries(const std::unordered_map<ShaderType, std::vector<uint32_t>>& vulkanSPIRV, Identifier identifier);
+    };
+
+    class Shader : public Asset {
     public:
         virtual ~Shader() = default;
 
@@ -26,11 +45,12 @@ namespace Kraken {
     class ShaderLibrary
     {
     public:
-        void Add(const std::string& name, const Ref<Shader>& shader);
-        Ref<Shader> Load(const std::string& name, const std::string& filepath);
-        Ref<Shader> Get(const std::string& name);
+        void Add(const Identifier& identifier, const Ref<Shader>& shader);
+        Ref<Shader> Load(const Identifier& identifier, const std::string& vertexSrc, const std::string& fragSource);
+        Ref<Shader> Load(const Identifier& identifier);
+        Ref<Shader> Get(const Identifier& identifier);
         
-        bool Exists(const std::string& name) const;
+        bool Exists(const Identifier& identifier) const;
     private:
         std::unordered_map<std::string, Ref<Shader>> m_Shaders;
     };

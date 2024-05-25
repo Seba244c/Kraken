@@ -19,7 +19,7 @@ public:
         const auto vb = Kraken::RenderCommand::CreateVertexBuffer(vertices, sizeof(vertices));
         vb->SetLayout({
             { Kraken::ShaderDataType::Float3, "a_Position" },
-            { Kraken::ShaderDataType::Float4, "a_Color"}
+            { Kraken::ShaderDataType::Float4, "a_Color" },
         });
 
 
@@ -31,39 +31,42 @@ public:
         m_VertexArray->SetIndexBuffer(ib);
 
         const std::string vertexSrc = R"(
-#version 450 core
+            #version 450 core
 
-uniform mat4 u_mProjectionView;
+            layout(location = 0) in vec3 a_Position;
+            layout(location = 1) in vec4 a_Color;
+            layout(std140, binding = 0) uniform Camera
+            {
+                mat4 u_mViewProjection;
+            };
 
-layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec4 a_Color;
+            layout(location = 0) out vec4 v_Color;
 
-out vec4 v_Color;
+            void main ()
+            {
+                v_Color = a_Color;
+                gl_Position = u_mViewProjection * vec4(a_Position, 1.0);
+            }
 
-void main ()
-{
-    v_Color = a_Color;
-    gl_Position = u_mProjectionView * vec4(a_Position, 1.0);
-}
-
-)";
+        )";
 
         const std::string fragmentSrc = R"(
-#version 450 core
+            #version 450 core
 
-layout(location = 0) out vec4 o_Color;
 
-in vec4 v_Color;
+            layout(location = 0) in vec4 v_Color;
+            layout(location = 0) out vec4 o_Color;
 
-void main ()
-{
-    o_Color = v_Color;
-}
+            void main ()
+            {
+                o_Color = v_Color;
+            }
 
-)";
+        )";
 
         m_Shader = Kraken::RenderCommand::CreateShader(vertexSrc, fragmentSrc);
         m_Camera = Kraken::CreateScope<Kraken::OrthographicCamera>(-2.0f, 2.0f, -2.0f, 2.0f);
+        Kraken::Renderer::Init();
     };
 
     void OnUpdate(const Kraken::Timestep ts) override {
@@ -80,7 +83,9 @@ void main ()
 
         Kraken::RenderCommand::Clear();
         Kraken::Renderer::BeginScene(*m_Camera);
-        Kraken::Renderer::Submit(m_Shader, m_VertexArray);
+        Kraken::Renderer::SetShader(m_Shader);
+
+        Kraken::Renderer::Submit(m_VertexArray);
         Kraken::Renderer::EndScene();
     }
 

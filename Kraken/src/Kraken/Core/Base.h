@@ -3,6 +3,8 @@
 //
 
 #pragma once
+
+#include <format>
 #include <memory>
 
 #ifdef KR_DEBUG
@@ -44,6 +46,18 @@ namespace Kraken {
     constexpr Ref<T> CreateRef(Args&& ... args) {
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
+
+    template<typename... Args>
+    std::string Format(std::string_view fmt, Args&&... args) {
+        return std::vformat(fmt, std::make_format_args(args...));
+    }
+
+    struct Identifier {
+        const std::string& domain;
+        const std::string& name;
+
+        [[nodiscard]] std::string ToString() const { return Format("{}:{}", domain, name); }
+    };
 }
 
 #include "Assert.h"

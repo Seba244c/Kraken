@@ -24,4 +24,8 @@ namespace Kraken {
 
         return result;
     }
+
+    std::string Files::GetCacheDir() {
+        return "assets/cache/";
+    }
 } // Kraken

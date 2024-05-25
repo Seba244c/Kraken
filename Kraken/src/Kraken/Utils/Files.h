@@ -9,5 +9,6 @@ namespace Kraken {
     class Files {
     public:
         static std::string ReadFile(const std::string& filepath);
+        static std::string GetCacheDir();
     };
 } // Kraken

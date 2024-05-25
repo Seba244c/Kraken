@@ -4,8 +4,6 @@
 
 #include "OpenGLBuffer.h"
 
-#include <glad/gl.h>
-
 namespace Kraken {
 
     // VERTEX BUFFER

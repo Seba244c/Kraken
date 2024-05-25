@@ -22,10 +22,6 @@ add_library(Kraken STATIC
         src/Kraken/Core/Layer.cpp
         src/Kraken/Core/Layer.h
         src/Kraken/Events/MouseEvents.h
-        src/Kraken/Debug/ImGuiLayer.cpp
-        src/Kraken/Debug/ImGuiLayer.h
-        src/Kraken/Platform/KRImGui.h
-        src/Kraken/Platform/KRImGui.cpp
         src/Kraken/IO/MouseCodes.h
         src/Kraken/IO/Input.cpp
         src/Kraken/IO/Input.h
@@ -65,10 +61,16 @@ add_library(Kraken STATIC
         src/Kraken/Platform/PlatformUtils.h
         src/Kraken/Platform/Windows/Windows.cpp
         src/Kraken/Platform/Time.h
+        src/Kraken/Core/Asset.h
+        src/Kraken/Graphics/UniformBuffer.h
+        src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.cpp
+        src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.h
 )
+
 target_include_directories(Kraken PUBLIC src)
 target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers
 target_compile_definitions(Kraken PUBLIC KR_VERSION="1.0.0")
+set_property(TARGET Kraken PROPERTY CMAKE_CXX_STANDARD 20)
 
 # Preprocessor build type definition
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -78,17 +80,18 @@ else ()
 endif ()
 
 # Universal Dependencies
-set(KR_LIBS spdlog::spdlog imgui glm::glm)
-
-add_subdirectory(vendor/spdlog) ## spdlog
-add_subdirectory(vendor/imgui) # dear ImGui
-set(GLM_BUILD_TESTS OFF CACHE BOOL "" FORCE) # GLM
-add_subdirectory(vendor/glm)
+find_package(spdlog)
+find_package(glm)
+find_package(unofficial-shaderc)
+find_package(spirv_cross_core)
+find_package(spirv_cross_glsl)
+set(KR_LIBS spdlog::spdlog glm::glm unofficial::shaderc::shaderc spirv-cross-core spirv-cross-glsl)
 
 ### Platform Support
 if(WIN32)
+    message("KRAKEN PLATFORM: Windows")
     target_compile_definitions(Kraken PUBLIC KR_PLATFORM_WIN)
-
+    
     set(support_glfw ON BOOL)
     set(support_opengl ON BOOL)
 elseif(APPLE)
@@ -110,19 +113,13 @@ endif()
 
 # Add platform specific libraries
 if(support_opengl)
-    add_subdirectory(vendor/GLAD)
-
     target_compile_definitions(Kraken PUBLIC KR_SUPPORT_OPENGL)
-    set(KR_LIBS ${KR_LIBS} glad)
+    find_package(glad CONFIG REQUIRED)
+    set(KR_LIBS ${KR_LIBS} glad::glad)
 endif()
 if(support_glfw)
-    target_compile_definitions(Kraken PUBLIC GLFW_INCLUDE_NONE) # Force GLFW not to include GL, for everybodys sake
-    set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-    set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-    set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
-    add_subdirectory(vendor/glfw)
-
     target_compile_definitions(Kraken PUBLIC KR_SUPPORT_GLFW)
+    find_package(glfw3)
     set(KR_LIBS ${KR_LIBS} glfw)
 endif()
 

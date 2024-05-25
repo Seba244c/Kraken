@@ -3,8 +3,6 @@
 //
 
 #include "OpenGLContext.h"
-#include <GLFW/glfw3.h>
-#include <glad/gl.h>
 
 namespace Kraken {
     OpenGLContext::OpenGLContext(GLFWwindow *windowHandle) : m_WindowHandle(windowHandle) {
@@ -13,7 +11,7 @@ namespace Kraken {
 
     void OpenGLContext::Init() {
         glfwMakeContextCurrent(m_WindowHandle);
-        if(!gladLoadGL(glfwGetProcAddress)) {
+        if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
             KRC_CRITICAL("ERR::GL::Failed to load GLAD");
             KRC_ASSERT(false, "Failed to initializee GLAD");
         }

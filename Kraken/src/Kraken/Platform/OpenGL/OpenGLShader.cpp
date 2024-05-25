@@ -3,120 +3,81 @@
 //
 
 #include "OpenGLShader.h"
-#include <glad/gl.h>
 
 #include <glm/gtc/type_ptr.hpp>
 
 #include "Kraken/Utils/Files.h"
 
 namespace Kraken {
+	uint32_t OpenGLShader::ShaderTypeToOpenGL(ShaderType t) {
+		switch (t) {
+			case VERTEX_SHADER: return GL_VERTEX_SHADER;
+			case FRAGMENT_SHADER: return GL_FRAGMENT_SHADER;
+		}
+
+		KRC_ASSERT(false, "Unkown shader type!")
+		return static_cast<shaderc_shader_kind>(0);
+	}
+
     OpenGLShader::OpenGLShader(const std::string &filepath) : m_FilePath(filepath) {
-    	auto src = Files::ReadFile(filepath);
-		const std::string delimiter = "#type fragment";
-	    const std::string vertexSrc = src.substr(0, src.find(delimiter));
-	    const std::string fragmentSrc = src.substr(src.find(delimiter)+delimiter.length());
-    	
-		//OpenGLShader(vertexSrc, fragmentSrc);
     	m_RendererID = 0;
     }
 
     OpenGLShader::OpenGLShader(const std::string &vertexSrc, const std::string &fragmentSrc) {
-    	// Create an empty vertex shader handle
-	    const GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+    	std::unordered_map<ShaderType, std::string> sources;
+    	sources[VERTEX_SHADER] = vertexSrc;
+    	sources[FRAGMENT_SHADER] = fragmentSrc;
 
-		// Send the vertex shader source code to GL
-		// Note that std::string's .c_str is NULL character terminated.
-		const GLchar *source = vertexSrc.c_str();
-		glShaderSource(vertexShader, 1, &source, 0);
+	    const auto vulkanSPRIV =
+	    	ShaderUtils::CompileOrGetVulkanBinaries(sources, Identifier("Anonymous", "Shader"));
 
-		// Compile the vertex shader
-		glCompileShader(vertexShader);
+    	m_OpenGLSPIRV =
+    		ShaderUtils::CompileOrGetOpenGLBinaries(vulkanSPRIV, Identifier("Anonymous", "Shader"));
 
-		GLint isCompiled = 0;
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &isCompiled);
-		if(isCompiled == GL_FALSE) {
-			GLint maxLength = 0;
-			glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &maxLength);
+    	CreateProgram();
+    }
 
-			// The maxLength includes the NULL character
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(vertexShader, maxLength, &maxLength, &infoLog[0]);
-			
-			// We don't need the shader anymore.
-			glDeleteShader(vertexShader);
+    void OpenGLShader::CreateProgram() {
+		const GLuint program = glCreateProgram();
 
-			KRC_ERROR("{0}", infoLog.data());
-			KRC_ASSERT(false, "Shader Compilation Failure!")
-			return;
-		}
+    	// Create and Attach all shaders
+    	std::vector<GLuint> shaderIDs;
+    	for(auto&& [stage, spirv] : m_OpenGLSPIRV) {
+    		KRC_TRACE("Creating Shader: " + Identifier("Anonymous", "Shader").ToString() + ":" + ShaderUtils::ShaderTypeToShortString(stage));
 
-		// Create an empty fragment shader handle
-	    const GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+    		GLuint shaderID = shaderIDs.emplace_back(glCreateShader(ShaderTypeToOpenGL(stage)));
 
-		// Send the fragment shader source code to GL
-		// Note that std::string's .c_str is NULL character terminated.
-		source = fragmentSrc.c_str();
-		glShaderSource(fragmentShader, 1, &source, 0);
+    		glShaderBinary(1, &shaderID, GL_SHADER_BINARY_FORMAT_SPIR_V, spirv.data(), spirv.size() * sizeof(uint32_t));
+    		glSpecializeShader(shaderID, "main", 0, nullptr, nullptr);
+    		glAttachShader(program, shaderID);
+    	}
 
-		// Compile the fragment shader
-		glCompileShader(fragmentShader);
+        glLinkProgram(program);
+        
+    	// Check for erros
+    	GLint isLinked;
+    	glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
+    	if(isLinked == GL_FALSE) {
+    		GLint maxLength;
+    		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &maxLength);
 
-		glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &isCompiled);
-		if (isCompiled == GL_FALSE) {
-			GLint maxLength = 0;
-			glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &maxLength);
+    		std::vector<GLchar> infoLog(maxLength);
+    		glGetProgramInfoLog(program, maxLength, &maxLength, infoLog.data());
+    		KRC_ERROR("Shader linking failed ({0}):\n{1}", m_FilePath, infoLog.data());
 
-			// The maxLength includes the NULL character
-			std::vector<GLchar> infoLog(maxLength);
-			glGetShaderInfoLog(fragmentShader, maxLength, &maxLength, &infoLog[0]);
-			
-			// We don't need the shader anymore.
-			glDeleteShader(fragmentShader);
-			// Either of them. Don't leak shaders.
-			glDeleteShader(vertexShader);
+    		glDeleteProgram(program);
 
-			KRC_ERROR("{0}", infoLog.data());
-			KRC_ASSERT(false, "Shader Compilation Failure!")
-			return;
-		}
+    		for (const auto id : shaderIDs)
+    			glDeleteShader(id);
+    	}
 
-		// Vertex and fragment shaders are successfully compiled.
-		// Now time to link them together into a program.
-		// Get a program object.
-		m_RendererID = glCreateProgram();
+    	// Delete shaders (they are now linked)
+    	for(const auto shaderID : shaderIDs) {
+    		glDetachShader(program, shaderID);
+    		glDeleteShader(shaderID);
+    	}
 
-		// Attach our shaders to our program
-		glAttachShader(m_RendererID, vertexShader);
-		glAttachShader(m_RendererID, fragmentShader);
-
-		// Link our program
-		glLinkProgram(m_RendererID);
-
-		// Note the different functions here: glGetProgram* instead of glGetShader*.
-		GLint isLinked = 0;
-		glGetProgramiv(m_RendererID, GL_LINK_STATUS, &isLinked);
-		if (isLinked == GL_FALSE) {
-			GLint maxLength = 0;
-			glGetProgramiv(m_RendererID, GL_INFO_LOG_LENGTH, &maxLength);
-
-			// The maxLength includes the NULL character
-			std::vector<GLchar> infoLog(maxLength);
-			glGetProgramInfoLog(m_RendererID, maxLength, &maxLength, &infoLog[0]);
-			
-			// We don't need the program anymore.
-			glDeleteProgram(m_RendererID);
-			// Don't leak shaders either.
-			glDeleteShader(vertexShader);
-			glDeleteShader(fragmentShader);
-
-			KRC_ERROR("{0}", infoLog.data());
-			KRC_ASSERT(false, "Shader Link Failure!")
-			return;
-		}
-
-		// Always detach shaders after a successful link.
-		glDetachShader(m_RendererID, vertexShader);
-		glDetachShader(m_RendererID, fragmentShader);
+    	m_RendererID = program;
     }
 
     OpenGLShader::~OpenGLShader() {

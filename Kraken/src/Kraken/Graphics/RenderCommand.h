@@ -44,6 +44,11 @@ namespace Kraken {
         static Ref<Shader> CreateShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
             return s_RendererAPI->CreateShader(vertexSrc, fragmentSrc);
         }
+
+        static Ref<UniformBuffer> CreateUniformBuffer(size_t size, int binding) {
+            return s_RendererAPI->CreateUniformBuffer(size, binding);
+        }
+
     private:
         static Scope<RendererAPI> s_RendererAPI;
     };

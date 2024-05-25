@@ -2,12 +2,11 @@
 // Created by sebsn on 02-05-2024.
 //
 
-#include <glad/gl.h>
-
 #include "OpenGLRendererAPI.h"
 #include "OpenGLBuffer.h"
 #include "OpenGLFramebuffer.h"
 #include "OpenGLShader.h"
+#include "OpenGLUniformBuffer.h"
 
 namespace Kraken {
     void OpenGLRendererAPI::Init() {
@@ -59,5 +58,9 @@ namespace Kraken {
 
     Ref<Framebuffer> OpenGLRendererAPI::CreateFramebuffer(const FramebufferSpecification &spec) {
         return CreateRef<OpenGLFramebuffer>(spec);
+    }
+
+    Ref<UniformBuffer> OpenGLRendererAPI::CreateUniformBuffer(uint32_t size, uint32_t binding) {
+        return CreateRef<OpenGLUniformBuffer>(size, binding);
     }
 } // Kraken
