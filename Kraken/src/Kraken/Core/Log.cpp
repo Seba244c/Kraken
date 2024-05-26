@@ -14,7 +14,7 @@ namespace Kraken {
     void Log::Init() {
         std::vector<spdlog::sink_ptr> logSinks;
         logSinks.emplace_back(std::make_shared<spdlog::sinks::stdout_color_sink_mt>());
-        logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("Cube.log", true));
+        logSinks.emplace_back(std::make_shared<spdlog::sinks::basic_file_sink_mt>("Kraken.log", true));
     
         logSinks[0]->set_pattern("%^[%T] [thread %t] (%n)%$ %v");
         logSinks[1]->set_pattern("%l: [%T] [thread %t] (%n) %v");

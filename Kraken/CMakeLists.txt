@@ -61,11 +61,11 @@ add_library(Kraken STATIC
         src/Kraken/Platform/PlatformUtils.h
         src/Kraken/Platform/Windows/Windows.cpp
         src/Kraken/Platform/Time.h
-        src/Kraken/Core/Asset.h
+        "src/Kraken/Assets/Asset.h"
         src/Kraken/Graphics/UniformBuffer.h
         src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.cpp
         src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.h
-)
+ "src/Kraken/Assets/Asset.cpp")
 
 target_include_directories(Kraken PUBLIC src)
 target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers

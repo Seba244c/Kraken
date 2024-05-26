@@ -5,7 +5,7 @@
 #pragma once
 #include <krpch.h>
 
-#include "Kraken/Core/Asset.h"
+#include "Kraken/Assets/Asset.h"
 #include <shaderc/shaderc.h>
 
 namespace Kraken {
@@ -25,7 +25,7 @@ namespace Kraken {
         static std::unordered_map<ShaderType, std::vector<uint32_t>> CompileOrGetOpenGLBinaries(const std::unordered_map<ShaderType, std::vector<uint32_t>>& vulkanSPIRV, Identifier identifier);
     };
 
-    class Shader : public Asset {
+    class Shader {
     public:
         virtual ~Shader() = default;
 

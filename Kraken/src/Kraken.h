@@ -7,6 +7,7 @@
 #include "Kraken/Core/Application.h"
 #include "Kraken/Core/Layer.h"
 #include "Kraken/IO/Input.h"
+#include "Kraken/Assets/Asset.h"
 
 //--Graphics----------------------------------
 #include "Kraken/Graphics/Renderer.h"

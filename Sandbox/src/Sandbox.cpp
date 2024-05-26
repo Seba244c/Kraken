@@ -67,6 +67,9 @@ public:
         m_Shader = Kraken::RenderCommand::CreateShader(vertexSrc, fragmentSrc);
         m_Camera = Kraken::CreateScope<Kraken::OrthographicCamera>(-2.0f, 2.0f, -2.0f, 2.0f);
         Kraken::Renderer::Init();
+        Kraken::AssetsManager::RegisterAssetProvider("Sandbox", Kraken::CreateScope<Kraken::FolderAssetProvider>("assets/"));
+        auto a = Kraken::AssetsManager::Get({ "Sandbox", "shaders/Sandbox.glsl" });
+        KRC_TRACE("Sandbox:shaders/Sandbox.glsl = {0}", a.GetPath().string());
     };
 
     void OnUpdate(const Kraken::Timestep ts) override {
