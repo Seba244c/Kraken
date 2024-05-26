@@ -1,7 +1,7 @@
 #include "Asset.h"
 
 namespace Kraken {
-	FolderAssetProvider::FolderAssetProvider(const std::string& folderPath) {
+	FolderAssetProvider::FolderAssetProvider(const std::string& domain, const std::string& folderPath) : m_Domain(domain) {
 		m_Folder = folderPath;
 		if(!exists(m_Folder)) {
 			create_directories(m_Folder);
@@ -25,7 +25,7 @@ namespace Kraken {
 				if (assetName.starts_with(folderPath)) assetName = assetName.substr(folderPath.length());
 
 				KRC_TRACE("Discovered Asset: {0}", assetName);
-				m_Map[assetName] =  CreateScope<AssetSpecification>(path);
+				m_Map[assetName] =  CreateScope<AssetSpecification>(Identifier{domain,assetName}, path);
 			}
 		}
 	}
@@ -42,6 +42,7 @@ namespace Kraken {
 	}
 
 	AssetSpecification& AssetsManager::Get(Identifier identifier) {
+		KRC_ASSERT(s_providerMap.contains(identifier.domain), "Domain not found!")
 		return s_providerMap[identifier.domain]->Get(identifier);
 	}
 }

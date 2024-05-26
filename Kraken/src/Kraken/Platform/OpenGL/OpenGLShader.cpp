@@ -19,8 +19,17 @@ namespace Kraken {
 		return static_cast<shaderc_shader_kind>(0);
 	}
 
-    OpenGLShader::OpenGLShader(const std::string &filepath) : m_FilePath(filepath) {
-    	m_RendererID = 0;
+    OpenGLShader::OpenGLShader(AssetSpecification& specs)  {
+        std::string source = Files::ReadFile(specs.GetPath());
+        const auto sources = PreProcessFromAsset(source);
+        
+        const auto vulkanSPRIV =
+            ShaderUtils::CompileOrGetVulkanBinaries(sources, specs.GetIdentifier());
+
+        m_OpenGLSPIRV =
+            ShaderUtils::CompileOrGetOpenGLBinaries(vulkanSPRIV, specs.GetIdentifier());
+
+        CreateProgram(specs.GetIdentifier());
     }
 
     OpenGLShader::OpenGLShader(const std::string &vertexSrc, const std::string &fragmentSrc) {
@@ -28,22 +37,23 @@ namespace Kraken {
     	sources[VERTEX_SHADER] = vertexSrc;
     	sources[FRAGMENT_SHADER] = fragmentSrc;
 
+        const auto i = Identifier("Anonymous", "Shader");
 	    const auto vulkanSPRIV =
-	    	ShaderUtils::CompileOrGetVulkanBinaries(sources, Identifier("Anonymous", "Shader"));
+	    	ShaderUtils::CompileOrGetVulkanBinaries(sources, i);
 
     	m_OpenGLSPIRV =
-    		ShaderUtils::CompileOrGetOpenGLBinaries(vulkanSPRIV, Identifier("Anonymous", "Shader"));
+    		ShaderUtils::CompileOrGetOpenGLBinaries(vulkanSPRIV, i);
 
-    	CreateProgram();
+    	CreateProgram(i);
     }
 
-    void OpenGLShader::CreateProgram() {
+    void OpenGLShader::CreateProgram(const Identifier& identifier) {
 		const GLuint program = glCreateProgram();
 
     	// Create and Attach all shaders
     	std::vector<GLuint> shaderIDs;
     	for(auto&& [stage, spirv] : m_OpenGLSPIRV) {
-    		KRC_TRACE("Creating Shader: " + Identifier("Anonymous", "Shader").ToString() + ":" + ShaderUtils::ShaderTypeToShortString(stage));
+    		KRC_TRACE("Creating Shader: " + identifier.ToString() + ":" + ShaderUtils::ShaderTypeToShortString(stage));
 
     		GLuint shaderID = shaderIDs.emplace_back(glCreateShader(ShaderTypeToOpenGL(stage)));
 
@@ -63,7 +73,7 @@ namespace Kraken {
 
     		std::vector<GLchar> infoLog(maxLength);
     		glGetProgramInfoLog(program, maxLength, &maxLength, infoLog.data());
-    		KRC_ERROR("Shader linking failed ({0}):\n{1}", m_FilePath, infoLog.data());
+    		KRC_ERROR("Shader linking failed ({0}):\n{1}", identifier.ToString(), infoLog.data());
 
     		glDeleteProgram(program);
 
@@ -78,6 +88,33 @@ namespace Kraken {
     	}
 
     	m_RendererID = program;
+    }
+
+    std::unordered_map<ShaderType, std::string> OpenGLShader::PreProcessFromAsset(std::string& source) {
+        std::unordered_map<ShaderType, std::string> shaderSources;
+
+        const char* typeToken = "#type";
+        size_t typeTokenLength = strlen(typeToken);
+        size_t pos = source.find(typeToken, 0); //Start of shader type declaration line
+
+        while (pos != std::string::npos) {
+            // Find Type Token
+            size_t eol = source.find_first_of("\r\n", pos); //End of shader type declaration line
+            KRC_ASSERT(eol != std::string::npos, "Syntax error");
+            size_t begin = pos + typeTokenLength + 1; //Start of shader type name (after "#type " keyword)
+            std::string type = source.substr(begin, eol - begin);
+            KRC_ASSERT(ShaderUtils::StringToShaderType(type), "Invalid shader type specified");
+
+            // Find next line start
+            size_t nextLinePos = source.find_first_not_of("\r\n", eol); //Start of shader code after shader type declaration line
+            KRC_ASSERT(nextLinePos != std::string::npos, "Syntax error");
+            pos = source.find(typeToken, nextLinePos); //Start of next shader type declaration line
+
+            auto s = (pos == std::string::npos) ? source.substr(nextLinePos) : source.substr(nextLinePos, pos - nextLinePos);
+            shaderSources[ShaderUtils::StringToShaderType(type)] = s;
+        }
+
+        return shaderSources;
     }
 
     OpenGLShader::~OpenGLShader() {

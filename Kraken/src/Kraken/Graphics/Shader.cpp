@@ -52,6 +52,16 @@ namespace Kraken {
         return "";
     }
 
+    ShaderType ShaderUtils::StringToShaderType(std::string& s) {
+        if (s == "vertex")
+            return VERTEX_SHADER;
+        if (s == "fragment" || s == "pixel")
+            return FRAGMENT_SHADER;
+
+        KRC_ASSERT(false, "Unknown shader type!");
+        return static_cast<ShaderType>(0);
+    }
+
     std::unordered_map<ShaderType, std::vector<uint32_t>> ShaderUtils::CompileOrGetVulkanBinaries(
         const std::unordered_map<ShaderType, std::string> &shaderSources, Identifier identifier) {
         // Output
@@ -160,20 +170,22 @@ namespace Kraken {
         m_Shaders[identifier.ToString()] = shader;
     }
 
-    Ref<Shader> ShaderLibrary::Load(const Identifier &identifier, const std::string& vertexSrc, const std::string& fragSource) {
+    Ref<Shader> ShaderLibrary::Put(const Identifier &identifier, const std::string& vertexSrc, const std::string& fragSource) {
+        KRC_TRACE("Manually putting shader: {0}", identifier.ToString());
+
         auto shader = RenderCommand::CreateShader(vertexSrc, fragSource);
         Add(identifier, shader);
         return shader;
     }
 
-    Ref<Shader> ShaderLibrary::Load(const Identifier &identifier) {
-        auto shader = nullptr;
-        Add(identifier, shader);
-        return shader;
-    }
+    Ref<Shader> ShaderLibrary::Get(const Identifier identifier) {
+        if(!Exists(identifier)) {
+            KRC_TRACE("Creating shader: {0}", identifier.ToString());
+        	auto spec = AssetsManager::Get(identifier);
 
-    Ref<Shader> ShaderLibrary::Get(const Identifier& identifier) {
-        KRC_ASSERT(Exists(identifier), "Shader not found!");
+        	m_Shaders[identifier.ToString()] = RenderCommand::CreateShader(spec);
+        }
+
         return m_Shaders[identifier.ToString()];
     }
 

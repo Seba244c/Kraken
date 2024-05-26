@@ -41,8 +41,13 @@ namespace Kraken {
         static Ref<IndexBuffer> CreateIndexBuffer(const uint32_t *indices, const uint32_t count) {
             return s_RendererAPI->CreateIndexBuffer(indices, count);
         }
+
         static Ref<Shader> CreateShader(const std::string& vertexSrc, const std::string& fragmentSrc) {
             return s_RendererAPI->CreateShader(vertexSrc, fragmentSrc);
+        }
+
+        static Ref<Shader> CreateShader(AssetSpecification& specs) {
+            return s_RendererAPI->CreateShader(specs);
         }
 
         static Ref<UniformBuffer> CreateUniformBuffer(size_t size, int binding) {

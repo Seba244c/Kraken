@@ -56,6 +56,11 @@ namespace Kraken {
         return CreateRef<OpenGLShader>(vertexSrc, fragmentSrc);
     }
 
+    Ref<Shader> OpenGLRendererAPI::CreateShader(AssetSpecification& specs) {
+        KRC_ASSERT(specs.GetPath().extension() == ".glsl", "File is not a glsl shader file!")
+        return CreateRef<OpenGLShader>(specs);
+    }
+
     Ref<Framebuffer> OpenGLRendererAPI::CreateFramebuffer(const FramebufferSpecification &spec) {
         return CreateRef<OpenGLFramebuffer>(spec);
     }

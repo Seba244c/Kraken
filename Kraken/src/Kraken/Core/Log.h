@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <filesystem>
 #include <spdlog/spdlog.h>
 
 namespace Kraken {
@@ -32,3 +33,9 @@ namespace Kraken {
 #define KRC_WARN(...) ::Kraken::Log::GetCoreLogger()->warn(__VA_ARGS__)
 #define KRC_ERROR(...) ::Kraken::Log::GetCoreLogger()->error(__VA_ARGS__)
 #define KRC_CRITICAL(...) ::Kraken::Log::GetCoreLogger()->critical(__VA_ARGS__)
+
+template <> struct fmt::formatter<std::filesystem::path> : formatter<std::string> {
+    auto format(std::filesystem::path p, format_context& ctx) {
+        return formatter<std::string>::format(p.string(), ctx);
+    }
+};

@@ -53,8 +53,8 @@ namespace Kraken {
     }
 
     struct Identifier {
-        const std::string& domain;
-        const std::string& name;
+        const std::string domain;
+        const std::string name;
 
         [[nodiscard]] std::string ToString() const { return Format("{}:{}", domain, name); }
     };

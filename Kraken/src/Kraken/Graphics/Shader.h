@@ -20,6 +20,7 @@ namespace Kraken {
         static const char* ShaderTypeCachedOpenGLFileExtension(ShaderType t);
         static const char* ShaderTypeCachedVulkanFileExtension(ShaderType t);
         static const char* ShaderTypeToShortString(ShaderType t);
+        static ShaderType StringToShaderType(std::string& s);
 
         static std::unordered_map<ShaderType, std::vector<uint32_t>> CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& shaderSources, Identifier identifier);
         static std::unordered_map<ShaderType, std::vector<uint32_t>> CompileOrGetOpenGLBinaries(const std::unordered_map<ShaderType, std::vector<uint32_t>>& vulkanSPIRV, Identifier identifier);
@@ -45,13 +46,12 @@ namespace Kraken {
     class ShaderLibrary
     {
     public:
-        void Add(const Identifier& identifier, const Ref<Shader>& shader);
-        Ref<Shader> Load(const Identifier& identifier, const std::string& vertexSrc, const std::string& fragSource);
-        Ref<Shader> Load(const Identifier& identifier);
-        Ref<Shader> Get(const Identifier& identifier);
+        Ref<Shader> Put(const Identifier& identifier, const std::string& vertexSrc, const std::string& fragSource);
+        Ref<Shader> Get(Identifier identifier);
         
         bool Exists(const Identifier& identifier) const;
     private:
+        void Add(const Identifier& identifier, const Ref<Shader>& shader);
         std::unordered_map<std::string, Ref<Shader>> m_Shaders;
     };
 }

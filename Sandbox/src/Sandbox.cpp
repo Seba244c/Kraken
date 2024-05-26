@@ -7,6 +7,8 @@
 class SandboxLayer final : public Kraken::Layer {
 public:
     SandboxLayer() : Layer("Sandbox") {
+        Kraken::AssetsManager::RegisterAssetProvider("Sandbox", Kraken::CreateScope<Kraken::FolderAssetProvider>("Sandbox", "assets/"));
+
         // Temp rendering
         Kraken::RenderCommand::SetClearColor(Kraken::Colors::DarkGray);
         constexpr float vertices[4*3+4*4] = {
@@ -30,46 +32,11 @@ public:
         m_VertexArray->AddVertexBuffer(vb);
         m_VertexArray->SetIndexBuffer(ib);
 
-        const std::string vertexSrc = R"(
-            #version 450 core
-
-            layout(location = 0) in vec3 a_Position;
-            layout(location = 1) in vec4 a_Color;
-            layout(std140, binding = 0) uniform Camera
-            {
-                mat4 u_mViewProjection;
-            };
-
-            layout(location = 0) out vec4 v_Color;
-
-            void main ()
-            {
-                v_Color = a_Color;
-                gl_Position = u_mViewProjection * vec4(a_Position, 1.0);
-            }
-
-        )";
-
-        const std::string fragmentSrc = R"(
-            #version 450 core
-
-
-            layout(location = 0) in vec4 v_Color;
-            layout(location = 0) out vec4 o_Color;
-
-            void main ()
-            {
-                o_Color = v_Color;
-            }
-
-        )";
-
-        m_Shader = Kraken::RenderCommand::CreateShader(vertexSrc, fragmentSrc);
+        Kraken::ShaderLibrary t;
+        m_Shader = t.Get({ "Sandbox", "shaders/Sandbox.glsl" });
         m_Camera = Kraken::CreateScope<Kraken::OrthographicCamera>(-2.0f, 2.0f, -2.0f, 2.0f);
+
         Kraken::Renderer::Init();
-        Kraken::AssetsManager::RegisterAssetProvider("Sandbox", Kraken::CreateScope<Kraken::FolderAssetProvider>("assets/"));
-        auto a = Kraken::AssetsManager::Get({ "Sandbox", "shaders/Sandbox.glsl" });
-        KRC_TRACE("Sandbox:shaders/Sandbox.glsl = {0}", a.GetPath().string());
     };
 
     void OnUpdate(const Kraken::Timestep ts) override {

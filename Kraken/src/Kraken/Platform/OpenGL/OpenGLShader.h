@@ -12,8 +12,8 @@ namespace Kraken {
     public:
         static uint32_t ShaderTypeToOpenGL(ShaderType t);
     public:
-        explicit OpenGLShader(const std::string& filepath);
         OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+        explicit OpenGLShader(AssetSpecification& specs);
         ~OpenGLShader() override;
 
         void Bind() const override;
@@ -29,8 +29,8 @@ namespace Kraken {
         void SetColor(const std::string &name, const Color &value) override;
     private:
         uint32_t m_RendererID;
-        std::string m_FilePath;
-        void CreateProgram();
+        void CreateProgram(const Identifier& identifier);
+        std::unordered_map<ShaderType, std::string> PreProcessFromAsset(std::string& source);
 
 		std::unordered_map<ShaderType, std::vector<uint32_t>> m_OpenGLSPIRV;
     };
