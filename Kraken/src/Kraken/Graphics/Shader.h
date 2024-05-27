@@ -42,16 +42,4 @@ namespace Kraken {
         virtual void SetMat4(const std::string& name, const glm::mat4& value) = 0;
         virtual void SetColor(const std::string& name, const Color& value) = 0;
     };
-
-    class ShaderLibrary
-    {
-    public:
-        Ref<Shader> Put(const Identifier& identifier, const std::string& vertexSrc, const std::string& fragSource);
-        Ref<Shader> Get(Identifier identifier);
-        
-        bool Exists(const Identifier& identifier) const;
-    private:
-        void Add(const Identifier& identifier, const Ref<Shader>& shader);
-        std::unordered_map<std::string, Ref<Shader>> m_Shaders;
-    };
 }

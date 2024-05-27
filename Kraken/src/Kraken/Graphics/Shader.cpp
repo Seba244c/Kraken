@@ -163,33 +163,4 @@ namespace Kraken {
 
         return shaderData;
     }
-
-
-    void ShaderLibrary::Add(const Identifier &identifier, const Ref<Shader> &shader) {
-        KRC_ASSERT(!Exists(identifier), "Shader already exists!");
-        m_Shaders[identifier.ToString()] = shader;
-    }
-
-    Ref<Shader> ShaderLibrary::Put(const Identifier &identifier, const std::string& vertexSrc, const std::string& fragSource) {
-        KRC_TRACE("Manually putting shader: {0}", identifier.ToString());
-
-        auto shader = RenderCommand::CreateShader(vertexSrc, fragSource);
-        Add(identifier, shader);
-        return shader;
-    }
-
-    Ref<Shader> ShaderLibrary::Get(const Identifier identifier) {
-        if(!Exists(identifier)) {
-            KRC_TRACE("Creating shader: {0}", identifier.ToString());
-        	auto spec = AssetsManager::Get(identifier);
-
-        	m_Shaders[identifier.ToString()] = RenderCommand::CreateShader(spec);
-        }
-
-        return m_Shaders[identifier.ToString()];
-    }
-
-    bool ShaderLibrary::Exists(const Identifier& identifier) const {
-        return m_Shaders.contains(identifier.ToString());
-    }
 }

@@ -32,8 +32,7 @@ public:
         m_VertexArray->AddVertexBuffer(vb);
         m_VertexArray->SetIndexBuffer(ib);
 
-        Kraken::ShaderLibrary t;
-        m_Shader = t.Get({ "Sandbox", "shaders/Sandbox.glsl" });
+        m_Shader = Kraken::AssetsManager::GetShader({ "Sandbox", "shaders/Sandbox.glsl" });
         m_Camera = Kraken::CreateScope<Kraken::OrthographicCamera>(-2.0f, 2.0f, -2.0f, 2.0f);
 
         Kraken::Renderer::Init();

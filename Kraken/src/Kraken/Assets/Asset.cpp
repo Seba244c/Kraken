@@ -1,4 +1,5 @@
 #include "Asset.h"
+#include "Kraken/Graphics/RenderCommand.h"
 
 namespace Kraken {
 	FolderAssetProvider::FolderAssetProvider(const std::string& domain, const std::string& folderPath) : m_Domain(domain) {
@@ -45,4 +46,33 @@ namespace Kraken {
 		KRC_ASSERT(s_providerMap.contains(identifier.domain), "Domain not found!")
 		return s_providerMap[identifier.domain]->Get(identifier);
 	}
+
+	template <typename T>
+	Ref<T> AssetLibrary<T>::Get(const Identifier& identifier) {
+		if (!Exists(identifier)) {
+			KRC_TRACE("Creating Asset: {0}", identifier.ToString());
+			auto spec = AssetsManager::Get(identifier);
+
+			m_Assets[identifier.ToString()] = CreateAsset(spec);
+		}
+
+		return m_Assets[identifier.ToString()];
+	}
+
+	template <typename T>
+	bool AssetLibrary<T>::Exists(const Identifier& identifier) const {
+		return m_Assets.contains(identifier.ToString());
+	}
+
+	template <typename T>
+	void AssetLibrary<T>::Add(const Identifier& identifier, const Ref<T>& asset) {
+		KRC_ASSERT(!Exists(identifier), "Asset already exists!");
+		m_Assets[identifier.ToString()] = asset;
+	}
+
+	Ref<Shader> ShaderLibrary::CreateAsset(AssetSpecification& specs) {
+		return RenderCommand::CreateShader(specs);
+	}
+
+	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Shader)
 }
