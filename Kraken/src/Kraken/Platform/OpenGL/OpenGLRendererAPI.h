@@ -25,5 +25,6 @@ namespace Kraken {
         Ref<Shader> CreateShader(AssetSpecification& specs) override;
         Ref<Framebuffer> CreateFramebuffer(const FramebufferSpecification &spec) override;
         Ref<UniformBuffer> CreateUniformBuffer(uint32_t size, uint32_t binding) override;
+        Ref<Texture> CreateTexture2D(AssetSpecification& specs) override;
     };
 } // Kraken

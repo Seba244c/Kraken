@@ -5,6 +5,7 @@
 #include "OpenGLShader.h"
 
 #include <glm/gtc/type_ptr.hpp>
+#include <shaderc/shaderc.hpp>
 
 #include "Kraken/Utils/Files.h"
 

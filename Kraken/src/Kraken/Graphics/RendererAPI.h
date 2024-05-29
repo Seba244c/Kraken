@@ -8,6 +8,7 @@
 #include "Kraken/Graphics/VertexArray.h"
 #include "Kraken/Graphics/Shader.h"
 #include "Kraken/Graphics/UniformBuffer.h"
+#include "Kraken/Graphics/Texture.h"
 
 namespace Kraken {
     class RendererAPI {
@@ -34,6 +35,7 @@ namespace Kraken {
         virtual Ref<Shader> CreateShader(const std::string& vertexSrc, const std::string& fragmentSrc) = 0;
         virtual Ref<Shader> CreateShader(AssetSpecification& specs) = 0;
         virtual Ref<UniformBuffer> CreateUniformBuffer(uint32_t size, uint32_t binding) = 0;
+        virtual Ref<Texture> CreateTexture2D(AssetSpecification& specs) = 0;
 
         virtual void SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height) = 0;
 

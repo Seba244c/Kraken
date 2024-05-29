@@ -32,6 +32,8 @@ public:
         m_VertexArray->SetIndexBuffer(ib);
 
         m_Shader = Kraken::AssetsManager::GetShader({ "Sandbox", "shaders/Sandbox.glsl" });
+        m_Texture = Kraken::AssetsManager::GetTexture({"Sandbox", "textures/Zote.jpg"});
+
         m_Camera = Kraken::CreateScope<Kraken::OrthographicCamera>(-2.0f, 2.0f, -2.0f, 2.0f);
 
         Kraken::Renderer::Init();
@@ -54,6 +56,8 @@ public:
 
     	// Render Triangle
         Kraken::Renderer::SetShader(m_Shader);
+        m_Texture->Bind();
+        m_Shader->SetInt("u_Texture", 0);
         Kraken::Renderer::Submit(m_VertexArray);
 
         // Render Texture
@@ -66,6 +70,7 @@ public:
 private:
     Kraken::Ref<Kraken::VertexArray> m_VertexArray;
     Kraken::Ref<Kraken::Shader> m_Shader;
+    Kraken::Ref<Kraken::Texture> m_Texture;
     Kraken::Scope<Kraken::OrthographicCamera> m_Camera;
 };
 

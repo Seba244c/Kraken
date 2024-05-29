@@ -67,7 +67,7 @@ namespace Kraken {
         // Output
         std::unordered_map<ShaderType, std::vector<uint32_t>> shaderData;
         shaderData.clear();
-
+        
         // Compiler options
         shaderc::Compiler compiler;
         shaderc::CompileOptions options;

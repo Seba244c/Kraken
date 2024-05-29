@@ -9,6 +9,7 @@
 // Forward declarations
 namespace Kraken {
 	class Shader;
+    class Texture;
 }
 
 namespace Kraken {
@@ -70,12 +71,13 @@ namespace Kraken {
 		static type##Library s_Lib##type##s;
 
 #define KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(type)                                                                            \
-    [[nodiscard]] Ref<Shader> AssetsManager::Get##type(const Identifier& identifier) { return s_Lib##type##s.Get(identifier); } \
+    [[nodiscard]] Ref<type> AssetsManager::Get##type(const Identifier& identifier) { return s_Lib##type##s.Get(identifier); } \
     [[nodiscard]] bool AssetsManager::type##Exists(const Identifier& identifier) { return s_Lib##type##s.Exists(identifier); }  \
     type##Library AssetsManager::s_Lib##type##s;
 
     // Library Types
     KR_ASSETLIB_TYPE(Shader)
+    KR_ASSETLIB_TYPE(Texture)
 
     class AssetsManager {
     public:
@@ -83,5 +85,6 @@ namespace Kraken {
         static AssetSpecification& Get(Identifier identifier);
 
 		KR_INTERNAL_ASSETMANAGER_LIBTYPE(Shader)
+		KR_INTERNAL_ASSETMANAGER_LIBTYPE(Texture)
     };
 }

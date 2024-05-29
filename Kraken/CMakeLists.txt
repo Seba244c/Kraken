@@ -65,7 +65,10 @@ add_library(Kraken STATIC
         src/Kraken/Graphics/UniformBuffer.h
         src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.cpp
         src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.h
- "src/Kraken/Assets/Asset.cpp")
+        "src/Kraken/Platform/OpenGL/OpenGLTexture.h"
+        "src/Kraken/Assets/Asset.cpp"
+        "src/Kraken/Graphics/Texture.h"
+ "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp")
 
 target_include_directories(Kraken PUBLIC src)
 target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers
@@ -85,7 +88,7 @@ find_package(glm)
 find_package(unofficial-shaderc)
 find_package(spirv_cross_core)
 find_package(spirv_cross_glsl)
-set(KR_LIBS spdlog::spdlog glm::glm unofficial::shaderc::shaderc spirv-cross-core spirv-cross-glsl)
+set(KR_LIBS spdlog::spdlog glm::glm unofficial::shaderc::shaderc spirv-cross-core spirv-cross-glsl stb_image)
 
 ### Platform Support
 if(WIN32)

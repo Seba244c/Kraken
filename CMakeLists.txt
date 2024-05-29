@@ -2,6 +2,7 @@
 # Includes Library Kraken
 # Includes Application Sandbox
 cmake_minimum_required (VERSION 3.28)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 20)
 
 # Enable Hot Reload for MSVC compilers if supported.
@@ -17,3 +18,4 @@ add_definitions(-DNOMINMAX)
 project ("Kraken")
 add_subdirectory(Sandbox)
 add_subdirectory(Kraken)
+add_subdirectory(libs)

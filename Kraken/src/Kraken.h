@@ -15,6 +15,7 @@
 
 #include "Kraken/Graphics/Camera.h"
 #include "Kraken/Graphics/Shader.h"
+#include "Kraken/Graphics/Texture.h"
 #include "Kraken/Graphics/VertexArray.h"
 //--------------------------------------------
 

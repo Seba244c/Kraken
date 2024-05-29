@@ -74,5 +74,10 @@ namespace Kraken {
 		return RenderCommand::CreateShader(specs);
 	}
 
+	Ref<Texture> TextureLibrary::CreateAsset(AssetSpecification& specs) {
+		return RenderCommand::CreateTexture(specs);
+	}
+	
 	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Shader)
+	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Texture)
 }

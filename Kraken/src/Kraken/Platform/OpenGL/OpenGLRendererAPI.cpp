@@ -7,6 +7,7 @@
 #include "OpenGLFramebuffer.h"
 #include "OpenGLShader.h"
 #include "OpenGLUniformBuffer.h"
+#include "OpenGLTexture.h"
 
 namespace Kraken {
     void OpenGLRendererAPI::Init() {
@@ -67,5 +68,9 @@ namespace Kraken {
 
     Ref<UniformBuffer> OpenGLRendererAPI::CreateUniformBuffer(uint32_t size, uint32_t binding) {
         return CreateRef<OpenGLUniformBuffer>(size, binding);
+    }
+
+    Ref<Texture> OpenGLRendererAPI::CreateTexture2D(AssetSpecification& specs) {
+        return CreateRef<OpenGLTexture2D>(specs);
     }
 } // Kraken

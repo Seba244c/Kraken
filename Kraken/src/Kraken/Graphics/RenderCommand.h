@@ -54,6 +54,10 @@ namespace Kraken {
             return s_RendererAPI->CreateUniformBuffer(size, binding);
         }
 
+		static Ref<Texture> CreateTexture(AssetSpecification& assetSpecification) {
+	        return s_RendererAPI->CreateTexture2D(assetSpecification);
+        }
+
     private:
         static Scope<RendererAPI> s_RendererAPI;
     };
