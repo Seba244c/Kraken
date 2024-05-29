@@ -23,12 +23,5 @@ namespace Kraken {
         static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 
         static void OnWindowResize(uint32_t width, uint32_t height);
-    private:
-        struct RenderData
-        {
-            Shader* Shader; // This object does not own the shader
-        };
-
-        static Scope<RenderData> s_RenderData;
     };    
 }

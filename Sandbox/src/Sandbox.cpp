@@ -11,19 +11,18 @@ public:
 
         // Temp rendering
         Kraken::RenderCommand::SetClearColor(Kraken::Colors::DarkGray);
-        constexpr float vertices[4*3+4*4] = {
-            -1.0f, -1.0f, 0.0f,   0.8f, 0.2f, 0.8f, 1.0f,
-            1.0f,  -1.0f, 0.0f,   0.2f, 0.3f, 0.8f, 1.0f,
-            1.0f,   1.0f, 0.0f,   0.8f, 0.8f, 0.2f, 1.0f,
-            -1.0,   1.0f, 0.0f,   0.2f, 0.8f, 0.2f, 1.0f
+        constexpr float vertices[4*3+2*4] = {
+            -1.0f, -1.0f, 0.0f,   0.0f, 0.0f,
+            1.0f,  -1.0f, 0.0f,   1.0f, 0.0f,
+            1.0f,   1.0f, 0.0f,   1.0f, 1.0f,
+            -1.0,   1.0f, 0.0f,   0.0f, 1.0f
         };
 
         const auto vb = Kraken::RenderCommand::CreateVertexBuffer(vertices, sizeof(vertices));
         vb->SetLayout({
             { Kraken::ShaderDataType::Float3, "a_Position" },
-            { Kraken::ShaderDataType::Float4, "a_Color" },
+            { Kraken::ShaderDataType::Float2, "a_TexCoord" },
         });
-
 
         constexpr uint32_t indicies[6] = { 0, 1, 2, 2, 3, 0 };
         const auto ib = Kraken::RenderCommand::CreateIndexBuffer(indicies, sizeof(indicies) / sizeof(uint32_t));
@@ -36,7 +35,7 @@ public:
         m_Camera = Kraken::CreateScope<Kraken::OrthographicCamera>(-2.0f, 2.0f, -2.0f, 2.0f);
 
         Kraken::Renderer::Init();
-    };
+    }
 
     void OnUpdate(const Kraken::Timestep ts) override {
         // movement
@@ -52,9 +51,12 @@ public:
 
         Kraken::RenderCommand::Clear();
         Kraken::Renderer::BeginScene(*m_Camera);
-        Kraken::Renderer::SetShader(m_Shader);
 
+    	// Render Triangle
+        Kraken::Renderer::SetShader(m_Shader);
         Kraken::Renderer::Submit(m_VertexArray);
+
+        // Render Texture
         Kraken::Renderer::EndScene();
     }
 
