@@ -3,6 +3,52 @@
 #include <stb_image.h>
 
 namespace Kraken {
+	namespace Utils {
+		static GLenum ImageFormatToGLDataFormat(const ImageFormat format) {
+			switch (format) {
+				case ImageFormat::RGB8:    return GL_RGB;
+				case ImageFormat::RGBA8:   return GL_RGBA;
+				case ImageFormat::R8:      return GL_R;
+				case ImageFormat::RGBA32F: return GL_RGBA;
+			}
+			
+			KRC_ASSERT(false, "Unkown ImageFormat");
+			return 0;
+		}
+		
+		static GLenum ImageFormatToGLInternalFormat(const ImageFormat format) {
+			switch (format) {
+				case ImageFormat::RGB8:    return GL_RGB8;
+				case ImageFormat::RGBA8:   return GL_RGBA8;
+				case ImageFormat::R8:	   return GL_R8;
+				case ImageFormat::RGBA32F: return GL_RGBA32F;
+			}
+
+			KRC_ASSERT(false, "Unkown ImageFormat");
+			return 0;
+		}
+
+		static GLint FilteringMethodToGLFilter(const FilteringMethod method) {
+			switch (method) {
+			case FilteringMethod::LINEAR:
+				return GL_LINEAR;
+			case FilteringMethod::NEAREST:
+				return GL_NEAREST;
+			case FilteringMethod::MIPMAP_CLOSEST_LINEAR:
+				return GL_LINEAR_MIPMAP_NEAREST;
+			case FilteringMethod::MIPMAP_CLOSEST_NEAREST:
+				return GL_NEAREST_MIPMAP_NEAREST;
+			case FilteringMethod::MIPMAP_INTERPOLATED_LINEAR:
+				return GL_LINEAR_MIPMAP_LINEAR;
+			case FilteringMethod::MIPMAP_INTERPOLATED_NEAREST:
+				return GL_NEAREST_MIPMAP_LINEAR;
+			}
+
+			KRC_ASSERT(false, "Unkown FilteringMethod");
+			return 0;
+		}
+	}
+
 	OpenGLTexture2D::OpenGLTexture2D(AssetSpecification& assetSpecification) {
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
@@ -10,30 +56,36 @@ namespace Kraken {
 		KRC_ASSERT(data, "Failed to load image!");
 
 		if(data) {
+			// Make specification
 			m_Width = width;
 			m_Height = height;
 
-			GLenum storageFormat = 0, imageFormat = 0;
+			ImageFormat format;
 			if (channels == 4) {
-				storageFormat = GL_RGBA8;
-				imageFormat = GL_RGBA;
+				format = ImageFormat::RGBA8;
 			} else if (channels == 3) {
-				storageFormat = GL_RGB8;
-				imageFormat = GL_RGB;
+				format = ImageFormat::RGB8;
+			} else {
+				KRC_ASSERT(false, "Unkown image format")
+				return;
 			}
+			constexpr auto minify = FilteringMethod::MIPMAP_INTERPOLATED_LINEAR;
+			constexpr auto magnify = FilteringMethod::LINEAR;
+
+			m_Specification = {m_Width, m_Height, format, minify, magnify};
 
 			// Create texture
 			glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
-			glTextureStorage2D(m_RendererID, 1, storageFormat, m_Width, m_Height);
+			glTextureStorage2D(m_RendererID, 1, Utils::ImageFormatToGLInternalFormat(format), m_Width, m_Height);
 
 			// Parameters
-			glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, Utils::FilteringMethodToGLFilter(minify));
+			glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, Utils::FilteringMethodToGLFilter(magnify));
 			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 			// Place data
-			glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, imageFormat, GL_UNSIGNED_BYTE, data);
+			glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, Utils::ImageFormatToGLDataFormat(format), GL_UNSIGNED_BYTE, data);
 			
 			stbi_image_free(data);
 		}
