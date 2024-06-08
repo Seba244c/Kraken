@@ -30,7 +30,7 @@ add_library(Kraken STATIC
         src/Kraken/Graphics/GraphicsContext.cpp
         src/Kraken/Graphics/GraphicsContext.h
         src/Kraken/Graphics/Renderer.h
-        src/Kraken/Graphics/RendererAPI.h
+        "src/Kraken/Graphics/GraphicsAPI.h"
         src/Kraken/Platform/OpenGL/OpenGLContext.cpp
         src/Kraken/Platform/OpenGL/OpenGLContext.h
         src/Kraken/Math/Color.h
@@ -40,9 +40,9 @@ add_library(Kraken STATIC
         src/Kraken/Platform/OpenGL/OpenGLShader.h
         src/Kraken/Utils/Files.cpp
         src/Kraken/Utils/Files.h
-        src/Kraken/Graphics/RendererAPI.cpp
-        src/Kraken/Platform/OpenGL/OpenGLRendererAPI.cpp
-        src/Kraken/Platform/OpenGL/OpenGLRendererAPI.h
+        "src/Kraken/Graphics/GraphicsAPI.cpp"
+        "src/Kraken/Platform/OpenGL/OpenGLGraphicsAPI.cpp"
+        "src/Kraken/Platform/OpenGL/OpenGLGraphicsAPI.h"
         src/Kraken/Graphics/Buffer.h
         src/Kraken/Platform/OpenGL/OpenGLBuffer.h
         src/Kraken/Platform/OpenGL/OpenGLBuffer.cpp
@@ -68,7 +68,7 @@ add_library(Kraken STATIC
         "src/Kraken/Platform/OpenGL/OpenGLTexture.h"
         "src/Kraken/Assets/Asset.cpp"
         "src/Kraken/Graphics/Texture.h"
- "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp")
+ "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp" "src/Kraken/Utils/OrthographicCameraController.h" "src/Kraken/Utils/OrthographicCameraController.cpp" "src/Kraken/Renderer/Renderer2D.h" "src/Kraken/Renderer/Renderer2D.cpp"  )
 
 target_include_directories(Kraken PUBLIC src)
 target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers

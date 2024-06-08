@@ -13,11 +13,11 @@
 namespace Kraken {
     Scope<GraphicsContext> GraphicsContext::Create(void *window) {
         switch (Renderer::GetAPI()) {
-            case RendererAPI::API::None:    KRC_ASSERT(false, "ERR::RENDERAPI::None is currently not supported!"); return nullptr;
+            case GraphicsAPI::API::None:    KRC_ASSERT(false, "ERR::RENDERAPI::None is currently not supported!"); return nullptr;
 
 #ifdef KR_SUPPORT_OPENGL
 #ifdef KR_SUPPORT_GLFW
-            case RendererAPI::API::OpenGL:   return CreateScope<OpenGLContext>(static_cast<GLFWwindow*>(window));
+            case GraphicsAPI::API::OpenGL:   return CreateScope<OpenGLContext>(static_cast<GLFWwindow*>(window));
 #else
 #error OpenGL Rendering API Does not support any of the windowing libraries supported by this platform
 #endif

@@ -9,18 +9,31 @@
 // Forward declarations
 namespace Kraken {
 	class Shader;
-    class Texture;
+    class Texture2D;
 }
 
 namespace Kraken {
 	class AssetSpecification {
     public:
-		explicit AssetSpecification(Identifier identifier, std::filesystem::path path) : m_Path(std::move(path)), m_Identifier(identifier) {}
-        [[nodiscard]] std::filesystem::path GetPath() { return m_Path;  }
-        [[nodiscard]] const Identifier& GetIdentifier() const { return m_Identifier;  }
-    private:
+		virtual ~AssetSpecification() = default;
+		[[nodiscard]] virtual const Identifier& GetIdentifier() const = 0;
+        [[nodiscard]] virtual long long ToBuf(char **buffer) = 0;
+        [[nodiscard]] virtual std::string ToString() = 0;
+    };
+
+    class FileAssetSpecification final : public AssetSpecification {
+    public:
+		explicit FileAssetSpecification(Identifier identifier, std::filesystem::path path) : m_Path(std::move(path)), m_Identifier(
+			std::move(identifier)) {}
+
+        [[nodiscard]] const Identifier& GetIdentifier() const override { return m_Identifier;  }
+		[[nodiscard]] long long ToBuf(char** buffer) override;
+        [[nodiscard]] std::string ToString() override;
+
+	private:
         std::filesystem::path m_Path;
         Identifier m_Identifier;
+	    
     };
 
     class DomainAssetProvider {
@@ -39,7 +52,7 @@ namespace Kraken {
 	    AssetSpecification& Get(Identifier& identifier) override;
         const std::string& GetDomain() override { return m_Domain; }
     private:
-        std::map<std::string, Scope<AssetSpecification>> m_Map;
+        std::map<std::string, Scope<FileAssetSpecification>> m_Map;
         std::filesystem::path m_Folder;
         const std::string m_Domain;
     };
@@ -77,7 +90,7 @@ namespace Kraken {
 
     // Library Types
     KR_ASSETLIB_TYPE(Shader)
-    KR_ASSETLIB_TYPE(Texture)
+    KR_ASSETLIB_TYPE(Texture2D)
 
     class AssetsManager {
     public:
@@ -85,6 +98,6 @@ namespace Kraken {
         static AssetSpecification& Get(Identifier identifier);
 
 		KR_INTERNAL_ASSETMANAGER_LIBTYPE(Shader)
-		KR_INTERNAL_ASSETMANAGER_LIBTYPE(Texture)
+		KR_INTERNAL_ASSETMANAGER_LIBTYPE(Texture2D)
     };
 }

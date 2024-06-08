@@ -37,6 +37,7 @@ namespace Kraken {
         static Application& GetInstance() { return *s_Instance; }
     private:
         bool m_ShouldClose = false;
+        bool m_Minimized = false;
 
         std::queue<Event*> m_EventsQueue;
         bool OnWindowClose(WindowCloseEvent& e);

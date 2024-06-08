@@ -21,8 +21,8 @@ namespace Kraken {
                 return GL_FLOAT;
             case ShaderDataType::Mat4:
                 return GL_FLOAT;
-            case ShaderDataType::Int:
-                return GL_INT;
+            case ShaderDataType::UInt:
+                return GL_UNSIGNED_INT;
             case ShaderDataType::Int2:
                 return GL_INT;
             case ShaderDataType::Int3:
@@ -62,12 +62,21 @@ namespace Kraken {
         const auto& layout = vertexBuffer->GetLayout();
         for(const auto& element : layout) {
             glEnableVertexAttribArray(i);
-            glVertexAttribPointer(i,
-                element.GetComponentCount(),
-                ShaderDataTypeToOpenGLBaseType(element.Type),
-                element.Normalized ? GL_TRUE : GL_FALSE,
-                layout.GetStride(),
-                reinterpret_cast<const void *>(element.Offset));
+            if(element.Type == ShaderDataType::UInt) {
+	            glVertexAttribIPointer(i,
+                    element.GetComponentCount(),
+                    GL_UNSIGNED_INT,
+                    layout.GetStride(),
+                    reinterpret_cast<const void *>(element.Offset));
+
+            } else {
+	            glVertexAttribPointer(i,
+	                element.GetComponentCount(),
+	                ShaderDataTypeToOpenGLBaseType(element.Type),
+	                element.Normalized ? GL_TRUE : GL_FALSE,
+	                layout.GetStride(),
+	                reinterpret_cast<const void *>(element.Offset));
+            }
             i++;
         }
 

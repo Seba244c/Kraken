@@ -6,10 +6,11 @@
 #include <krpch.h>
 
 namespace Kraken {
-    class Files {
+    class  Files {
     public:
-        static std::string ReadFile(const std::string& filepath);
-        static std::string ReadFile(const std::filesystem::path& filepath);
-        static std::string GetCacheDir();
+        [[nodiscard]] static std::string ReadFile(const std::string& filepath);
+        [[nodiscard]] static std::string ReadFile(const std::filesystem::path& filepath);
+        [[nodiscard]] static long long LoadFile(char **buffer,const std::filesystem::path& filepath);
+        [[nodiscard]] static std::string GetCacheDir();
     };
 } // Kraken

@@ -11,10 +11,13 @@ namespace Kraken {
     class OpenGLVertexBuffer final : public VertexBuffer {
     public:
         OpenGLVertexBuffer(const float* vertices, uint32_t size);
+        OpenGLVertexBuffer(uint32_t size);
         ~OpenGLVertexBuffer() override;
 
         [[nodiscard]] const BufferLayout & GetLayout() const override { return m_Layout; }
         void SetLayout(const BufferLayout &layout) override { m_Layout = layout; }
+
+		void SetData(const void* data, uint32_t size) override;
 
         void Bind() const override;
         void Unbind() const override;

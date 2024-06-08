@@ -21,7 +21,7 @@ namespace Kraken {
 	}
 
     OpenGLShader::OpenGLShader(AssetSpecification& specs)  {
-        std::string source = Files::ReadFile(specs.GetPath());
+        std::string source = specs.ToString();
         const auto sources = PreProcessFromAsset(source);
         
         const auto vulkanSPRIV =

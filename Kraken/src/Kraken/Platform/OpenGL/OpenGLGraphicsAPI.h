@@ -5,11 +5,11 @@
 #pragma once
 #include <krpch.h>
 
-#include "Kraken/Graphics/RendererAPI.h"
+#include "Kraken/Graphics/GraphicsAPI.h"
 #include "Kraken/Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Kraken {
-    class OpenGLRendererAPI final : public RendererAPI {
+    class OpenGLGraphicsAPI final : public GraphicsAPI {
     public:
         void Init() override;
 
@@ -20,11 +20,13 @@ namespace Kraken {
 
         Ref<VertexArray> CreateVertexArray() override;
         Ref<VertexBuffer> CreateVertexBuffer(const float *vertices, uint32_t size) override;
+        Ref<VertexBuffer> CreateVertexBuffer(uint32_t size) override;
         Ref<IndexBuffer> CreateIndexBuffer(const uint32_t *indices, uint32_t count) override;
         Ref<Shader> CreateShader(const std::string &vertexSrc, const std::string &fragmentSrc) override;
         Ref<Shader> CreateShader(AssetSpecification& specs) override;
         Ref<Framebuffer> CreateFramebuffer(const FramebufferSpecification &spec) override;
         Ref<UniformBuffer> CreateUniformBuffer(uint32_t size, uint32_t binding) override;
-        Ref<Texture> CreateTexture2D(AssetSpecification& specs) override;
+        Ref<Texture2D> CreateTexture2D(AssetSpecification& specs) override;
+        Ref<Texture2D> CreateTexture2D(TextureSpecification& specs) override;
     };
 } // Kraken

@@ -1,7 +1,16 @@
 #include "Asset.h"
 #include "Kraken/Graphics/RenderCommand.h"
+#include "Kraken/Utils/Files.h"
 
 namespace Kraken {
+	long long FileAssetSpecification::ToBuf(char** buffer) {
+		return Files::LoadFile(buffer, m_Path);
+	}
+
+	std::string FileAssetSpecification::ToString() {
+		return Files::ReadFile(m_Path);
+	}
+
 	FolderAssetProvider::FolderAssetProvider(const std::string& domain, const std::string& folderPath) : m_Domain(domain) {
 		m_Folder = folderPath;
 		if(!exists(m_Folder)) {
@@ -26,7 +35,7 @@ namespace Kraken {
 				if (assetName.starts_with(folderPath)) assetName = assetName.substr(folderPath.length());
 
 				KRC_TRACE("Discovered Asset: {0}", assetName);
-				m_Map[assetName] =  CreateScope<AssetSpecification>(Identifier{domain,assetName}, path);
+				m_Map[assetName] =  CreateScope<FileAssetSpecification>(Identifier{domain,assetName}, path);
 			}
 		}
 	}
@@ -51,7 +60,7 @@ namespace Kraken {
 	Ref<T> AssetLibrary<T>::Get(const Identifier& identifier) {
 		if (!Exists(identifier)) {
 			KRC_TRACE("Creating Asset: {0}", identifier.ToString());
-			auto spec = AssetsManager::Get(identifier);
+			auto& spec = AssetsManager::Get(identifier);
 
 			m_Assets[identifier.ToString()] = CreateAsset(spec);
 		}
@@ -74,10 +83,10 @@ namespace Kraken {
 		return RenderCommand::CreateShader(specs);
 	}
 
-	Ref<Texture> TextureLibrary::CreateAsset(AssetSpecification& specs) {
+	Ref<Texture2D> Texture2DLibrary::CreateAsset(AssetSpecification& specs) {
 		return RenderCommand::CreateTexture(specs);
 	}
 	
 	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Shader)
-	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Texture)
+	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Texture2D)
 }

@@ -1,7 +1,5 @@
-#ifndef KRAKEN_APP
-#define KRAKEN_APP
+#pragma once
 // This is used by Kraken applications to automatically include everything needed
-
 //-Application--------------------------------
 #include "Kraken/Core/Base.h"
 #include "Kraken/Core/Application.h"
@@ -17,12 +15,19 @@
 #include "Kraken/Graphics/Shader.h"
 #include "Kraken/Graphics/Texture.h"
 #include "Kraken/Graphics/VertexArray.h"
+
+#include "Kraken/Renderer/Renderer2D.h"
+//--------------------------------------------
+
+
+//-Application Utils--------------------------
+#include "Kraken/Utils/OrthographicCameraController.h"
+#include "Kraken/Platform/PlatformUtils.h"
 //--------------------------------------------
 
 //-Entrypoint---------------------------------
+#ifdef KRAKEN_APP
 #include "Kraken/Core/Entrypoint.h"
+#undef KRAKEN_APP
+#endif
 //--------------------------------------------
-
-#include "Kraken/Platform/PlatformUtils.h"
-
-#endif //KRAKEN_APP

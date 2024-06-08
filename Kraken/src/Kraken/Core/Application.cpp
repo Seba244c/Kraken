@@ -26,8 +26,7 @@ namespace Kraken {
         KRC_INFO("Appstate: Create Window");
 
         m_Window = Window::Create(WindowSpecs({.initializeFullscreen = false, .initializeHidden = true}));
-        m_Window->SetEventCallback([this](Event *e) { m_EventsQueue.push(e); });
-        // Here the applications takes ownership of the event
+        m_Window->SetEventCallback([this](Event *e) { m_EventsQueue.push(e); }); // Here the applications takes ownership of the event
     }
 
     void Application::Run() {
@@ -63,10 +62,12 @@ namespace Kraken {
             m_LastFrameTime = now;
 
             // Update layers and render
-            for(Layer* layer : m_Layerstack)
+            if(!m_Minimized) {
+	            for(Layer* layer : m_Layerstack)
                 layer->OnUpdate(deltaTime);
 
-            m_Window->SwapBuffers();
+	            m_Window->SwapBuffers();
+            }
         }
     }
 
@@ -80,6 +81,13 @@ namespace Kraken {
     }
 
     bool Application::OnWindowResize(const WindowResizeEvent &e) {
+        if(e.GetWidth() == 0 || e.GetHeight() == 0) {
+            KRC_INFO("Window was minimized!");
+
+            m_Minimized = true;
+	        return false;
+        } m_Minimized = false;
+
         Renderer::OnWindowResize(e.GetWidth(), e.GetHeight());
         return false;
     }

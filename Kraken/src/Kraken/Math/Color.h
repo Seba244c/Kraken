@@ -3,12 +3,15 @@
 //
 
 #pragma once
+#include "glm/glm.hpp"
 
 namespace Kraken {
     struct Color {
         const float r, g, b, a;
 
         constexpr Color(const float r, const float g, const float b, const float a = 1.0f) : r(r), g(g), b(b), a(a) {}
+
+    	operator glm::vec4() const { return {r,g,b,a}; }
     };
 
     class Colors {

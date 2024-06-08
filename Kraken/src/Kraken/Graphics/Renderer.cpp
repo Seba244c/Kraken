@@ -5,6 +5,7 @@
 #include "Renderer.h"
 
 #include "RenderCommand.h"
+#include "Kraken/Renderer/Renderer2D.h"
 
 namespace Kraken {
     struct RendererData {
@@ -16,17 +17,19 @@ namespace Kraken {
         Ref<Shader> Shader;
     };
 
-    static RendererData s_Data;
+    static RendererData s_Storage;
     void Renderer::Init() {
-		s_Data.CameraUniformBuffer = RenderCommand::CreateUniformBuffer(sizeof(RendererData::CameraData), 0);
+		s_Storage.CameraUniformBuffer = RenderCommand::CreateUniformBuffer(sizeof(RendererData::CameraData), 0);
+        Renderer2D::Init();
     }
 
     void Renderer::Shutdown() {
+		
     }
 
     void Renderer::BeginScene(const Camera& camera) {
-        s_Data.CameraBuffer.ViewProjection = camera.GetViewProjectionMatrix();
-		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(RendererData::CameraData));
+        s_Storage.CameraBuffer.ViewProjection = camera.GetViewProjectionMatrix();
+		s_Storage.CameraUniformBuffer->SetData(&s_Storage.CameraBuffer, sizeof(RendererData::CameraData));
         //camera.GetFBO()->Bind();
     }
 
@@ -36,7 +39,7 @@ namespace Kraken {
 
     void Renderer::SetShader(const Ref<Shader>& shader) {
         shader->Bind();
-        s_Data.Shader = shader;
+        s_Storage.Shader = shader;
     }
 
 

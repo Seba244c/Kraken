@@ -5,5 +5,5 @@
 #include "RenderCommand.h"
 
 namespace Kraken {
-    Scope<RendererAPI> RenderCommand::s_RendererAPI = RendererAPI::Create();
+    Scope<GraphicsAPI> RenderCommand::s_GraphicsAPI = GraphicsAPI::Create();
 }

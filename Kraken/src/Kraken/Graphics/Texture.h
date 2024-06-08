@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include "krpch.h"
+#include <krpch.h>
 
 namespace Kraken {
 	enum class ImageFormat {
@@ -35,10 +35,13 @@ namespace Kraken {
 	public:
 		virtual ~Texture() = default;
 
-		virtual uint32_t GetWidth() const = 0;
-		virtual uint32_t GetHeight() const = 0;
+		[[nodiscard]] virtual uint32_t GetWidth() const = 0;
+		[[nodiscard]] virtual uint32_t GetHeight() const = 0;
+		[[nodiscard]] virtual uint32_t GetRendererID() const = 0;
 
 		virtual void Bind(uint32_t slot = 0) const = 0;
+		virtual void SetData(void* data, uint32_t size) = 0;
+		virtual bool operator==(const Texture& other) const = 0;
 	protected:
 		TextureSpecification m_Specification;
 	};

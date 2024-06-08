@@ -52,7 +52,10 @@ namespace Kraken {
 	OpenGLTexture2D::OpenGLTexture2D(AssetSpecification& assetSpecification) {
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
-		stbi_uc* data = stbi_load(assetSpecification.GetPath().string().c_str(), &width, &height, &channels, 0);
+		char* buffer;
+		const auto length = assetSpecification.ToBuf(&buffer);
+
+		stbi_uc* data = stbi_load_from_memory(reinterpret_cast<unsigned char*>(buffer), length, &width, &height, &channels, 0);
 		KRC_ASSERT(data, "Failed to load image!");
 
 		if(data) {
@@ -91,11 +94,32 @@ namespace Kraken {
 		}
 	}
 
+	OpenGLTexture2D::OpenGLTexture2D(const TextureSpecification& textureSpecification) {
+		m_Specification = textureSpecification;
+		m_Width = m_Specification.Width;
+		m_Height = m_Specification.Height;
+		
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
+		glTextureStorage2D(m_RendererID, 1, Utils::ImageFormatToGLInternalFormat(textureSpecification.Format), m_Width, m_Height);
+
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MIN_FILTER, Utils::FilteringMethodToGLFilter(textureSpecification.minifyFilter));
+		glTextureParameteri(m_RendererID, GL_TEXTURE_MAG_FILTER, Utils::FilteringMethodToGLFilter(textureSpecification.magnifyFilter));
+
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_RendererID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	}
+
 	OpenGLTexture2D::~OpenGLTexture2D() {
 		glDeleteTextures(1, &m_RendererID);
 	}
 
 	void OpenGLTexture2D::Bind(const uint32_t slot) const {
 		glBindTextureUnit(slot, m_RendererID);
+	}
+
+	void OpenGLTexture2D::SetData(void* data, uint32_t size) {
+		uint32_t bpp = m_Specification.Format == ImageFormat::RGBA8 ? 4 : 3;
+		KRC_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
+		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, Utils::ImageFormatToGLDataFormat(m_Specification.Format), GL_UNSIGNED_BYTE, data);
 	}
 }

@@ -47,6 +47,17 @@ namespace Kraken {
         return result;
     }
 
+    long long Files::LoadFile(char **buffer, const std::filesystem::path& filepath) {
+        std::ifstream in(filepath, std::ios::binary | std::ios::ate);
+        KRC_ASSERT(in.is_open(), "File not found")
+        const std::streamsize size = in.tellg();
+		in.seekg(0, std::ios::beg);
+        
+        *buffer = new char[size];
+        in.read(*buffer, size);
+        return size;
+    }
+
     std::string Files::GetCacheDir() {
         return "assets/cache/";
     }

@@ -1,7 +1,7 @@
 //
 // Created by sebsn on 15-05-2024.
 //
-#include "krpch.h"
+#include <krpch.h>
 #include "Kraken/Platform/PlatformUtils.h"
 #include "Kraken/Platform/Time.h"
 

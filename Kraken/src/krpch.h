@@ -24,6 +24,7 @@
 #include <sstream>
 #include <iostream>
 #include <filesystem>
+#include <array>
 
 #include <glm/glm.hpp>
 

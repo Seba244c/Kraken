@@ -2,11 +2,13 @@
 // Created by sebsn on 21-04-2024.
 //
 
+#define KRAKEN_APP
 #include "Kraken.h"
+#include "Sandbox2D.h"
 
 class SandboxLayer final : public Kraken::Layer {
 public:
-    SandboxLayer() : Layer("Sandbox") {
+    SandboxLayer() : Layer("Sandbox"), m_Camera(800.0f/600.0f) {
         Kraken::AssetsManager::RegisterAssetProvider("Sandbox", Kraken::CreateScope<Kraken::FolderAssetProvider>("Sandbox", "assets/"));
 
         // Temp rendering
@@ -32,29 +34,20 @@ public:
         m_VertexArray->SetIndexBuffer(ib);
 
         m_Shader = Kraken::AssetsManager::GetShader({ "Sandbox", "shaders/Sandbox.glsl" });
-        m_Texture = Kraken::AssetsManager::GetTexture({"Sandbox", "textures/Zote.jpg"});
-
-        m_Camera = Kraken::CreateScope<Kraken::OrthographicCamera>(-2.0f, 2.0f, -2.0f, 2.0f);
+        m_Texture = Kraken::AssetsManager::GetTexture2D({"Sandbox", "textures/Zote.jpg"});
 
         Kraken::Renderer::Init();
     }
 
     void OnUpdate(const Kraken::Timestep ts) override {
-        // movement
-        auto direction = glm::vec3(0.0f);
-        float scaledSpeed = 6.0f * ts;
+        // Update
+    	m_Camera.OnUpdate(ts);
 
-        if(Kraken::Input::IsKeyPressed(Kraken::Key::W)) direction.y += 1;
-        if(Kraken::Input::IsKeyPressed(Kraken::Key::S)) direction.y -= 1;
-        if(Kraken::Input::IsKeyPressed(Kraken::Key::D)) direction.x += 1;
-        if(Kraken::Input::IsKeyPressed(Kraken::Key::A)) direction.x -= 1;
-        if(length(direction) > 0)
-            m_Camera->SetPosition(m_Camera->GetPosition() + normalize(direction) * scaledSpeed);
-
+        // Render
         Kraken::RenderCommand::Clear();
-        Kraken::Renderer::BeginScene(*m_Camera);
+        Kraken::Renderer::BeginScene(m_Camera.GetCamera());
 
-    	// Render Triangle
+    	// Render Texture
         Kraken::Renderer::SetShader(m_Shader);
         m_Texture->Bind();
         m_Shader->SetInt("u_Texture", 0);
@@ -65,20 +58,21 @@ public:
     }
 
     void OnEvent(Kraken::Event &event) override {
-        
+        m_Camera.OnEvent(event);
     }
 private:
     Kraken::Ref<Kraken::VertexArray> m_VertexArray;
     Kraken::Ref<Kraken::Shader> m_Shader;
     Kraken::Ref<Kraken::Texture> m_Texture;
-    Kraken::Scope<Kraken::OrthographicCamera> m_Camera;
+    Kraken::OrthographicCameraController m_Camera;
 };
 
 class Sandbox : public Kraken::Application {
 public:
     explicit Sandbox(const Kraken::ApplicationInfo &applicationInfo)
         : Application(applicationInfo) {
-        PushLayer(new SandboxLayer());
+        //PushLayer(new SandboxLayer());
+        PushLayer(new Sandbox2D());
     }
 };
 
