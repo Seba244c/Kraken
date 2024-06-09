@@ -16,6 +16,8 @@ namespace Kraken {
     
     Application::Application(const ApplicationInfo &applicationInfo) : m_LastFrameTime(TimeInstant(0.0f)),
                                                                        m_ApplicationInfo(applicationInfo) {
+        KR_PROFILE_FUNCTION();
+
         KRC_ASSERT(s_Instance == nullptr, "Instance shouldn't already exist");
         s_Instance = this;
 
@@ -30,29 +32,37 @@ namespace Kraken {
     }
 
     void Application::Run() {
+        KR_PROFILE_FUNCTION();
+
         m_Window->Show();
         FPSTimer::Start();
         
         KRC_INFO("Appstate: Main loop");
+    	KR_PROFILE_SCOPE("Main Loop");
         while(!m_ShouldClose) {
-            // Handle events
+        	KR_PROFILE_SCOPE("Fame");
             m_Window->PollEvents();
 
-            while(!m_EventsQueue.empty()) {
-                const auto e = m_EventsQueue.front();
-                EventDispatcher dispatcher(e);
-                m_EventsQueue.pop();
+            if(!m_EventsQueue.empty()) {
+            	KR_PROFILE_SCOPE("Events");
 
-                dispatcher.Dispatch<WindowCloseEvent>(KR_BIND_EVENT_FN(Application::OnWindowClose));
-                dispatcher.Dispatch<WindowResizeEvent>(KR_BIND_EVENT_FN(Application::OnWindowResize));
-                Input::Event(*e); // For all input events
+	            while(!m_EventsQueue.empty()) {
+	                const auto e = m_EventsQueue.front();
+	                EventDispatcher dispatcher(e);
+	                m_EventsQueue.pop();
 
-                for (auto it = m_Layerstack.end(); it != m_Layerstack.begin();) {
-                    if(e->Handled) break;
-                    (*--it)->OnEvent(*e);
-                }
+	                dispatcher.Dispatch<WindowCloseEvent>(KR_BIND_EVENT_FN(Application::OnWindowClose));
+	                dispatcher.Dispatch<WindowResizeEvent>(KR_BIND_EVENT_FN(Application::OnWindowResize));
+	                Input::Event(*e); // For all input events
+	                
+					KR_PROFILE_SCOPE("Layerstack OnEvent");
+	                for (auto it = m_Layerstack.end(); it != m_Layerstack.begin();) {
+	                    if(e->Handled) break;
+	                    (*--it)->OnEvent(*e);
+	                }
 
-                delete e;
+	                delete e;
+	            }
             }
 
             // Time
@@ -63,11 +73,12 @@ namespace Kraken {
 
             // Update layers and render
             if(!m_Minimized) {
+				KR_PROFILE_SCOPE("Update Layers");
 	            for(Layer* layer : m_Layerstack)
                 layer->OnUpdate(deltaTime);
-
-	            m_Window->SwapBuffers();
             }
+
+        	m_Window->SwapBuffers();
         }
     }
 
@@ -81,6 +92,8 @@ namespace Kraken {
     }
 
     bool Application::OnWindowResize(const WindowResizeEvent &e) {
+        KR_PROFILE_FUNCTION();
+
         if(e.GetWidth() == 0 || e.GetHeight() == 0) {
             KRC_INFO("Window was minimized!");
 
@@ -93,16 +106,21 @@ namespace Kraken {
     }
 
     Application::~Application() {
+        KR_PROFILE_FUNCTION();
         KRC_INFO("Appstate: Cleanup");
         KRC_INFO("App Timer: {0}s", m_FullAppTimer.Get().GetSeconds());
     }
 
     void Application::PushLayer(Layer* layer) {
+        KR_PROFILE_FUNCTION();
+
         m_Layerstack.PushLayer(layer);
         layer->OnAttach();
     }
 
     void Application::PushOverlay(Layer* layer) {
+        KR_PROFILE_FUNCTION();
+
         m_Layerstack.PushOverlay(layer);
         layer->OnAttach();
     }

@@ -61,6 +61,7 @@ add_library(Kraken STATIC
         src/Kraken/Platform/PlatformUtils.h
         src/Kraken/Platform/Windows/Windows.cpp
         src/Kraken/Platform/Time.h
+        src/Kraken/Debug/Instrumentor.h
         "src/Kraken/Assets/Asset.h"
         src/Kraken/Graphics/UniformBuffer.h
         src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.cpp
@@ -78,6 +79,7 @@ set_property(TARGET Kraken PROPERTY CMAKE_CXX_STANDARD 20)
 # Preprocessor build type definition
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions(Kraken PUBLIC KR_DEBUG)
+    target_compile_definitions(Kraken PUBLIC KR_PROFILE)
 else ()
     target_compile_definitions(Kraken PUBLIC KR_RELEASE)
 endif ()

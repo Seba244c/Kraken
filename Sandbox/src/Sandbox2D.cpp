@@ -18,6 +18,8 @@ void Sandbox2D::OnDetach() {
 }
 
 void Sandbox2D::OnUpdate(const Kraken::Timestep ts) {
+    KR_PROFILE_FUNCTION();
+
 	// Update
     m_Camera.OnUpdate(ts);
 

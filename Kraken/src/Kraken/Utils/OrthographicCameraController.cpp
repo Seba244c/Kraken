@@ -8,6 +8,8 @@ namespace Kraken {
 	}
 
 	void OrthographicCameraController::OnUpdate(Timestep ts) {
+        KR_PROFILE_FUNCTION();
+
         auto direction = glm::vec3(0.0f);
         float scaledSpeed = CameraSpeed * ts;
 
@@ -34,6 +36,8 @@ namespace Kraken {
 	}
 
 	bool OrthographicCameraController::OnMouseScrolled(MouseScrolledEvent& e) {
+        KR_PROFILE_FUNCTION();
+
 		m_ZoomLevel -= e.YOffset() * 0.25f;
 		m_ZoomLevel = std::max(m_ZoomLevel, 0.25f);
 		m_Camera.SetProjection(-m_AspectRatio * m_ZoomLevel, m_AspectRatio * m_ZoomLevel, -m_ZoomLevel, m_ZoomLevel);
@@ -42,6 +46,8 @@ namespace Kraken {
 	}
 
 	bool OrthographicCameraController::OnWindowResized(const WindowResizeEvent& e) {
+        KR_PROFILE_FUNCTION();
+
 		OnResize(static_cast<float>(e.GetWidth()), static_cast<float>(e.GetHeight()));
 		return false;
 	}

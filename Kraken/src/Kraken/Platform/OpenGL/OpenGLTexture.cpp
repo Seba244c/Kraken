@@ -50,11 +50,14 @@ namespace Kraken {
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(AssetSpecification& assetSpecification) {
+        KR_PROFILE_FUNCTION();
+
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(1);
 		char* buffer;
 		const auto length = assetSpecification.ToBuf(&buffer);
-
+		
+		KR_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(AssetSpecification& assetSpecification)");
 		stbi_uc* data = stbi_load_from_memory(reinterpret_cast<unsigned char*>(buffer), length, &width, &height, &channels, 0);
 		KRC_ASSERT(data, "Failed to load image!");
 
@@ -95,6 +98,8 @@ namespace Kraken {
 	}
 
 	OpenGLTexture2D::OpenGLTexture2D(const TextureSpecification& textureSpecification) {
+        KR_PROFILE_FUNCTION();
+
 		m_Specification = textureSpecification;
 		m_Width = m_Specification.Width;
 		m_Height = m_Specification.Height;
@@ -110,10 +115,14 @@ namespace Kraken {
 	}
 
 	OpenGLTexture2D::~OpenGLTexture2D() {
+        KR_PROFILE_FUNCTION();
+
 		glDeleteTextures(1, &m_RendererID);
 	}
 
 	void OpenGLTexture2D::Bind(const uint32_t slot) const {
+        KR_PROFILE_FUNCTION();
+
 		glBindTextureUnit(slot, m_RendererID);
 	}
 

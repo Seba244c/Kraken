@@ -14,6 +14,8 @@ namespace Kraken {
 	static uint8_t s_GLFWWindowCount = 0;
     
     GLFWWindow::GLFWWindow(const WindowSpecs& windowSpecs) {
+        KR_PROFILE_FUNCTION();
+
         if(s_GLFWWindowCount++ == 0) {
             KRC_TRACE("GLFWWindowCount was 0");
             if(!GLFW::InitGlfw()) {
@@ -125,18 +127,26 @@ namespace Kraken {
     }
 
     void GLFWWindow::PollEvents() {
+        KR_PROFILE_FUNCTION();
+
         glfwPollEvents();
     }
 
     void GLFWWindow::SwapBuffers() {
-        m_GraphicsContext->SwapBuffers();
+        KR_PROFILE_FUNCTION();
+
+        glfwSwapBuffers(m_Window);
     }
 
     void GLFWWindow::Show() {
+        KR_PROFILE_FUNCTION();
+
         glfwShowWindow(m_Window);
     }
 
     GLFWWindow::~GLFWWindow() {
+        KR_PROFILE_FUNCTION();
+
         glfwDestroyWindow(m_Window);
         
         if(++s_GLFWWindowCount == 0) {
@@ -147,6 +157,8 @@ namespace Kraken {
 
 
     void GLFWWindow::Fullscreen(const bool fullscreen) {
+        KR_PROFILE_FUNCTION();
+
         GLFWmonitor* monitor = glfwGetWindowMonitor(m_Window);
         if((monitor != nullptr) == fullscreen) return;
         m_State.Fullscreen = fullscreen;
@@ -170,6 +182,8 @@ namespace Kraken {
     }
 
     bool GLFW::InitGlfw() {
+        KR_PROFILE_FUNCTION();
+
         KRC_INFO("GLFW: Initializing GLFW");
         
         glfwSetErrorCallback(error_callback);

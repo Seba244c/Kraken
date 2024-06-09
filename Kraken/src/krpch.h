@@ -43,5 +43,6 @@
 #endif
 
 #include "Kraken/Core/Base.h"
+#include "Kraken/Debug/Instrumentor.h"
 
 #endif //KR_KRPCH_H

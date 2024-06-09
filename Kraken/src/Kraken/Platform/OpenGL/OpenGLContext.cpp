@@ -10,6 +10,8 @@ namespace Kraken {
     }
 
     void OpenGLContext::Init() {
+        KR_PROFILE_FUNCTION();
+
         glfwMakeContextCurrent(m_WindowHandle);
         if(!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
             KRC_CRITICAL("ERR::GL::Failed to load GLAD");
@@ -22,9 +24,5 @@ namespace Kraken {
         KRC_INFO("  Version: {0}", reinterpret_cast<const char*>(glGetString(GL_VERSION)));
         
         //KRC_INFO(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "Kraken requires at least OpenGL version 4.5!");
-    }
-
-    void OpenGLContext::SwapBuffers() {
-        glfwSwapBuffers(m_WindowHandle);
     }
 } // Kraken

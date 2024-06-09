@@ -11,6 +11,8 @@
 
 namespace Kraken {
     void OpenGLGraphicsAPI::Init() {
+        KR_PROFILE_FUNCTION();
+
 		// Culling
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
@@ -24,6 +26,8 @@ namespace Kraken {
     }
 
     void OpenGLGraphicsAPI::SetClearColor(const Color color) {
+        KR_PROFILE_FUNCTION();
+
         glClearColor(color.r, color.g, color.b, color.a);
     }
 
@@ -32,6 +36,8 @@ namespace Kraken {
     }
 
     void OpenGLGraphicsAPI::DrawIndexed(const Ref<VertexArray> &vertexArray, uint32_t indexCount) {
+        KR_PROFILE_FUNCTION();
+
         vertexArray->Bind();
         const uint32_t count = indexCount ? indexCount : vertexArray->GetIndexBuffer()->GetCount();
         glDrawElements(GL_TRIANGLES, count, GL_UNSIGNED_INT, nullptr);

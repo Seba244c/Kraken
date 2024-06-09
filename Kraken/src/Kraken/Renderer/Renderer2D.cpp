@@ -44,6 +44,8 @@ namespace Kraken {
     static Renderer2DData s_Data;
 
 	void Renderer2D::Init() { // Creates necessary renderer resources
+		KR_PROFILE_FUNCTION();
+
 		s_Data.CameraUniformBuffer = RenderCommand::CreateUniformBuffer(sizeof(Renderer2DData::CameraData), 0);
 
 		// Texture
@@ -155,10 +157,14 @@ void main ()
 	}
 
 	void Renderer2D::Shutdown() {
+		KR_PROFILE_FUNCTION();
+
 		delete[] s_Data.QuadVertexBufferBase;
 	}
 
 	void Renderer2D::BeginScene(const Camera& camera) {
+		KR_PROFILE_FUNCTION();
+
         s_Data.CameraBuffer.ViewProjection = camera.GetViewProjectionMatrix();
 		s_Data.CameraUniformBuffer->SetData(&s_Data.CameraBuffer, sizeof(Renderer2DData::CameraData));
 
@@ -166,11 +172,14 @@ void main ()
 	}
 
 	void Renderer2D::EndScene() {
+		KR_PROFILE_FUNCTION();
+
 		Flush();
 	}
 
 	void Renderer2D::Flush() {
 		if (s_Data.QuadIndexCount) {
+			KR_PROFILE_SCOPE("Quads");
 			uint32_t dataSize = (uint32_t)((uint8_t*)s_Data.QuadVertexBufferPtr - (uint8_t*)s_Data.QuadVertexBufferBase);
 			s_Data.QuadVertexBuffer->SetData(s_Data.QuadVertexBufferBase, dataSize);
 			s_Data.QuadShader->Bind();
@@ -188,6 +197,8 @@ void main ()
 	}
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Color& color) {
+		KR_PROFILE_FUNCTION();
+
 		DrawQuad(
 			translate(glm::mat4(1.0f), position) * scale(glm::mat4(1.0f), {size.x, size.y, 1.0f})
 			, color);
@@ -200,6 +211,8 @@ void main ()
 
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture,
 		const Color& color) {
+		KR_PROFILE_FUNCTION();
+
 		DrawQuad(
 			translate(glm::mat4(1.0f), position) * scale(glm::mat4(1.0f), {size.x, size.y, 1.0f})
 			, texture, color);     
@@ -212,6 +225,8 @@ void main ()
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size,
 		const Color& color) {
+		KR_PROFILE_FUNCTION();
+
 		DrawQuad(
 			translate(glm::mat4(1.0f), position)
 			* rotate(glm::mat4(1.0f), glm::radians(rotationZ), {0.0f, 0.0f, 1.0f}) *
@@ -226,6 +241,8 @@ void main ()
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size,
 		const Ref<Texture2D> texture, const Color& color) {
+		KR_PROFILE_FUNCTION();
+
 		DrawQuad(
 			translate(glm::mat4(1.0f), position)
 			* rotate(glm::mat4(1.0f), glm::radians(rotationZ), {0.0f, 0.0f, 1.0f}) *
@@ -234,6 +251,8 @@ void main ()
 	}
 
 	void Renderer2D::DrawQuad(const glm::mat4& transform, const Color& color) {
+		KR_PROFILE_FUNCTION();
+
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 
@@ -252,6 +271,8 @@ void main ()
 	}
 
 	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const Color& color) {
+		KR_PROFILE_FUNCTION();
+
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 

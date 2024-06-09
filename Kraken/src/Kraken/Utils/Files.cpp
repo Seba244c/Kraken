@@ -6,6 +6,8 @@
 
 namespace Kraken {
     std::string Files::ReadFile(const std::string &filepath) {
+        KR_PROFILE_FUNCTION();
+
         std::string result;
         std::ifstream in(filepath, std::ios::in | std::ios::binary); // ifstream closes itself due to RAII
 
@@ -26,6 +28,8 @@ namespace Kraken {
     }
 
     std::string Files::ReadFile(const std::filesystem::path& filepath) {
+        KR_PROFILE_FUNCTION();
+
         std::string result;
         std::ifstream in(filepath, std::ios::in | std::ios::binary); // ifstream closes itself due to RAII
 
@@ -48,6 +52,8 @@ namespace Kraken {
     }
 
     long long Files::LoadFile(char **buffer, const std::filesystem::path& filepath) {
+        KR_PROFILE_FUNCTION();
+
         std::ifstream in(filepath, std::ios::binary | std::ios::ate);
         KRC_ASSERT(in.is_open(), "File not found")
         const std::streamsize size = in.tellg();

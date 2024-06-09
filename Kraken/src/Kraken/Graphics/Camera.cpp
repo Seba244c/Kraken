@@ -16,11 +16,15 @@ namespace Kraken {
     }
 
     void OrthographicCamera::SetProjection(const float left, const float right, const float bottom, const float top) {
+        KR_PROFILE_FUNCTION();
+
 		m_ProjectionMatrix = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
 		m_ViewProjectionMatrix = m_ViewMatrix * m_ProjectionMatrix;
 	}
 
     void OrthographicCamera::RecalculateViewMatrix() {
+        KR_PROFILE_FUNCTION();
+
         const auto transform = translate(glm::mat4(1.0f), m_Position)
                                * rotate(glm::mat4(1.0f), glm::radians(m_Rotation), glm::vec3(0,0,1)); // Rotation only along z axis, since this is an orthographic camera
         m_ViewMatrix = inverse(transform); // For cameras
