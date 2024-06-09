@@ -10,6 +10,7 @@ namespace Kraken {
 		glm::vec4 Color;
 		glm::vec2 TexCoord;
 		uint32_t TexIndex;
+		float TilingFactor;
 	};
 
     struct Renderer2DData {
@@ -69,6 +70,7 @@ namespace Kraken {
 	        { ShaderDataType::Float4, "a_Color" },
 	        { ShaderDataType::Float2, "a_TexCoord" },
 	        { ShaderDataType::UInt, "a_TexIndex" },
+	        { ShaderDataType::Float, "a_TilingFactor" },
 	    });
 		s_Data.QuadVertexArray->AddVertexBuffer(s_Data.QuadVertexBuffer);
 		s_Data.QuadVertexBufferBase = new QuadVertex[s_Data.MaxVertices];
@@ -101,6 +103,7 @@ layout(location = 0) in vec3 a_Position;
 layout(location = 1) in vec4 a_Color;
 layout(location = 2) in vec2 a_TexCoord;
 layout(location = 3) in uint a_TexIndex;
+layout(location = 4) in float a_TilingFactor;
 layout(std140, binding = 0) uniform Camera
 {
     mat4 u_mViewProjection;
@@ -110,15 +113,17 @@ struct VertexOutput
 {
 	vec4 Color;
 	vec2 TexCoord;
+	float TilingFactor;
 };
 
 layout (location = 0) out VertexOutput Output;
-layout (location = 2) out flat uint v_TexIndex;
+layout (location = 3) out flat uint v_TexIndex;
 
 void main ()
 {
 	Output.Color = a_Color;
 	Output.TexCoord = a_TexCoord;
+	Output.TilingFactor = a_TilingFactor;
 	v_TexIndex = a_TexIndex;
     gl_Position = u_mViewProjection * vec4(a_Position, 1.0);
 }
@@ -129,10 +134,11 @@ struct VertexOutput
 {
 	vec4 Color;
 	vec2 TexCoord;
+	float TilingFactor;
 };
 
 layout(location = 0) in VertexOutput Input;
-layout(location = 2) in flat uint v_TexIndex;
+layout(location = 3) in flat uint v_TexIndex;
 
 layout(location = 0) out vec4 o_Color;
 
@@ -141,7 +147,7 @@ layout(binding = 0) uniform sampler2D u_Textures[32];
 void main ()
 {
 	vec4 texColor = Input.Color;
-	texColor *= texture(u_Textures[v_TexIndex], Input.TexCoord);
+	texColor *= texture(u_Textures[v_TexIndex], Input.TexCoord * Input.TilingFactor);
 
 	if (texColor.a == 0.0)
 		discard;
@@ -192,10 +198,7 @@ void main ()
 		}
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Color& color) {
-		DrawQuad({ position.x, position.y, 1.0f }, size, color);
-	}
-
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Color& color) { DrawQuad({ position.x, position.y, 1.0f }, size, color); }
 	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Color& color) {
 		KR_PROFILE_FUNCTION();
 
@@ -204,25 +207,19 @@ void main ()
 			, color);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture,
-		const Color& color) {
-		DrawQuad({ position.x, position.y, 1.0f }, size, texture, color);
-	}
-
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture,
+	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, const float tilingFactor,
+		const Color& color) { DrawQuad({ position.x, position.y, 1.0f }, size, texture, tilingFactor, color); }
+	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, const float tilingFactor,
 		const Color& color) {
 		KR_PROFILE_FUNCTION();
 
 		DrawQuad(
 			translate(glm::mat4(1.0f), position) * scale(glm::mat4(1.0f), {size.x, size.y, 1.0f})
-			, texture, color);     
+			, texture, tilingFactor, color);     
 	}
 
 	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const float rotationZ, const glm::vec2& size,
-	                                 const Color& color) {
-		DrawRotatedQuad({ position.x, position.y, 1.0f }, rotationZ, size, color);
-	}
-
+		const Color& color) { DrawRotatedQuad({ position.x, position.y, 1.0f }, rotationZ, size, color); }
 	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size,
 		const Color& color) {
 		KR_PROFILE_FUNCTION();
@@ -234,20 +231,17 @@ void main ()
 			, color);
 	}
 
-	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const float rotationZ, const glm::vec2& size,
-		const Ref<Texture2D> texture, const Color& color) {
-		DrawRotatedQuad({ position.x, position.y, 1.0f }, rotationZ, size, texture, color);
-	}
-
-	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size,
-		const Ref<Texture2D> texture, const Color& color) {
+	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const float rotationZ, const glm::vec2& size, const Ref<Texture2D> texture, const float tilingFactor,
+		const Color& color) { DrawRotatedQuad({ position.x, position.y, 1.0f }, rotationZ, size, texture, tilingFactor, color); }
+	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size, const Ref<Texture2D> texture, const float tilingFactor,
+		const Color& color) {
 		KR_PROFILE_FUNCTION();
 
 		DrawQuad(
 			translate(glm::mat4(1.0f), position)
 			* rotate(glm::mat4(1.0f), glm::radians(rotationZ), {0.0f, 0.0f, 1.0f}) *
 			scale(glm::mat4(1.0f), {size.x, size.y, 1.0f})
-			, texture, color);
+			, texture, tilingFactor, color);
 	}
 
 	void Renderer2D::DrawQuad(const glm::mat4& transform, const Color& color) {
@@ -255,6 +249,8 @@ void main ()
 
 		constexpr size_t quadVertexCount = 4;
 		constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+		constexpr float tilingFactor = 1.0f;
+		constexpr int textureIndex = 0;
 
 		if (s_Data.QuadIndexCount >= Renderer2DData::MaxIndices)
 			NextBatch();
@@ -263,14 +259,15 @@ void main ()
 			s_Data.QuadVertexBufferPtr->Position = transform * s_Data.QuadVertexPositions[i];
 			s_Data.QuadVertexBufferPtr->Color = color;
 			s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[i];
-			s_Data.QuadVertexBufferPtr->TexIndex = 0; // White texture
+			s_Data.QuadVertexBufferPtr->TexIndex = textureIndex; // White texture
+			s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 			s_Data.QuadVertexBufferPtr++;
 		}
 
 		s_Data.QuadIndexCount += 6;
 	}
 
-	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const Color& color) {
+	void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const float tilingFactor, const Color& color) {
 		KR_PROFILE_FUNCTION();
 
 		constexpr size_t quadVertexCount = 4;
@@ -302,6 +299,7 @@ void main ()
 			s_Data.QuadVertexBufferPtr->Color = color;
 			s_Data.QuadVertexBufferPtr->TexCoord = textureCoords[i];
 			s_Data.QuadVertexBufferPtr->TexIndex = texIndex;
+			s_Data.QuadVertexBufferPtr->TilingFactor = tilingFactor;
 			s_Data.QuadVertexBufferPtr++;
 		}
 

@@ -17,16 +17,16 @@ namespace Kraken {
 		// Primitives
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Color& color);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Color& color);
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, const Color& color = Colors::White);
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, const Color& color = Colors::White);
+		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, float tilingFactor = 1, const Color& color = Colors::White);
+		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float tilingFactor = 1, const Color& color = Colors::White);
 
 		static void DrawRotatedQuad(const glm::vec2& position, const float rotationZ, const glm::vec2& size, const Color& color);
 		static void DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size, const Color& color);
-		static void DrawRotatedQuad(const glm::vec2& position, const float rotationZ, const glm::vec2& size, const Ref<Texture2D> texture, const Color& color = Colors::White);
-		static void DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size, const Ref<Texture2D> texture, const Color& color = Colors::White);
+		static void DrawRotatedQuad(const glm::vec2& position, const float rotationZ, const glm::vec2& size, const Ref<Texture2D> texture, float tilingFactor = 1, const Color& color = Colors::White);
+		static void DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size, const Ref<Texture2D> texture, float tilingFactor = 1, const Color& color = Colors::White);
 
 		static void DrawQuad(const glm::mat4& transform, const Color& color);
-		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const Color& color);
+		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const Color& color);
 	private:
 		static void StartBatch();
 		static void NextBatch();
