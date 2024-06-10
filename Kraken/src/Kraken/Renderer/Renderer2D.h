@@ -7,6 +7,15 @@
 namespace Kraken {
 	class Renderer2D {
 	public:
+		struct Quad {
+			const glm::vec2 Position = {0.0f, 0.0f};
+			const glm::vec2 Size = {1.0f, 1.0f};
+			const float Rotation = 0.0f;
+			const Ref<Texture2D> Texture;
+			const float TilingFactor = 1.0f;
+			const Color Color = Colors::White;
+		};
+	public:
 		static void Init();
 		static void Shutdown();
 
@@ -15,16 +24,8 @@ namespace Kraken {
 		static void Flush();
 		
 		// Primitives
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Color& color);
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Color& color);
-		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, float tilingFactor = 1, const Color& color = Colors::White);
-		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, float tilingFactor = 1, const Color& color = Colors::White);
-
-		static void DrawRotatedQuad(const glm::vec2& position, const float rotationZ, const glm::vec2& size, const Color& color);
-		static void DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size, const Color& color);
-		static void DrawRotatedQuad(const glm::vec2& position, const float rotationZ, const glm::vec2& size, const Ref<Texture2D> texture, float tilingFactor = 1, const Color& color = Colors::White);
-		static void DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size, const Ref<Texture2D> texture, float tilingFactor = 1, const Color& color = Colors::White);
-
+		static void DrawQuad(const Quad &q);
+		static void DrawRotatedQuad(const Quad &q);
 		static void DrawQuad(const glm::mat4& transform, const Color& color);
 		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor, const Color& color);
 	private:

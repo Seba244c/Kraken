@@ -26,11 +26,11 @@ void Sandbox2D::OnUpdate(const Kraken::Timestep ts) {
     // Rendering
     Kraken::RenderCommand::Clear();
     Kraken::Renderer2D::BeginScene(m_Camera.GetCamera());
-    Kraken::Renderer2D::DrawQuad({0.0f, 0.0f}, {1.0f, 1.0f}, Kraken::Colors::Red);
-    Kraken::Renderer2D::DrawQuad({1.0f, 0.0f}, {1.0f, 1.0f}, Kraken::Colors::Blue);
+    Kraken::Renderer2D::DrawQuad({.Color = Kraken::Colors::Red});
+    Kraken::Renderer2D::DrawQuad({.Position ={1.0f, 0.0f}, .Color = Kraken::Colors::Blue});
     s_Rotation += ts * 75;
-    Kraken::Renderer2D::DrawRotatedQuad({2.0f, 0.0f}, s_Rotation, {0.5f, 0.5f}, Kraken::Colors::Green);
-    Kraken::Renderer2D::DrawRotatedQuad({0.0f, 2.0f}, -s_Rotation, {1.0f, 1.0f}, m_Texture, 3);
+    Kraken::Renderer2D::DrawRotatedQuad({.Position ={2.0f, 0.0f}, .Size = {0.5f, 0.5f}, .Rotation=s_Rotation, .Color = Kraken::Colors::Green});
+    Kraken::Renderer2D::DrawRotatedQuad({.Position ={0.0f, 1.5f}, .Rotation=-s_Rotation, .Texture=m_Texture, .TilingFactor = 3});
     
     Kraken::Renderer2D::EndScene();
 }

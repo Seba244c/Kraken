@@ -198,50 +198,38 @@ void main ()
 		}
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Color& color) { DrawQuad({ position.x, position.y, 1.0f }, size, color); }
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Color& color) {
+	void Renderer2D::DrawQuad(const Quad &q) {
 		KR_PROFILE_FUNCTION();
+		// TODO: The texture check is also expensive.
 
-		DrawQuad(
-			translate(glm::mat4(1.0f), position) * scale(glm::mat4(1.0f), {size.x, size.y, 1.0f})
-			, color);
+		if(q.Texture)
+			DrawQuad(
+				translate(glm::mat4(1.0f), {q.Position.x, q.Position.y, 0.0f})
+				* scale(glm::mat4(1.0f), {q.Size.x, q.Size.y, 1.0f})
+			, q.Texture, q.TilingFactor, q.Color);
+		else 
+			DrawQuad(
+				translate(glm::mat4(1.0f), {q.Position.x, q.Position.y, 0.0f})
+				* scale(glm::mat4(1.0f), {q.Size.x, q.Size.y, 1.0f})
+				, q.Color);
 	}
 
-	void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D> texture, const float tilingFactor,
-		const Color& color) { DrawQuad({ position.x, position.y, 1.0f }, size, texture, tilingFactor, color); }
-	void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D> texture, const float tilingFactor,
-		const Color& color) {
+	void Renderer2D::DrawRotatedQuad(const Quad &q) {
 		KR_PROFILE_FUNCTION();
+		// TODO: The texture check
 
-		DrawQuad(
-			translate(glm::mat4(1.0f), position) * scale(glm::mat4(1.0f), {size.x, size.y, 1.0f})
-			, texture, tilingFactor, color);     
-	}
-
-	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const float rotationZ, const glm::vec2& size,
-		const Color& color) { DrawRotatedQuad({ position.x, position.y, 1.0f }, rotationZ, size, color); }
-	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size,
-		const Color& color) {
-		KR_PROFILE_FUNCTION();
-
-		DrawQuad(
-			translate(glm::mat4(1.0f), position)
-			* rotate(glm::mat4(1.0f), glm::radians(rotationZ), {0.0f, 0.0f, 1.0f}) *
-			scale(glm::mat4(1.0f), {size.x, size.y, 1.0f })
-			, color);
-	}
-
-	void Renderer2D::DrawRotatedQuad(const glm::vec2& position, const float rotationZ, const glm::vec2& size, const Ref<Texture2D> texture, const float tilingFactor,
-		const Color& color) { DrawRotatedQuad({ position.x, position.y, 1.0f }, rotationZ, size, texture, tilingFactor, color); }
-	void Renderer2D::DrawRotatedQuad(const glm::vec3& position, const float rotationZ, const glm::vec2& size, const Ref<Texture2D> texture, const float tilingFactor,
-		const Color& color) {
-		KR_PROFILE_FUNCTION();
-
-		DrawQuad(
-			translate(glm::mat4(1.0f), position)
-			* rotate(glm::mat4(1.0f), glm::radians(rotationZ), {0.0f, 0.0f, 1.0f}) *
-			scale(glm::mat4(1.0f), {size.x, size.y, 1.0f})
-			, texture, tilingFactor, color);
+		if(q.Texture)
+			DrawQuad(
+				translate(glm::mat4(1.0f), {q.Position.x, q.Position.y, 0.0f})
+				* rotate(glm::mat4(1.0f), glm::radians(q.Rotation), {0.0f, 0.0f, 1.0f}) *
+				scale(glm::mat4(1.0f), {q.Size.x, q.Size.y, 1.0f})
+			, q.Texture, q.TilingFactor, q.Color);
+		else 
+			DrawQuad(
+				translate(glm::mat4(1.0f), {q.Position.x, q.Position.y, 0.0f})
+				* rotate(glm::mat4(1.0f), glm::radians(q.Rotation), {0.0f, 0.0f, 1.0f}) *
+				scale(glm::mat4(1.0f), {q.Size.x, q.Size.y, 1.0f})
+				, q.Color);
 	}
 
 	void Renderer2D::DrawQuad(const glm::mat4& transform, const Color& color) {
