@@ -76,7 +76,7 @@ namespace Kraken {
 				return;
 			}
 			constexpr auto minify = FilteringMethod::MIPMAP_INTERPOLATED_LINEAR;
-			constexpr auto magnify = FilteringMethod::LINEAR;
+			constexpr auto magnify = FilteringMethod::NEAREST;
 
 			m_Specification = {m_Width, m_Height, format, minify, magnify};
 

@@ -10,6 +10,7 @@
 namespace Kraken {
 	class Shader;
     class Texture2D;
+    class SpriteSheet;
 }
 
 namespace Kraken {
@@ -19,6 +20,7 @@ namespace Kraken {
 		[[nodiscard]] virtual const Identifier& GetIdentifier() const = 0;
         [[nodiscard]] virtual long long ToBuf(char **buffer) = 0;
         [[nodiscard]] virtual std::string ToString() = 0;
+        [[nodiscard]] virtual std::vector<std::string> ToLines() = 0;
     };
 
     class FileAssetSpecification final : public AssetSpecification {
@@ -29,6 +31,7 @@ namespace Kraken {
         [[nodiscard]] const Identifier& GetIdentifier() const override { return m_Identifier;  }
 		[[nodiscard]] long long ToBuf(char** buffer) override;
         [[nodiscard]] std::string ToString() override;
+		[[nodiscard]] std::vector<std::string> ToLines() override;
 
 	private:
         std::filesystem::path m_Path;
@@ -91,6 +94,7 @@ namespace Kraken {
     // Library Types
     KR_ASSETLIB_TYPE(Shader)
     KR_ASSETLIB_TYPE(Texture2D)
+    KR_ASSETLIB_TYPE(SpriteSheet)
 
     class AssetsManager {
     public:
@@ -99,5 +103,6 @@ namespace Kraken {
 
 		KR_INTERNAL_ASSETMANAGER_LIBTYPE(Shader)
 		KR_INTERNAL_ASSETMANAGER_LIBTYPE(Texture2D)
+		KR_INTERNAL_ASSETMANAGER_LIBTYPE(SpriteSheet)
     };
 }

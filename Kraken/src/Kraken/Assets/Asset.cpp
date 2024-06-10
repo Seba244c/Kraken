@@ -1,5 +1,6 @@
 #include "Asset.h"
 #include "Kraken/Graphics/RenderCommand.h"
+#include "Kraken/Renderer/Sprite.h"
 #include "Kraken/Utils/Files.h"
 
 namespace Kraken {
@@ -9,6 +10,10 @@ namespace Kraken {
 
 	std::string FileAssetSpecification::ToString() {
 		return Files::ReadFile(m_Path);
+	}
+
+	std::vector<std::string> FileAssetSpecification::ToLines() {
+		return Files::ReadLines(m_Path);
 	}
 
 	FolderAssetProvider::FolderAssetProvider(const std::string& domain, const std::string& folderPath) : m_Domain(domain) {
@@ -86,7 +91,12 @@ namespace Kraken {
 	Ref<Texture2D> Texture2DLibrary::CreateAsset(AssetSpecification& specs) {
 		return RenderCommand::CreateTexture(specs);
 	}
-	
+
+	Ref<SpriteSheet> SpriteSheetLibrary::CreateAsset(AssetSpecification& specs) {
+		return CreateRef<SpriteSheet>(specs);
+	}
+
 	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Shader)
 	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Texture2D)
+	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(SpriteSheet)
 }

@@ -33,19 +33,35 @@ namespace Kraken {
         std::string result;
         std::ifstream in(filepath, std::ios::in | std::ios::binary); // ifstream closes itself due to RAII
 
-        if (in) {
+        if (in.is_open()) {
             in.seekg(0, std::ios::end);
             if (const size_t size = in.tellg(); size != -1) {
                 result.resize(size);
                 in.seekg(0, std::ios::beg);
                 in.read(&result[0], size);
-            }
-            else {
+            } else {
                 KRC_ERROR("Could not open file '{0}'", filepath);
             }
+
+            in.close();
         }
         else {
             KRC_ERROR("Could not open file '{0}'", filepath);
+        }
+
+        return result;
+    }
+
+    std::vector<std::string> Files::ReadLines(std::filesystem::path& path) {
+        std::vector<std::string> result;
+        std::ifstream in(path, std::ios::in); // ifstream closes itself due to RAII
+
+        if (in.is_open()) {
+            std::string line;
+            while(std::getline(in, line)) result.push_back(line);
+            in.close();
+        } else {
+            KRC_ERROR("Could not open file '{0}'", path);
         }
 
         return result;

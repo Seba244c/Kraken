@@ -17,6 +17,7 @@
 #include "Kraken/Graphics/VertexArray.h"
 
 #include "Kraken/Renderer/Renderer2D.h"
+#include "Kraken/Renderer/Sprite.h"
 //--------------------------------------------
 
 

@@ -10,6 +10,7 @@ namespace Kraken {
     public:
         [[nodiscard]] static std::string ReadFile(const std::string& filepath);
         [[nodiscard]] static std::string ReadFile(const std::filesystem::path& filepath);
+	    [[nodiscard]] static std::vector<std::string> ReadLines(std::filesystem::path& path);
         [[nodiscard]] static long long LoadFile(char **buffer,const std::filesystem::path& filepath);
         [[nodiscard]] static std::string GetCacheDir();
     };

@@ -69,7 +69,7 @@ add_library(Kraken STATIC
         "src/Kraken/Platform/OpenGL/OpenGLTexture.h"
         "src/Kraken/Assets/Asset.cpp"
         "src/Kraken/Graphics/Texture.h"
- "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp" "src/Kraken/Utils/OrthographicCameraController.h" "src/Kraken/Utils/OrthographicCameraController.cpp" "src/Kraken/Renderer/Renderer2D.h" "src/Kraken/Renderer/Renderer2D.cpp"  )
+ "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp" "src/Kraken/Utils/OrthographicCameraController.h" "src/Kraken/Utils/OrthographicCameraController.cpp" "src/Kraken/Renderer/Renderer2D.h" "src/Kraken/Renderer/Renderer2D.cpp"   "src/Kraken/Renderer/Sprite.h" "src/Kraken/Renderer/Sprite.cpp")
 
 target_include_directories(Kraken PUBLIC src)
 target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers

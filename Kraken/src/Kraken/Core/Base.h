@@ -57,6 +57,11 @@ namespace Kraken {
         const std::string name;
 
         [[nodiscard]] std::string ToString() const { return Format("{}:{}", domain, name); }
+        [[nodiscard]] static Identifier ParseIdentifier(std::string& s) {
+            const auto split = s.find(':');
+
+            return {s.substr(0, split),s.substr(split+1, s.length())};
+        }
     };
 }
 
