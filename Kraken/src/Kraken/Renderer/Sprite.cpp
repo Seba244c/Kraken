@@ -39,19 +39,19 @@ namespace Kraken {
 			std::string value = line.substr(1);
 			if(line[0] == 't') texture = AssetsManager::GetTexture2D(Identifier::ParseIdentifier(value));
 			else if(line[0] == 'o') {
-			    std::istringstream iss(value);
+			    std::istringstream is(value);
 			    std::string num;
 
-				std::getline(iss, num, ',');
+				std::getline(is, num, ',');
 				const float x = std::stoi(num);
-				std::getline(iss, num, ',');
+				std::getline(is, num, ',');
 				const float y = std::stoi(num);
-				std::getline(iss, num, ',');
+				std::getline(is, num, ',');
 				const float w = std::stoi(num);
-				std::getline(iss, num, ',');
+				std::getline(is, num, ',');
 				const float h = std::stoi(num);
-
-				offset = {x,y,w,h};
+				
+				offset = { x, texture->GetHeight()-y-h,w,h};
 			} else if(line[0] == 's') {
 				PushSprite(value[0], texture, offset);
 			}

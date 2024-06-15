@@ -1,5 +1,6 @@
 #include "Asset.h"
 #include "Kraken/Graphics/RenderCommand.h"
+#include "Kraken/Renderer/Font.h"
 #include "Kraken/Renderer/Sprite.h"
 #include "Kraken/Utils/Files.h"
 
@@ -96,7 +97,12 @@ namespace Kraken {
 		return CreateRef<SpriteSheet>(specs);
 	}
 
+	Ref<Font> FontLibrary::CreateAsset(AssetSpecification& specs) {
+		return CreateRef<Font>(specs);
+	}
+
 	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Shader)
 	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Texture2D)
 	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(SpriteSheet)
+	KR_INTERNAL_ASSETMANAGER_LIBTYPE_CPP(Font)
 }

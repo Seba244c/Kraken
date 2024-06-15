@@ -18,6 +18,7 @@ namespace Kraken {
         [[nodiscard]] const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
         [[nodiscard]] const glm::mat4& GetViewProjectionMatrix() const { return m_ViewProjectionMatrix; }
         [[nodiscard]] const Scope<Framebuffer>& GetFBO() const { return m_Framebuffer; }
+        void SetFBO(Scope<Framebuffer>& framebuffer) { m_Framebuffer = std::move(framebuffer); }
     protected:
         glm::mat4 m_ProjectionMatrix;
     	glm::mat4 m_ViewMatrix;

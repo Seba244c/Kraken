@@ -69,7 +69,7 @@ add_library(Kraken STATIC
         "src/Kraken/Platform/OpenGL/OpenGLTexture.h"
         "src/Kraken/Assets/Asset.cpp"
         "src/Kraken/Graphics/Texture.h"
- "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp" "src/Kraken/Utils/OrthographicCameraController.h" "src/Kraken/Utils/OrthographicCameraController.cpp" "src/Kraken/Renderer/Renderer2D.h" "src/Kraken/Renderer/Renderer2D.cpp"   "src/Kraken/Renderer/Sprite.h" "src/Kraken/Renderer/Sprite.cpp")
+ "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp" "src/Kraken/Utils/OrthographicCameraController.h" "src/Kraken/Utils/OrthographicCameraController.cpp" "src/Kraken/Renderer/Renderer2D.h" "src/Kraken/Renderer/Renderer2D.cpp"   "src/Kraken/Renderer/Sprite.h" "src/Kraken/Renderer/Sprite.cpp" "src/Kraken/Renderer/Font.h" "src/Kraken/Renderer/Font.cpp")
 
 target_include_directories(Kraken PUBLIC src)
 target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers
@@ -90,7 +90,7 @@ find_package(glm)
 find_package(unofficial-shaderc)
 find_package(spirv_cross_core)
 find_package(spirv_cross_glsl)
-set(KR_LIBS spdlog::spdlog glm::glm unofficial::shaderc::shaderc spirv-cross-core spirv-cross-glsl stb_image)
+set(KR_LIBS spdlog::spdlog glm::glm unofficial::shaderc::shaderc spirv-cross-core spirv-cross-glsl stb_image msdf-atlas-gen)
 
 ### Platform Support
 if(WIN32)

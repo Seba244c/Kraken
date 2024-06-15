@@ -49,6 +49,8 @@ namespace Kraken {
         KR_PROFILE_FUNCTION();
 
 		OnResize(static_cast<float>(e.GetWidth()), static_cast<float>(e.GetHeight()));
+		if(m_Camera.GetFBO()) m_Camera.GetFBO()->Resize(e.GetWidth(), e.GetHeight());
+
 		return false;
 	}
 }

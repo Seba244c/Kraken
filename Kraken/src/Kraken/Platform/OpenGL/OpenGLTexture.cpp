@@ -8,7 +8,7 @@ namespace Kraken {
 			switch (format) {
 				case ImageFormat::RGB8:    return GL_RGB;
 				case ImageFormat::RGBA8:   return GL_RGBA;
-				case ImageFormat::R8:      return GL_R;
+				case ImageFormat::R8:      return GL_RED;
 				case ImageFormat::RGBA32F: return GL_RGBA;
 			}
 			
@@ -22,6 +22,18 @@ namespace Kraken {
 				case ImageFormat::RGBA8:   return GL_RGBA8;
 				case ImageFormat::R8:	   return GL_R8;
 				case ImageFormat::RGBA32F: return GL_RGBA32F;
+			}
+
+			KRC_ASSERT(false, "Unkown ImageFormat");
+			return 0;
+		}
+
+		static int ImageFormatBytesPrPixel(const ImageFormat format) {
+			switch (format) {
+				case ImageFormat::RGB8:    return 3;
+				case ImageFormat::RGBA8:   return 4;
+				case ImageFormat::R8:	   return 1;
+				case ImageFormat::RGBA32F: return 16;
 			}
 
 			KRC_ASSERT(false, "Unkown ImageFormat");
@@ -127,8 +139,7 @@ namespace Kraken {
 	}
 
 	void OpenGLTexture2D::SetData(void* data, uint32_t size) {
-		uint32_t bpp = m_Specification.Format == ImageFormat::RGBA8 ? 4 : 3;
-		KRC_ASSERT(size == m_Width * m_Height * bpp, "Data must be entire texture!");
+		KRC_ASSERT(size == m_Width * m_Height * Utils::ImageFormatBytesPrPixel(m_Specification.Format), "Data must be entire texture!");
 		glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, Utils::ImageFormatToGLDataFormat(m_Specification.Format), GL_UNSIGNED_BYTE, data);
 	}
 }

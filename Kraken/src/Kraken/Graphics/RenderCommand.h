@@ -66,6 +66,10 @@ namespace Kraken {
 	        return s_GraphicsAPI->CreateTexture2D(textureSpecification);
         }
 
+        static Ref<Framebuffer> CreateFramebuffer(const FramebufferSpecification &framebufferSpecification) {
+	        return s_GraphicsAPI->CreateFramebuffer(framebufferSpecification);
+        }
+
     private:
         static Scope<GraphicsAPI> s_GraphicsAPI;
     };

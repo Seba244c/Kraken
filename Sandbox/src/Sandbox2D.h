@@ -12,4 +12,5 @@ public:
 private:
     Kraken::OrthographicCameraController m_Camera;
     Kraken::Ref<Kraken::Texture2D> m_Texture;
+    Kraken::Ref<Kraken::Font> m_Font;
 };

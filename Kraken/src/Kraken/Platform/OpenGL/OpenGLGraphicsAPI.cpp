@@ -73,7 +73,7 @@ namespace Kraken {
     }
 
     Ref<Framebuffer> OpenGLGraphicsAPI::CreateFramebuffer(const FramebufferSpecification &spec) {
-        return CreateRef<OpenGLFramebuffer>(spec);
+        return CreateRef<OpenGlFramebuffer>(spec);
     }
 
     Ref<UniformBuffer> OpenGLGraphicsAPI::CreateUniformBuffer(uint32_t size, uint32_t binding) {

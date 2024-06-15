@@ -15,6 +15,7 @@
 #include "Kraken/Graphics/Shader.h"
 #include "Kraken/Graphics/Texture.h"
 #include "Kraken/Graphics/VertexArray.h"
+#include "Kraken/Renderer/Font.h"
 
 #include "Kraken/Renderer/Renderer2D.h"
 #include "Kraken/Renderer/Sprite.h"

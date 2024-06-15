@@ -6,6 +6,8 @@
 
 #include <glm/gtc/matrix_transform.hpp>
 
+#include "RenderCommand.h"
+
 namespace Kraken {
 	Camera::Camera(const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix) : m_ProjectionMatrix(projectionMatrix),
               m_ViewMatrix(viewMatrix), m_ViewProjectionMatrix(viewMatrix * projectionMatrix) {

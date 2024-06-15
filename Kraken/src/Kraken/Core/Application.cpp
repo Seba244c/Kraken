@@ -27,7 +27,9 @@ namespace Kraken {
 
         KRC_INFO("Appstate: Create Window");
 
-        m_Window = Window::Create(WindowSpecs({.initializeFullscreen = false, .initializeHidden = true}));
+        m_Window = Window::Create(WindowSpecs({
+            .initializeFullscreen = false, .initializeHidden = true,
+        	.Width = applicationInfo.WindowWidth, .Height = applicationInfo.WindowHeight}));
         m_Window->SetEventCallback([this](Event *e) { m_EventsQueue.push(e); }); // Here the applications takes ownership of the event
     }
 

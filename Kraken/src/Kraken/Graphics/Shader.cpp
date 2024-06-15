@@ -64,6 +64,7 @@ namespace Kraken {
 
     std::unordered_map<ShaderType, std::vector<uint32_t>> ShaderUtils::CompileOrGetVulkanBinaries(
         const std::unordered_map<ShaderType, std::string> &shaderSources, Identifier identifier) {
+
         // Output
         std::unordered_map<ShaderType, std::vector<uint32_t>> shaderData;
         shaderData.clear();
@@ -77,9 +78,12 @@ namespace Kraken {
         std::filesystem::path cacheDirectory = Files::GetCacheDir() + "/shader/" + identifier.domain + "/";
 
         for(auto&& [ stage, source ] : shaderSources) {
+            KRC_TRACE("Compiling shader {0}, stage: {1} to SPIRV...", identifier.ToString(), stage == FRAGMENT_SHADER ? "FRAG" : "VERT");
+
             std::filesystem::path cachedPath = cacheDirectory / (identifier.name + ShaderTypeCachedVulkanFileExtension(stage));
 
             if (std::ifstream in(cachedPath, std::ios::in | std::ios::binary); in.is_open()) {
+                KRC_TRACE("Cash hit!");
                 in.seekg(0, std::ios::end);
                 auto size = in.tellg();
                 in.seekg(0, std::ios::beg);
@@ -88,6 +92,7 @@ namespace Kraken {
                 data.resize(size / sizeof(uint32_t));
                 in.read((char*)data.data(), size);
             } else {
+                KRC_TRACE("Cash miss, recompiling...");
                 shaderc::SpvCompilationResult module = compiler.CompileGlslToSpv(source,
                     ShaderTypeToShaderC(stage),
                     (identifier.ToString() + ":" + ShaderTypeToShortString(stage)).c_str(),
@@ -126,9 +131,11 @@ namespace Kraken {
         std::filesystem::path cacheDirectory = Files::GetCacheDir() + "/shader/" + identifier.domain + "/";
 
         for(auto&& [ stage, spirv ] : vulkanSPIRV) {
+            KRC_TRACE("Compiling shader {0}, stage: {1} from SPIRV to GLSL...", identifier.ToString(), stage == FRAGMENT_SHADER ? "FRAG" : "VERT");
             std::filesystem::path cachedPath = cacheDirectory / (identifier.name + ShaderTypeCachedOpenGLFileExtension(stage));
 
             if (std::ifstream in(cachedPath, std::ios::in | std::ios::binary); in.is_open()) {
+                KRC_TRACE("Cash hit!");
                 in.seekg(0, std::ios::end);
                 auto size = in.tellg();
                 in.seekg(0, std::ios::beg);
@@ -137,6 +144,7 @@ namespace Kraken {
                 data.resize(size / sizeof(uint32_t));
                 in.read((char*)data.data(), size);
             } else {
+                KRC_TRACE("Cash miss, recompiling...");
                 spirv_cross::CompilerGLSL glslCompiler(spirv);
                 openGLSourceCode[stage] = glslCompiler.compile();
                 auto& source = openGLSourceCode[stage];

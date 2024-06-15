@@ -14,6 +14,8 @@ namespace Kraken {
         std::string Name;
         std::string Author;
         std::string Version;
+        uint32_t WindowWidth = 1280;
+        uint32_t WindowHeight = 720;
     };
     
     struct AppCommandlineArguments {

@@ -15,6 +15,7 @@ int main(int argc, char** argv) {
 
     KR_PROFILE_BEGIN_SESSION("Startup", "KrakenProfile-Startup.json");
     const auto app = Kraken::CreateApplication({argc, argv});
+    KRC_ASSERT(app, "App is nullptr!")
     KRC_TRACE("Application Info\n\tName: {}, Author: {}, Version: {}",
         app->GetApplicationInfo().Name,
         app->GetApplicationInfo().Author,
@@ -25,7 +26,7 @@ int main(int argc, char** argv) {
     app->Run();
     KR_PROFILE_END_SESSION();
     
-	KR_PROFILE_BEGIN_SESSION("Shutdown", "HazelProfile-Shutdown.json");
+	KR_PROFILE_BEGIN_SESSION("Shutdown", "KrakenProfile-Shutdown.json");
     delete app;
     KRC_INFO("Goodbye");
 	KR_PROFILE_END_SESSION();

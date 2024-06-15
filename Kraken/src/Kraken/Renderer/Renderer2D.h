@@ -5,8 +5,11 @@
 #include "Sprite.h"
 #include "Kraken/Graphics/Camera.h"
 #include "Kraken/Graphics/Texture.h"
+#undef DrawText
 
 namespace Kraken {
+	class Font;
+
 	class Renderer2D {
 	public:
 		struct Quad {
@@ -40,9 +43,10 @@ namespace Kraken {
 		static void DrawRotatedSprite(const Sprite &s);
 		static void DrawQuad(const glm::mat4& transform, const Color& color);
 		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec2 textureCoords[], float tilingFactor, const Color& color);
+		static void DrawText(const std::string& string, Ref<Font> font, const glm::mat4& transform);
 
 		static void DrawTileMap(const glm::vec2& pos, TileMap &tileMap);
-	private:
+
 		static void StartBatch();
 		static void NextBatch();
 	};

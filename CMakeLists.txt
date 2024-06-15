@@ -17,5 +17,6 @@ add_definitions(-DNOMINMAX)
 # Projects
 project ("Kraken")
 add_subdirectory(Sandbox)
+add_subdirectory(Demos/TappyBird)
 add_subdirectory(Kraken)
 add_subdirectory(libs)

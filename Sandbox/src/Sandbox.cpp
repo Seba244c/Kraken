@@ -71,6 +71,10 @@ class Sandbox : public Kraken::Application {
 public:
     explicit Sandbox(const Kraken::ApplicationInfo &applicationInfo)
         : Application(applicationInfo) {
+		Kraken::AssetsManager::RegisterAssetProvider("Sandbox", Kraken::CreateScope<Kraken::FolderAssetProvider>("Sandbox", "assets/"));
+		Kraken::Renderer::Init();
+		Kraken::RenderCommand::SetClearColor(Kraken::Colors::DarkGray);
+
         //PushLayer(new SandboxLayer());
         PushLayer(new Sandbox2D());
     }

@@ -3,14 +3,15 @@
     {
       "name": "glad",
       "features": [
-        "loader",
-        "gl-api-46"
+        "gl-api-46",
+        "loader"
       ]
     },
     "glfw3",
     "glm",
     "shaderc",
     "spdlog",
-    "spirv-cross"
+    "spirv-cross",
+    "msdfgen"
   ]
 }

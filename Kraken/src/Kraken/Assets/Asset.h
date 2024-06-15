@@ -11,6 +11,7 @@ namespace Kraken {
 	class Shader;
     class Texture2D;
     class SpriteSheet;
+    class Font;
 }
 
 namespace Kraken {
@@ -95,6 +96,7 @@ namespace Kraken {
     KR_ASSETLIB_TYPE(Shader)
     KR_ASSETLIB_TYPE(Texture2D)
     KR_ASSETLIB_TYPE(SpriteSheet)
+    KR_ASSETLIB_TYPE(Font)
 
     class AssetsManager {
     public:
@@ -104,5 +106,6 @@ namespace Kraken {
 		KR_INTERNAL_ASSETMANAGER_LIBTYPE(Shader)
 		KR_INTERNAL_ASSETMANAGER_LIBTYPE(Texture2D)
 		KR_INTERNAL_ASSETMANAGER_LIBTYPE(SpriteSheet)
+		KR_INTERNAL_ASSETMANAGER_LIBTYPE(Font)
     };
 }
