@@ -5,6 +5,7 @@
 #pragma once
 
 #include <krpch.h>
+#include "Kraken/Utils/Resource.h"
 
 // Forward declarations
 namespace Kraken {
@@ -40,6 +41,20 @@ namespace Kraken {
 	    
     };
 
+    class LiteralAssetSpecification final : public AssetSpecification {
+    public:
+        LiteralAssetSpecification(const Identifier &identifier, Resource data);
+	    ~LiteralAssetSpecification() override;
+        [[nodiscard]] const Identifier& GetIdentifier() const override { return m_Identifier;  }
+	    [[nodiscard]] long long ToBuf(char** buffer) override;
+	    [[nodiscard]] std::string ToString() override;
+	    [[nodiscard]] std::vector<std::string> ToLines() override;
+
+	private:
+        Resource m_Data;
+        Identifier m_Identifier;
+    };
+
     class DomainAssetProvider {
     public:
         virtual ~DomainAssetProvider() = default;
@@ -59,6 +74,17 @@ namespace Kraken {
         std::map<std::string, Scope<FileAssetSpecification>> m_Map;
         std::filesystem::path m_Folder;
         const std::string m_Domain;
+    };
+
+    class KrakenInternalAssetProvider : public DomainAssetProvider {
+    public:
+        KrakenInternalAssetProvider();
+	    ~KrakenInternalAssetProvider() override;
+	    AssetSpecification& Get(Identifier& identifier) override;
+	    const std::string& GetDomain() { return m_Domain; };
+    private:
+        std::string m_Domain;
+        std::map<std::string, Scope<LiteralAssetSpecification>> m_Map;
     };
 
     template <typename T>

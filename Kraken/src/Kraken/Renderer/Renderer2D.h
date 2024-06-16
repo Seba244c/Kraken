@@ -28,6 +28,15 @@ namespace Kraken {
 			const Ref<SubTexture2D> Texture;
 			const Color Color = Colors::White;
 		};
+
+		struct Text {
+			const std::string String;
+			const Ref<Font> Font;
+			const glm::vec2 Position = {0.0f, 0.0f};
+			const Color Color = Colors::White;
+			const float Kerning = 0.0f;
+			const float LineSpacing = 0.0f;
+		};
 	public:
 		static void Init();
 		static void Shutdown();
@@ -43,7 +52,8 @@ namespace Kraken {
 		static void DrawRotatedSprite(const Sprite &s);
 		static void DrawQuad(const glm::mat4& transform, const Color& color);
 		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, const glm::vec2 textureCoords[], float tilingFactor, const Color& color);
-		static void DrawText(const std::string& string, Ref<Font> font, const glm::mat4& transform);
+		static void DrawText(const Text &t);
+		static void DrawText(const std::string &string, const Ref<Font> &font, const glm::mat4 &transform, const Color &color = Colors::White, float kerning = 0.0f, float lineSpacing = 0.0f);
 
 		static void DrawTileMap(const glm::vec2& pos, TileMap &tileMap);
 

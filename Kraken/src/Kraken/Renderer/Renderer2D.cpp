@@ -125,132 +125,8 @@ namespace Kraken {
         delete[] quadIndices;
 
         // Shaders
-        s_Data.QuadShader = RenderCommand::CreateShader(R"(
-#version 450 core
-
-layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec4 a_Color;
-layout(location = 2) in vec2 a_TexCoord;
-layout(location = 3) in uint a_TexIndex;
-layout(location = 4) in float a_TilingFactor;
-layout(std140, binding = 0) uniform Camera
-{
-    mat4 u_mViewProjection;
-};
-
-struct VertexOutput
-{
-    vec4 Color;
-    vec2 TexCoord;
-    float TilingFactor;
-};
-
-layout (location = 0) out VertexOutput Output;
-layout (location = 3) out flat uint v_TexIndex;
-
-void main ()
-{
-    Output.Color = a_Color;
-    Output.TexCoord = a_TexCoord;
-    Output.TilingFactor = a_TilingFactor;
-    v_TexIndex = a_TexIndex;
-    gl_Position = u_mViewProjection * vec4(a_Position, 1.0);
-}
-            )", R"(
-#version 450 core
-
-struct VertexOutput
-{
-    vec4 Color;
-    vec2 TexCoord;
-    float TilingFactor;
-};
-
-layout(location = 0) in VertexOutput Input;
-layout(location = 3) in flat uint v_TexIndex;
-
-layout(location = 0) out vec4 o_Color;
-
-layout(binding = 0) uniform sampler2D u_Textures[32];
-
-void main ()
-{
-    vec4 texColor = Input.Color;
-    texColor *= texture(u_Textures[v_TexIndex], Input.TexCoord * Input.TilingFactor);
-
-    if (texColor.a == 0.0)
-        discard;
-
-    o_Color = texColor;
-}
-            )");
-    	s_Data.TextShader = RenderCommand::CreateShader(R"(
-#version 450 core
-
-layout(location = 0) in vec3 a_Position;
-layout(location = 1) in vec4 a_Color;
-layout(location = 2) in vec2 a_TexCoord;
-layout(std140, binding = 0) uniform Camera
-{
-    mat4 u_mViewProjection;
-};
-
-struct VertexOutput
-{
-    vec4 Color;
-    vec2 TexCoord;
-};
-
-layout (location = 0) out VertexOutput Output;
-
-void main ()
-{
-    Output.Color = a_Color;
-    Output.TexCoord = a_TexCoord;
-    gl_Position = u_mViewProjection * vec4(a_Position, 1.0);
-}
-            )", R"(
-#version 450 core
-
-struct VertexOutput
-{
-    vec4 Color;
-    vec2 TexCoord;
-};
-
-layout(location = 0) in VertexOutput Input;
-layout(location = 0) out vec4 o_Color;
-
-layout(binding = 0) uniform sampler2D u_FontAtlas;
-
-float screenPxRange() {
-	const float pxRange = 2.0; // set to distance field's pixel range
-    vec2 unitRange = vec2(pxRange)/vec2(textureSize(u_FontAtlas, 0));
-    vec2 screenTexSize = vec2(1.0)/fwidth(Input.TexCoord);
-    return max(0.5*dot(unitRange, screenTexSize), 1.0);
-}
-
-float median(float r, float g, float b) {
-    return max(min(r, g), min(max(r, g), b));
-}
-
-void main ()
-{
-    vec4 texColor = Input.Color * texture(u_FontAtlas, Input.TexCoord);
-
-	vec3 msd = texture(u_FontAtlas, Input.TexCoord).rgb;
-    float sd = median(msd.r, msd.g, msd.b);
-    float screenPxDistance = screenPxRange()*(sd - 0.5);
-    float opacity = clamp(screenPxDistance + 0.5, 0.0, 1.0);
-	if (opacity == 0.0)
-		discard;
-
-	vec4 bgColor = vec4(0.0);
-    o_Color = mix(bgColor, Input.Color, opacity);
-	if (o_Color.a == 0.0)
-		discard;
-}
-            )");
+    	s_Data.QuadShader = AssetsManager::GetShader({"KRInternal", "Renderer2D_Quad.glsl"});
+    	s_Data.TextShader = AssetsManager::GetShader({"KRInternal", "Renderer2D_Text.glsl"});
 
         s_Data.QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
         s_Data.QuadVertexPositions[1] = {  0.5f, -0.5f, 0.0f, 1.0f };
@@ -419,14 +295,13 @@ void main ()
         s_Data.QuadIndexCount += 6;
     }
 
-    void Renderer2D::DrawText(const std::string& string, Ref<Font> font, const glm::mat4& transform) {
-        // TEMP
-    	glm::vec4 Color{ 1.0f };
-		float Kerning = 0.0f;
-		float LineSpacing = 0.0f;
-        //
+    void Renderer2D::DrawText(const Text &t) {
+		DrawText(t.String, t.Font, translate(glm::mat4(1.0f), {t.Position.x, t.Position.y, 0.0f}), t.Color, t.Kerning, t.LineSpacing);
+    }
 
-		const auto& fontGeometry = font->GetFontData()->FontGeometry;
+    void Renderer2D::DrawText(const std::string& string, const Ref<Font>& font, const glm::mat4& transform,
+	    const Color& color, float kerning, float lineSpacing) {
+        const auto& fontGeometry = font->GetFontData()->FontGeometry;
 		const auto& metrics = fontGeometry.getMetrics();
 		Ref<Texture2D> fontAtlas = font->GetAtlasTexture();
 
@@ -435,7 +310,7 @@ void main ()
         s_Data.FontAtlasTexture = fontAtlas;
         
 		double x = 0.0;
-		double fsScale = 1.0 / (metrics.ascenderY - metrics.descenderY);
+		const double fsScale = 1.0 / (metrics.ascenderY - metrics.descenderY);
 		double y = 0.0;
 		const float spaceGlyphAdvance = fontGeometry.getGlyph(' ')->getAdvance();
 
@@ -446,10 +321,10 @@ void main ()
             case '\r': continue;
             case '\n':
 				x = 0;
-				y -= fsScale * metrics.lineHeight + LineSpacing;
+				y -= fsScale * metrics.lineHeight + lineSpacing;
 				continue;
             case '\t':
-				x += 4.0f * (fsScale * spaceGlyphAdvance + Kerning);
+				x += 4.0f * (fsScale * spaceGlyphAdvance + kerning);
 				continue;
             case ' ':
 				float advance = spaceGlyphAdvance;
@@ -460,7 +335,7 @@ void main ()
 					advance = static_cast<float>(dAdvance);
                 }
 
-                x += fsScale * advance + Kerning;
+                x += fsScale * advance + kerning;
                 continue;
             }
 
@@ -497,22 +372,22 @@ void main ()
 
             // Add to queue
             s_Data.TextVertexBufferPtr->Position = transform * glm::vec4(quadMin, 0.0f, 1.0f);
-			s_Data.TextVertexBufferPtr->Color = Color;
+			s_Data.TextVertexBufferPtr->Color = color;
 			s_Data.TextVertexBufferPtr->TexCoord = texCoordMin;
 			s_Data.TextVertexBufferPtr++;
 
 			s_Data.TextVertexBufferPtr->Position = transform * glm::vec4(quadMin.x, quadMax.y, 0.0f, 1.0f);
-			s_Data.TextVertexBufferPtr->Color = Color;
+			s_Data.TextVertexBufferPtr->Color = color;
 			s_Data.TextVertexBufferPtr->TexCoord = { texCoordMin.x, texCoordMax.y };
 			s_Data.TextVertexBufferPtr++;
 
 			s_Data.TextVertexBufferPtr->Position = transform * glm::vec4(quadMax, 0.0f, 1.0f);
-			s_Data.TextVertexBufferPtr->Color = Color;
+			s_Data.TextVertexBufferPtr->Color = color;
 			s_Data.TextVertexBufferPtr->TexCoord = texCoordMax;
 			s_Data.TextVertexBufferPtr++;
 
 			s_Data.TextVertexBufferPtr->Position = transform * glm::vec4(quadMax.x, quadMin.y, 0.0f, 1.0f);
-			s_Data.TextVertexBufferPtr->Color = Color;
+			s_Data.TextVertexBufferPtr->Color = color;
 			s_Data.TextVertexBufferPtr->TexCoord = { texCoordMax.x, texCoordMin.y };
 			s_Data.TextVertexBufferPtr++;
 			s_Data.TextIndexCount += 6;
@@ -522,7 +397,7 @@ void main ()
 				char nextCharacter = string[i + 1];
 				fontGeometry.getAdvance(advance, character, nextCharacter);
 
-				x += fsScale * advance + Kerning;
+				x += fsScale * advance + kerning;
 			}
 		}
     }

@@ -2,6 +2,7 @@
 // Created by sebsn on 21-04-2024.
 //
 
+#ifdef __cplusplus
 #ifndef KR_KRPCH_H
 #define KR_KRPCH_H
 
@@ -46,3 +47,4 @@
 #include "Kraken/Debug/Instrumentor.h"
 
 #endif //KR_KRPCH_H
+#endif

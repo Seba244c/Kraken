@@ -8,6 +8,7 @@
 
 #include "Kraken/Graphics/Renderer.h"
 #include "Kraken/IO/Input.h"
+#include "Resource.h"
 
 #include "Kraken/Platform/PlatformUtils.h"
 
@@ -31,6 +32,9 @@ namespace Kraken {
             .initializeFullscreen = false, .initializeHidden = true,
         	.Width = applicationInfo.WindowWidth, .Height = applicationInfo.WindowHeight}));
         m_Window->SetEventCallback([this](Event *e) { m_EventsQueue.push(e); }); // Here the applications takes ownership of the event
+
+        // Internal assets
+        AssetsManager::RegisterAssetProvider("KRInternal", CreateScope<KrakenInternalAssetProvider>());
     }
 
     void Application::Run() {

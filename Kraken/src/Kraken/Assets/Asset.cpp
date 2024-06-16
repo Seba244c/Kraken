@@ -17,6 +17,33 @@ namespace Kraken {
 		return Files::ReadLines(m_Path);
 	}
 
+	LiteralAssetSpecification::LiteralAssetSpecification(const Identifier &identifier, const Resource data) : m_Data(data), m_Identifier(identifier)  {
+	}
+
+	LiteralAssetSpecification::~LiteralAssetSpecification() {
+	}
+
+	long long LiteralAssetSpecification::ToBuf(char** buffer) {
+		*buffer = const_cast<char *>(m_Data.data());
+		return m_Data.size();
+	}
+
+	std::string LiteralAssetSpecification::ToString() {
+		return m_Data.toString();
+	}
+
+	std::vector<std::string> LiteralAssetSpecification::ToLines() {
+		std::vector<std::string> out;
+
+		std::stringstream stream(ToString());
+		std::string line;
+		while (std::getline(stream, line)) {
+		  out.push_back(line);
+		}
+
+		return out;
+	}
+
 	FolderAssetProvider::FolderAssetProvider(const std::string& domain, const std::string& folderPath) : m_Domain(domain) {
 		m_Folder = folderPath;
 		if(!exists(m_Folder)) {
@@ -47,6 +74,20 @@ namespace Kraken {
 	}
 
 	AssetSpecification& FolderAssetProvider::Get(Identifier& identifier) {
+		KRC_ASSERT(m_Map.contains(identifier.name))
+		return *m_Map[identifier.name];
+	}
+	
+#define KRI_ADD_RESOURCE(NAME, RESOURCE) m_Map[NAME] = CreateScope<LiteralAssetSpecification>(Identifier{ "KRInternal", NAME },Resource(_resource_##RESOURCE, _resource_##RESOURCE##_len))
+	KrakenInternalAssetProvider::KrakenInternalAssetProvider() : m_Domain("KRInternal") {
+		KRI_ADD_RESOURCE("Renderer2D_Text.glsl", assets_Renderer2D_Text_glsl);
+		KRI_ADD_RESOURCE("Renderer2D_Quad.glsl", assets_Renderer2D_Quad_glsl);
+	}
+
+	KrakenInternalAssetProvider::~KrakenInternalAssetProvider() {
+	}
+
+	AssetSpecification& KrakenInternalAssetProvider::Get(Identifier& identifier) {
 		KRC_ASSERT(m_Map.contains(identifier.name))
 		return *m_Map[identifier.name];
 	}

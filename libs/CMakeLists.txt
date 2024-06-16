@@ -8,3 +8,5 @@ set(MSDF_ATLAS_NO_ARTERY_FONT ON)
 set(MSDF_ATLAS_DYNAMIC_RUNTIME ON)
 add_subdirectory(msdf-atlas-gen)
 set_target_properties(msdf-atlas-gen PROPERTIES FOLDER "Libs")
+
+add_subdirectory("embed-resource")

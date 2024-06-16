@@ -1,9 +1,24 @@
-project(Kraken DESCRIPTION "Kraken, C++ Engine" VERSION 1.0.0 LANGUAGES CXX)
+# Project?
+project(Kraken DESCRIPTION "Kraken, C++ Engine" VERSION 1.0.0 LANGUAGES C CXX)
+
+## Embed assets
+FILE(GLOB KRInternalAssetFilesWithPrefix "assets/*")
+
+### the paths needs to be relative for the embedding function to work
+set(KRInternalAssetFiles)
+foreach(file_path ${KRInternalAssetFilesWithPrefix})
+    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}/" "" file_path_fixed "${file_path}")
+    set(KRInternalAssetFiles ${KRInternalAssetFiles} "${file_path_fixed}")
+    message("Found asset ${file_path_fixed}")
+endforeach()
+
+embed_resources(KRInternalResources ${KRInternalAssetFiles})
 
 # Add library
 add_library(Kraken STATIC
         src/krpch.h
         src/Kraken.h
+        ${KRInternalResources}
         src/Kraken/Core/Base.h
         src/Kraken/Core/Log.cpp
         src/Kraken/Core/Log.h
@@ -69,7 +84,7 @@ add_library(Kraken STATIC
         "src/Kraken/Platform/OpenGL/OpenGLTexture.h"
         "src/Kraken/Assets/Asset.cpp"
         "src/Kraken/Graphics/Texture.h"
- "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp" "src/Kraken/Utils/OrthographicCameraController.h" "src/Kraken/Utils/OrthographicCameraController.cpp" "src/Kraken/Renderer/Renderer2D.h" "src/Kraken/Renderer/Renderer2D.cpp"   "src/Kraken/Renderer/Sprite.h" "src/Kraken/Renderer/Sprite.cpp" "src/Kraken/Renderer/Font.h" "src/Kraken/Renderer/Font.cpp")
+ "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp" "src/Kraken/Utils/OrthographicCameraController.h" "src/Kraken/Utils/OrthographicCameraController.cpp" "src/Kraken/Renderer/Renderer2D.h" "src/Kraken/Renderer/Renderer2D.cpp"   "src/Kraken/Renderer/Sprite.h" "src/Kraken/Renderer/Sprite.cpp" "src/Kraken/Renderer/Font.h" "src/Kraken/Renderer/Font.cpp" "src/Kraken/Utils/Resource.h")
 
 target_include_directories(Kraken PUBLIC src)
 target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers

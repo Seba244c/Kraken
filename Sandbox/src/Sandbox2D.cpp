@@ -37,7 +37,7 @@ void Sandbox2D::OnUpdate(const Kraken::Timestep ts) {
     Kraken::RenderCommand::Clear();
     Kraken::Renderer2D::BeginScene(m_Camera.GetCamera());
 	Kraken::Renderer2D::DrawTileMap({}, *s_TileMap);
-	Kraken::Renderer2D::DrawText("Hello World!", m_Font, {1.0f});
+	Kraken::Renderer2D::DrawText({"Hello World!", m_Font, {0,10}});
     Kraken::Renderer2D::EndScene();
 }
 
