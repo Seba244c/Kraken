@@ -17,22 +17,22 @@ namespace Kraken {
 		return Files::ReadLines(m_Path);
 	}
 
-	LiteralAssetSpecification::LiteralAssetSpecification(const Identifier &identifier, const Resource data) : m_Data(data), m_Identifier(identifier)  {
+	ResourceAssetSpecification::ResourceAssetSpecification(const Identifier &identifier, const Resource data) : m_Data(data), m_Identifier(identifier)  {
 	}
 
-	LiteralAssetSpecification::~LiteralAssetSpecification() {
+	ResourceAssetSpecification::~ResourceAssetSpecification() {
 	}
 
-	long long LiteralAssetSpecification::ToBuf(char** buffer) {
+	long long ResourceAssetSpecification::ToBuf(char** buffer) {
 		*buffer = const_cast<char *>(m_Data.data());
 		return m_Data.size();
 	}
 
-	std::string LiteralAssetSpecification::ToString() {
+	std::string ResourceAssetSpecification::ToString() {
 		return m_Data.toString();
 	}
 
-	std::vector<std::string> LiteralAssetSpecification::ToLines() {
+	std::vector<std::string> ResourceAssetSpecification::ToLines() {
 		std::vector<std::string> out;
 
 		std::stringstream stream(ToString());
@@ -78,10 +78,11 @@ namespace Kraken {
 		return *m_Map[identifier.name];
 	}
 	
-#define KRI_ADD_RESOURCE(NAME, RESOURCE) m_Map[NAME] = CreateScope<LiteralAssetSpecification>(Identifier{ "KRInternal", NAME },Resource(_resource_##RESOURCE, _resource_##RESOURCE##_len))
+#define KRI_ADD_RESOURCE(NAME, RESOURCE) m_Map[NAME] = CreateScope<ResourceAssetSpecification>(Identifier{ "KRInternal", NAME },Resource(_resource_##RESOURCE, _resource_##RESOURCE##_len))
 	KrakenInternalAssetProvider::KrakenInternalAssetProvider() : m_Domain("KRInternal") {
 		KRI_ADD_RESOURCE("Renderer2D_Text.glsl", assets_Renderer2D_Text_glsl);
 		KRI_ADD_RESOURCE("Renderer2D_Quad.glsl", assets_Renderer2D_Quad_glsl);
+		KRI_ADD_RESOURCE("04B_03__.TTF", assets_04B_03___TTF);
 		KRI_ADD_RESOURCE("VKDemo.glsl", assets_VKDemo_glsl);
 	}
 

@@ -23,6 +23,7 @@ private:
 #define KRI_LINK_RESOURCE(RESOURCE) extern "C" { extern const char _resource_##RESOURCE[]; extern const size_t _resource_##RESOURCE##_len; }
 KRI_LINK_RESOURCE(assets_Renderer2D_Text_glsl)
 KRI_LINK_RESOURCE(assets_Renderer2D_Quad_glsl)
+KRI_LINK_RESOURCE(assets_04B_03___TTF)
 KRI_LINK_RESOURCE(assets_VKDemo_glsl)
 
 #endif

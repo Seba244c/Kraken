@@ -41,10 +41,10 @@ namespace Kraken {
 
     };
 
-    class LiteralAssetSpecification final : public AssetSpecification {
+    class ResourceAssetSpecification final : public AssetSpecification {
     public:
-        LiteralAssetSpecification(const Identifier &identifier, Resource data);
-	    ~LiteralAssetSpecification() override;
+        ResourceAssetSpecification(const Identifier &identifier, Resource data);
+	    ~ResourceAssetSpecification() override;
         [[nodiscard]] const Identifier& GetIdentifier() const override { return m_Identifier;  }
 	    [[nodiscard]] long long ToBuf(char** buffer) override;
 	    [[nodiscard]] std::string ToString() override;
@@ -84,7 +84,7 @@ namespace Kraken {
 	    const std::string& GetDomain() override { return m_Domain; };
     private:
         std::string m_Domain;
-        std::map<std::string, Scope<LiteralAssetSpecification>> m_Map;
+        std::map<std::string, Scope<ResourceAssetSpecification>> m_Map;
     };
 
     template <typename T>
