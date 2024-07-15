@@ -39,6 +39,9 @@
 #ifdef KR_SUPPORT_OPENGL
 #include <glad/glad.h>
 #endif
+#ifdef KR_SUPPORT_VULKAN
+#include "vulkan/vulkan.h"
+#endif
 #ifdef KR_SUPPORT_GLFW
 #include "GLFW/glfw3.h"
 #endif

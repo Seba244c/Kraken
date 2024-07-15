@@ -11,6 +11,6 @@ namespace Kraken {
         virtual ~GraphicsContext() = default;
 
         virtual void Init() = 0;
-        static Scope<GraphicsContext> Create(void* window);
+        static Scope<GraphicsContext> Create(const ApplicationInfo& appInfo, void* window);
     };
 } // Kraken

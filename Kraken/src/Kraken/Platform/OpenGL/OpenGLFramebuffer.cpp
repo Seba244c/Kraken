@@ -10,7 +10,7 @@ namespace Kraken {
 	namespace Utils {
         static GLenum FramebufferTextureFormatToGL(FramebufferTextureFormat format) {
 	        switch (format) {
-	        case FramebufferTextureFormat::RGBA8:       return GL_RGBA8;
+	           case FramebufferTextureFormat::RGBA8:       return GL_RGBA8;
 	        }
 
             KRC_ASSERT(false)
@@ -59,14 +59,14 @@ namespace Kraken {
 				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, internalFormat, width, height, GL_FALSE);
 			} else {
 				glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, width, height);
-				
+
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			}
-			
+
 			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, TextureTarget(multisampled), id, 0);
         }
     }
@@ -136,7 +136,7 @@ namespace Kraken {
 			// Only depth-pass
 			glDrawBuffer(GL_NONE);
 		}
-        
+
 		KRC_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
@@ -151,14 +151,14 @@ namespace Kraken {
 
     void OpenGlFramebuffer::Bind() {
         KR_PROFILE_FUNCTION();
-        
+
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
         glViewport(0, 0, m_Specification.Width, m_Specification.Height);
     }
 
     void OpenGlFramebuffer::Unbind() {
         KR_PROFILE_FUNCTION();
-        
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
@@ -172,7 +172,7 @@ namespace Kraken {
 
 		m_Specification.Width = width;
 		m_Specification.Height = height;
-		
+
 		Invalidate();
     }
 } // Kraken

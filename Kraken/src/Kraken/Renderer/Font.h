@@ -4,8 +4,8 @@
 #include "Kraken/Graphics/Texture.h"
 #include "Kraken/Assets/Asset.h"
 
-#include "msdfgen/msdfgen.h"
-#include "msdfgen/msdfgen-ext.h"
+//#include "msdfgen/msdfgen.h"
+//#include "msdfgen/msdfgen-ext.h"
 #undef INFINITE
 #include "msdf-atlas-gen/msdf-atlas-gen.h"
 

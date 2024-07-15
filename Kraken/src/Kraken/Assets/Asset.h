@@ -38,7 +38,7 @@ namespace Kraken {
 	private:
         std::filesystem::path m_Path;
         Identifier m_Identifier;
-	    
+
     };
 
     class LiteralAssetSpecification final : public AssetSpecification {
@@ -81,7 +81,7 @@ namespace Kraken {
         KrakenInternalAssetProvider();
 	    ~KrakenInternalAssetProvider() override;
 	    AssetSpecification& Get(Identifier& identifier) override;
-	    const std::string& GetDomain() { return m_Domain; };
+	    const std::string& GetDomain() override { return m_Domain; };
     private:
         std::string m_Domain;
         std::map<std::string, Scope<LiteralAssetSpecification>> m_Map;

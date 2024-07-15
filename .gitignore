@@ -498,3 +498,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+## Profiles
+KrakenProfile-*

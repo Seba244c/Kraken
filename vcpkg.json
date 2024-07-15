@@ -12,6 +12,7 @@
     "shaderc",
     "spdlog",
     "spirv-cross",
-    "msdfgen"
+    "msdfgen",
+    "vulkan"
   ]
 }

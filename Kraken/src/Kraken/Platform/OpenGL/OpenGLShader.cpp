@@ -25,7 +25,7 @@ namespace Kraken {
 
         std::string source = specs.ToString();
         const auto sources = PreProcessFromAsset(source);
-        
+
         const auto vulkanSPRIV =
             ShaderUtils::CompileOrGetVulkanBinaries(sources, specs.GetIdentifier());
 
@@ -42,7 +42,7 @@ namespace Kraken {
     	sources[VERTEX_SHADER] = vertexSrc;
     	sources[FRAGMENT_SHADER] = fragmentSrc;
 
-        const auto i = Identifier("Anonymous", "Shader");
+        const Identifier i = {"Anonymous", "Shader"};
 	    const auto vulkanSPRIV =
 	    	ShaderUtils::CompileOrGetVulkanBinaries(sources, i);
 
@@ -70,7 +70,7 @@ namespace Kraken {
     	}
 
         glLinkProgram(program);
-        
+
     	// Check for erros
     	GLint isLinked;
     	glGetProgramiv(program, GL_LINK_STATUS, &isLinked);
@@ -192,7 +192,7 @@ namespace Kraken {
     	const GLint location = glGetUniformLocation(m_RendererID, name.c_str());
     	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
     }
-	
+
     void OpenGLShader::SetColor(const std::string &name, const Color &value) {
         KR_PROFILE_FUNCTION();
 

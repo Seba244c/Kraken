@@ -9,6 +9,7 @@
 
 namespace Kraken {
     struct WindowSpecs {
+        const ApplicationInfo& appInfo;
         bool noResize = false;
         bool initializeFullscreen = false;
         bool initializeHidden = false;

@@ -12,7 +12,7 @@
 
 namespace Kraken {
 	static uint8_t s_GLFWWindowCount = 0;
-    
+
     GLFWWindow::GLFWWindow(const WindowSpecs& windowSpecs) {
         KR_PROFILE_FUNCTION();
 
@@ -24,13 +24,15 @@ namespace Kraken {
                 return;
             }
         }
-        
+
         // Window Hints
+        #ifdef KR_SUPPORT_OPENGL
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-        #ifdef KR_PLATFORM_OSX
-            glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#ifdef KR_PLATFORM_OSX
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+#endif
         #endif
 
         // Window Hints pt. 2
@@ -41,17 +43,17 @@ namespace Kraken {
         m_State.Title = (windowSpecs.title.empty()) ? Application::GetInstance().GetApplicationInfo().Name : windowSpecs.title;
         m_State.WidthFramebuffer = windowSpecs.Width;
         m_State.HeightFrameBuffer = windowSpecs.Height;
-        
+
         // Create window
         KRC_INFO("GLFW: Creating Window, Name: {}, Fullscreen {}, NoResize {}, Size {}x{}", m_State.Title, windowSpecs.initializeFullscreen, windowSpecs.noResize, windowSpecs.Width, windowSpecs.Height);
         m_Window = glfwCreateWindow(static_cast<int>(windowSpecs.Width), static_cast<int>(windowSpecs.Height), m_State.Title.c_str(), nullptr, nullptr);
-        
+
         if(m_Window == nullptr) {
             const char* errorDescription;
             KRC_CRITICAL("ERR::IO::CREATE_WINDOW_FAILED, {}, {}", glfwGetError(&errorDescription), errorDescription);
             return;
         }
-        
+
         glfwSetWindowUserPointer(m_Window, &m_State);
 
         // Callbacks
@@ -68,7 +70,7 @@ namespace Kraken {
             const WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
             state.EventCallback(new WindowCloseEvent);
         });
-        
+
         glfwSetKeyCallback(m_Window, [](GLFWwindow *window, int key, int scancode, int action, int mods) {
             const WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
 
@@ -100,7 +102,7 @@ namespace Kraken {
 
         glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
             const WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
-            
+
             switch (action) {
                 case GLFW_PRESS: {
                     state.EventCallback(new ButtonPressedEvent(button));
@@ -118,11 +120,11 @@ namespace Kraken {
             const WindowState& state = *static_cast<WindowState *>(glfwGetWindowUserPointer(window));
             state.EventCallback(new MouseScrolledEvent(static_cast<float>(xOffset), static_cast<float>(yOffset)));
         });
-        
+
         if(windowSpecs.initializeFullscreen) GLFWWindow::Fullscreen(true);
-        
+
         // GraphicsContext
-        m_GraphicsContext = GraphicsContext::Create(m_Window);
+        m_GraphicsContext = GraphicsContext::Create(windowSpecs.appInfo, m_Window);
         m_GraphicsContext->Init();
     }
 
@@ -148,7 +150,7 @@ namespace Kraken {
         KR_PROFILE_FUNCTION();
 
         glfwDestroyWindow(m_Window);
-        
+
         if(++s_GLFWWindowCount == 0) {
             KRC_TRACE("GLFWWindowCount was 0");
             GLFW::Terminate();
@@ -162,7 +164,7 @@ namespace Kraken {
         GLFWmonitor* monitor = glfwGetWindowMonitor(m_Window);
         if((monitor != nullptr) == fullscreen) return;
         m_State.Fullscreen = fullscreen;
-        
+
         if(fullscreen) {
             monitor = glfwGetPrimaryMonitor();
             const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -185,7 +187,7 @@ namespace Kraken {
         KR_PROFILE_FUNCTION();
 
         KRC_INFO("GLFW: Initializing GLFW");
-        
+
         glfwSetErrorCallback(error_callback);
         if(glfwInit() == GLFW_FALSE) {
             const char* errorDescription;

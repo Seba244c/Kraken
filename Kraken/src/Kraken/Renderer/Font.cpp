@@ -65,7 +65,8 @@ namespace Kraken {
 		msdf_atlas::TightAtlasPacker atlasPacker;
 		atlasPacker.setPixelRange(2.0);
 		atlasPacker.setMiterLimit(1.0);
-		atlasPacker.setPadding(0);
+		atlasPacker.setOuterPixelPadding(0);
+		atlasPacker.setInnerPixelPadding(0);
 		atlasPacker.setScale(emSize);
 		int remaining = atlasPacker.pack(m_FontData->Glyphs.data(), static_cast<int>(m_FontData->Glyphs.size()));
 		KRC_ASSERT(remaining == 0)

@@ -8,13 +8,13 @@
 
 #include "Kraken/Graphics/Renderer.h"
 #include "Kraken/IO/Input.h"
-#include "Resource.h"
+#include "Kraken/Utils/Resource.h"
 
 #include "Kraken/Platform/PlatformUtils.h"
 
 namespace Kraken {
 	Application* Application::s_Instance = nullptr;
-    
+
     Application::Application(const ApplicationInfo &applicationInfo) : m_LastFrameTime(TimeInstant(0.0f)),
                                                                        m_ApplicationInfo(applicationInfo) {
         KR_PROFILE_FUNCTION();
@@ -29,6 +29,7 @@ namespace Kraken {
         KRC_INFO("Appstate: Create Window");
 
         m_Window = Window::Create(WindowSpecs({
+        	.appInfo = applicationInfo,
             .initializeFullscreen = false, .initializeHidden = true,
         	.Width = applicationInfo.WindowWidth, .Height = applicationInfo.WindowHeight}));
         m_Window->SetEventCallback([this](Event *e) { m_EventsQueue.push(e); }); // Here the applications takes ownership of the event
@@ -42,7 +43,7 @@ namespace Kraken {
 
         m_Window->Show();
         FPSTimer::Start();
-        
+
         KRC_INFO("Appstate: Main loop");
     	KR_PROFILE_SCOPE("Main Loop");
         while(!m_ShouldClose) {
@@ -60,7 +61,7 @@ namespace Kraken {
 	                dispatcher.Dispatch<WindowCloseEvent>(KR_BIND_EVENT_FN(Application::OnWindowClose));
 	                dispatcher.Dispatch<WindowResizeEvent>(KR_BIND_EVENT_FN(Application::OnWindowResize));
 	                Input::Event(*e); // For all input events
-	                
+
 					KR_PROFILE_SCOPE("Layerstack OnEvent");
 	                for (auto it = m_Layerstack.end(); it != m_Layerstack.begin();) {
 	                    if(e->Handled) break;

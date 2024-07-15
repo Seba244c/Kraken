@@ -10,18 +10,20 @@ namespace Kraken {
 				case ImageFormat::RGBA8:   return GL_RGBA;
 				case ImageFormat::R8:      return GL_RED;
 				case ImageFormat::RGBA32F: return GL_RGBA;
+				case ImageFormat::None:    return 0;
 			}
-			
+
 			KRC_ASSERT(false, "Unkown ImageFormat");
 			return 0;
 		}
-		
+
 		static GLenum ImageFormatToGLInternalFormat(const ImageFormat format) {
 			switch (format) {
 				case ImageFormat::RGB8:    return GL_RGB8;
 				case ImageFormat::RGBA8:   return GL_RGBA8;
 				case ImageFormat::R8:	   return GL_R8;
 				case ImageFormat::RGBA32F: return GL_RGBA32F;
+				case ImageFormat::None:    return 0;
 			}
 
 			KRC_ASSERT(false, "Unkown ImageFormat");
@@ -34,6 +36,7 @@ namespace Kraken {
 				case ImageFormat::RGBA8:   return 4;
 				case ImageFormat::R8:	   return 1;
 				case ImageFormat::RGBA32F: return 16;
+				case ImageFormat::None:    return 0;
 			}
 
 			KRC_ASSERT(false, "Unkown ImageFormat");
@@ -68,7 +71,7 @@ namespace Kraken {
 		stbi_set_flip_vertically_on_load(1);
 		char* buffer;
 		const auto length = assetSpecification.ToBuf(&buffer);
-		
+
 		KR_PROFILE_SCOPE("stbi_load - OpenGLTexture2D::OpenGLTexture2D(AssetSpecification& assetSpecification)");
 		stbi_uc* data = stbi_load_from_memory(reinterpret_cast<unsigned char*>(buffer), length, &width, &height, &channels, 0);
 		KRC_ASSERT(data, "Failed to load image!");
@@ -104,7 +107,7 @@ namespace Kraken {
 
 			// Place data
 			glTextureSubImage2D(m_RendererID, 0, 0, 0, m_Width, m_Height, Utils::ImageFormatToGLDataFormat(format), GL_UNSIGNED_BYTE, data);
-			
+
 			stbi_image_free(data);
 		}
 	}
@@ -115,7 +118,7 @@ namespace Kraken {
 		m_Specification = textureSpecification;
 		m_Width = m_Specification.Width;
 		m_Height = m_Specification.Height;
-		
+
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_RendererID);
 		glTextureStorage2D(m_RendererID, 1, Utils::ImageFormatToGLInternalFormat(textureSpecification.Format), m_Width, m_Height);
 

@@ -63,6 +63,14 @@ namespace Kraken {
             return {s.substr(0, split),s.substr(split+1, s.length())};
         }
     };
+
+    struct ApplicationInfo {
+        std::string Name;
+        std::string Author;
+        std::string Version;
+        uint32_t WindowWidth = 1280;
+        uint32_t WindowHeight = 720;
+    };
 }
 
 #include "Assert.h"

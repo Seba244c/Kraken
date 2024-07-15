@@ -10,14 +10,6 @@
 #include "Kraken/IO/Window.h"
 
 namespace Kraken {
-    struct ApplicationInfo {
-        std::string Name;
-        std::string Author;
-        std::string Version;
-        uint32_t WindowWidth = 1280;
-        uint32_t WindowHeight = 720;
-    };
-    
     struct AppCommandlineArguments {
         int argc;
         char **argv;
