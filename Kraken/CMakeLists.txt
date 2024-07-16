@@ -99,7 +99,11 @@ elseif(APPLE)
             src/Kraken/Platform/Vulkan/VKGraphicsAPI.cpp
             src/Kraken/Platform/Vulkan/VKGraphicsAPI.h
             src/Kraken/Platform/Vulkan/VKContext.cpp
-            src/Kraken/Platform/Vulkan/VKContext.h)
+            src/Kraken/Platform/Vulkan/VKContext.h
+            src/Kraken/Platform/Vulkan/VKUtil.cpp
+            src/Kraken/Platform/Vulkan/VKUtil.h
+            src/Kraken/Platform/Vulkan/VKShader.h
+            src/Kraken/Platform/Vulkan/VKShader.cpp)
 endif()
 
 # Add library with the corfect sources
@@ -107,7 +111,9 @@ add_library(Kraken STATIC ${KRSources})
 
 target_include_directories(Kraken PUBLIC src)
 target_precompile_headers(Kraken PRIVATE src/krpch.h) # Precompiled headers
-target_compile_definitions(Kraken PUBLIC KR_VERSION="1.0.0")
+target_compile_definitions(Kraken PUBLIC KR_VERSION_MAJOR=1)
+target_compile_definitions(Kraken PUBLIC KR_VERSION_MINOR=0)
+target_compile_definitions(Kraken PUBLIC KR_VERSION_REV=0)
 set_property(TARGET Kraken PROPERTY CMAKE_CXX_STANDARD 20)
 
 ### Platform Support

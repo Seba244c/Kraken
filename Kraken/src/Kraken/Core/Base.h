@@ -64,13 +64,22 @@ namespace Kraken {
         }
     };
 
+    struct Version {
+        uint8_t Major;
+        uint8_t Minor;
+        uint8_t Rev;
+    };
+#define KR_VERSION_TO_VK(v) VK_MAKE_VERSION(v.Major, v.Minor, v.Rev)
+
     struct ApplicationInfo {
         std::string Name;
         std::string Author;
-        std::string Version;
+        Version Version;
         uint32_t WindowWidth = 1280;
         uint32_t WindowHeight = 720;
     };
+
+    constexpr Version s_KrakenVersion = { KR_VERSION_MAJOR, KR_VERSION_MINOR, KR_VERSION_REV };
 }
 
 #include "Assert.h"

@@ -29,7 +29,7 @@ namespace Kraken {
 #ifdef KR_SUPPORT_GLFW
             case GraphicsAPI::API::Vulkan:   return CreateScope<VKContext>(appInfo, static_cast<GLFWwindow*>(window));
 #else
-#error Metal Rendering API Does not support any of the windowing libraries supported by this platform
+#error Vulkan Rendering API Does not support any of the windowing libraries supported by this platform
 #endif
 #endif
         }

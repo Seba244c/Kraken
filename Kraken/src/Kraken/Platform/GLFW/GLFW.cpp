@@ -30,9 +30,8 @@ namespace Kraken {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef KR_PLATFORM_OSX
-        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
+        #else
+        glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         #endif
 
         // Window Hints pt. 2
@@ -132,12 +131,6 @@ namespace Kraken {
         KR_PROFILE_FUNCTION();
 
         glfwPollEvents();
-    }
-
-    void GLFWWindow::SwapBuffers() {
-        KR_PROFILE_FUNCTION();
-
-        glfwSwapBuffers(m_Window);
     }
 
     void GLFWWindow::Show() {

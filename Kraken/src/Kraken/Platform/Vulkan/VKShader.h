@@ -1,5 +1,5 @@
 //
-// Created by sebsn on 30-04-2024.
+// Created by sebsn on 15-07-2024.
 //
 
 #pragma once
@@ -8,13 +8,11 @@
 #include "Kraken/Graphics/Shader.h"
 
 namespace Kraken {
-    class OpenGLShader final : public Shader{
+    class VKShader final : public Shader{
     public:
-        static uint32_t ShaderTypeToOpenGL(ShaderType t);
-    public:
-        OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc);
-        explicit OpenGLShader(AssetSpecification& specs);
-        ~OpenGLShader() override;
+        VKShader(const std::string& vertexSrc, const std::string& fragmentSrc);
+        explicit VKShader(AssetSpecification& specs);
+        ~VKShader() override;
 
         void Bind() const override;
         void Unbind() const override;
@@ -27,10 +25,5 @@ namespace Kraken {
         void SetFloat4(const std::string &name, const glm::vec4 &value) override;
         void SetMat4(const std::string &name, const glm::mat4 &value) override;
         void SetColor(const std::string &name, const Color &value) override;
-    private:
-        uint32_t m_RendererID;
-        void CreateProgram(const Identifier& identifier);
-
-		std::unordered_map<ShaderType, std::vector<uint32_t>> m_OpenGLSPIRV;
     };
 } // Kraken

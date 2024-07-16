@@ -82,6 +82,7 @@ namespace Kraken {
 	KrakenInternalAssetProvider::KrakenInternalAssetProvider() : m_Domain("KRInternal") {
 		KRI_ADD_RESOURCE("Renderer2D_Text.glsl", assets_Renderer2D_Text_glsl);
 		KRI_ADD_RESOURCE("Renderer2D_Quad.glsl", assets_Renderer2D_Quad_glsl);
+		KRI_ADD_RESOURCE("VKDemo.glsl", assets_VKDemo_glsl);
 	}
 
 	KrakenInternalAssetProvider::~KrakenInternalAssetProvider() {

@@ -22,6 +22,7 @@ namespace Kraken {
         static const char* ShaderTypeToShortString(ShaderType t);
         static ShaderType StringToShaderType(std::string& s);
 
+        static std::unordered_map<ShaderType, std::string> ProcessAssetSourceCode(std::string& source);
     	static std::unordered_map<ShaderType, std::vector<uint32_t>> CompileOrGetVulkanBinaries(const std::unordered_map<ShaderType, std::string>& shaderSources, Identifier identifier);
         static std::unordered_map<ShaderType, std::vector<uint32_t>> CompileOrGetOpenGLBinaries(const std::unordered_map<ShaderType, std::vector<uint32_t>>& vulkanSPIRV, Identifier identifier);
     };

@@ -39,3 +39,8 @@ template <> struct fmt::formatter<std::filesystem::path> : formatter<std::string
         return formatter<std::string>::format(p.string(), ctx);
     }
 };
+template <> struct fmt::formatter<Kraken::Version> : formatter<std::string> {
+    auto format(Kraken::Version v, format_context& ctx) {
+        return formatter<std::string>::format(fmt::format("{0}.{1}.{2}", v.Major, v.Minor, v.Rev), ctx);
+    }
+};

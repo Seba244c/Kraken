@@ -15,7 +15,6 @@ namespace Kraken {
 		~GLFWWindow() override;
 
         void PollEvents() override;
-        void SwapBuffers() override;
         void Show() override;
         void Fullscreen(bool fullscreen) override;
 
@@ -23,7 +22,9 @@ namespace Kraken {
         [[nodiscard]] uint32_t GetFBWidth() const override { return m_State.WidthFramebuffer; };
         [[nodiscard]] uint32_t GetFBHeight() const override { return m_State.HeightFrameBuffer; };
         [[nodiscard]] bool IsFullscreen() const override { return m_State.Fullscreen; };
-        [[nodiscard]] void * GetNativeWindow() const override { return m_Window; };
+        [[nodiscard]] void * GetNativeWindow() const override { return m_Window; }
+
+        [[nodiscard]] const Scope<GraphicsContext> &GetGraphicsContext() override { return m_GraphicsContext; }
 
     private:
         struct WindowState {

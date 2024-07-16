@@ -8,8 +8,10 @@
 #include "Kraken/Events/Event.h"
 
 namespace Kraken {
+    class GraphicsContext;
+
     struct WindowSpecs {
-        const ApplicationInfo& appInfo;
+        const ApplicationInfo appInfo = {};
         bool noResize = false;
         bool initializeFullscreen = false;
         bool initializeHidden = false;
@@ -26,7 +28,6 @@ namespace Kraken {
 
         // Actions
         virtual void PollEvents() = 0;
-        virtual void SwapBuffers() = 0;
         virtual void Show() = 0;
         virtual void Fullscreen(bool fullscreen) = 0;
 
@@ -36,6 +37,7 @@ namespace Kraken {
         [[nodiscard]] virtual uint32_t GetFBHeight() const = 0;
         [[nodiscard]] virtual bool IsFullscreen() const = 0;
         [[nodiscard]] virtual void* GetNativeWindow() const = 0;
+        [[nodiscard]] virtual const Scope<GraphicsContext>& GetGraphicsContext() = 0;
 
         static Scope<Window> Create(const WindowSpecs& specs = WindowSpecs());
     };

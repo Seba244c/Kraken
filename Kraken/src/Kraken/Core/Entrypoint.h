@@ -11,7 +11,7 @@
 int main(int argc, char** argv) {
     Kraken::Log::Init();
     KRC_INFO("The Kraken awakes!");
-    KRC_INFO("Kraken Version: {}", KR_VERSION);
+    KRC_INFO("Kraken Version: {}", Kraken::s_KrakenVersion);
 
     KR_PROFILE_BEGIN_SESSION("Startup", "KrakenProfile-Startup.json");
     const auto app = Kraken::CreateApplication({argc, argv});

@@ -72,11 +72,11 @@ public:
     explicit Sandbox(const Kraken::ApplicationInfo &applicationInfo)
         : Application(applicationInfo) {
 		Kraken::AssetsManager::RegisterAssetProvider("Sandbox", Kraken::CreateScope<Kraken::FolderAssetProvider>("Sandbox", "assets/"));
-		Kraken::Renderer::Init();
-		Kraken::RenderCommand::SetClearColor(Kraken::Colors::DarkGray);
+		//Kraken::Renderer::Init();
+		//Kraken::RenderCommand::SetClearColor(Kraken::Colors::DarkGray);
 
         //PushLayer(new SandboxLayer());
-        PushLayer(new Sandbox2D());
+        //PushLayer(new Sandbox2D());
     }
 };
 
@@ -84,7 +84,7 @@ Kraken::Application *Kraken::CreateApplication(AppCommandlineArguments cmdlineAr
     ApplicationInfo info;
     info.Name = "Kraken Sandbox";
     info.Author = "ssnoer";
-    info.Version = "1.0.0";
+    info.Version = {1,0,0};
     
     return new Sandbox(info);
 }

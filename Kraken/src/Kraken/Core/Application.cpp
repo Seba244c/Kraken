@@ -5,6 +5,7 @@
 #include "Application.h"
 
 #include "Kraken/Events/KeyEvents.h"
+#include "Kraken/Graphics/GraphicsContext.h"
 
 #include "Kraken/Graphics/Renderer.h"
 #include "Kraken/IO/Input.h"
@@ -26,6 +27,9 @@ namespace Kraken {
         PlatformInit::Init();
         m_FullAppTimer = Timer::Start();
 
+    	// Internal assets
+    	AssetsManager::RegisterAssetProvider("KRInternal", CreateScope<KrakenInternalAssetProvider>());
+
         KRC_INFO("Appstate: Create Window");
 
         m_Window = Window::Create(WindowSpecs({
@@ -33,9 +37,6 @@ namespace Kraken {
             .initializeFullscreen = false, .initializeHidden = true,
         	.Width = applicationInfo.WindowWidth, .Height = applicationInfo.WindowHeight}));
         m_Window->SetEventCallback([this](Event *e) { m_EventsQueue.push(e); }); // Here the applications takes ownership of the event
-
-        // Internal assets
-        AssetsManager::RegisterAssetProvider("KRInternal", CreateScope<KrakenInternalAssetProvider>());
     }
 
     void Application::Run() {
@@ -79,14 +80,19 @@ namespace Kraken {
             m_LastFrameTime = now;
 
             // Update layers and render
+        	m_Window->GetGraphicsContext()->WaitForFrame();
+        	m_Window->GetGraphicsContext()->NewFrame();
+
             if(!m_Minimized) {
 				KR_PROFILE_SCOPE("Update Layers");
 	            for(Layer* layer : m_Layerstack)
-                layer->OnUpdate(deltaTime);
+					layer->OnUpdate(deltaTime);
             }
 
-        	m_Window->SwapBuffers();
+        	m_Window->GetGraphicsContext()->ShowFrame();
         }
+
+    	m_Window->GetGraphicsContext()->EnsureIdle();
     }
 
     void Application::Stop() {
