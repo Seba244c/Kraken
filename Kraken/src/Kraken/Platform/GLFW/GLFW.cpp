@@ -9,6 +9,7 @@
 #include "Kraken/Events/ApplicationEvents.h"
 #include "Kraken/Events/KeyEvents.h"
 #include "Kraken/Events/MouseEvents.h"
+#include "Kraken/Graphics/GraphicsAPI.h"
 
 namespace Kraken {
 	static uint8_t s_GLFWWindowCount = 0;
@@ -27,9 +28,11 @@ namespace Kraken {
 
         // Window Hints
         #ifdef KR_SUPPORT_OPENGL
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
-        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        if(GraphicsAPI::GetAPI() == GraphicsAPI::API::OpenGL) {
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+            glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
+            glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        } else glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         #else
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         #endif

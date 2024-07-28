@@ -25,4 +25,17 @@ namespace Kraken {
         
         //KRC_INFO(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "Kraken requires at least OpenGL version 4.5!");
     }
+
+    void OpenGLContext::WaitForFrame() {
+    }
+
+    void OpenGLContext::NewFrame() {
+    }
+
+    void OpenGLContext::ShowFrame() {
+        glfwSwapBuffers(m_WindowHandle);
+    }
+
+    void OpenGLContext::EnsureIdle() {
+    }
 } // Kraken

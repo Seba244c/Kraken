@@ -150,7 +150,7 @@ namespace Kraken {
     }
 
     VkShaderModule VKUtil::CreateShaderModule(AssetSpecification& spec) {
-
+        return nullptr;
     }
 
     uint32_t VKUtil::RateDeviceSuitability(VkPhysicalDevice device, VkSurfaceKHR surface) {

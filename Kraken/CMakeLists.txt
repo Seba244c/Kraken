@@ -69,41 +69,42 @@ set(KRSources src/krpch.h
         "src/Kraken/Graphics/Texture.h"
   "src/Kraken/Utils/OrthographicCameraController.h" "src/Kraken/Utils/OrthographicCameraController.cpp" "src/Kraken/Renderer/Renderer2D.h" "src/Kraken/Renderer/Renderer2D.cpp"   "src/Kraken/Renderer/Sprite.h" "src/Kraken/Renderer/Sprite.cpp" "src/Kraken/Renderer/Font.h" "src/Kraken/Renderer/Font.cpp" "src/Kraken/Utils/Resource.h")
 
+## Graphics sources
+set(GLSources src/Kraken/Platform/OpenGL/OpenGLContext.cpp
+        src/Kraken/Platform/OpenGL/OpenGLContext.h
+        src/Kraken/Platform/OpenGL/OpenGLShader.cpp
+        src/Kraken/Platform/OpenGL/OpenGLShader.h
+        "src/Kraken/Platform/OpenGL/OpenGLGraphicsAPI.cpp"
+        "src/Kraken/Platform/OpenGL/OpenGLGraphicsAPI.h"
+        src/Kraken/Platform/OpenGL/OpenGLBuffer.h
+        src/Kraken/Platform/OpenGL/OpenGLBuffer.cpp
+        src/Kraken/Platform/OpenGL/OpenGLVertexArray.cpp
+        src/Kraken/Platform/OpenGL/OpenGLVertexArray.h
+        src/Kraken/Platform/OpenGL/OpenGLFramebuffer.cpp
+        src/Kraken/Platform/OpenGL/OpenGLFramebuffer.h
+        src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.cpp
+        src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.h
+        "src/Kraken/Platform/OpenGL/OpenGLTexture.h"
+        "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp")
+
+set(VKSources src/Kraken/Platform/Vulkan/VKGraphicsAPI.cpp
+        src/Kraken/Platform/Vulkan/VKGraphicsAPI.h
+        src/Kraken/Platform/Vulkan/VKContext.cpp
+        src/Kraken/Platform/Vulkan/VKContext.h
+        src/Kraken/Platform/Vulkan/VKUtil.cpp
+        src/Kraken/Platform/Vulkan/VKUtil.h
+        src/Kraken/Platform/Vulkan/VKShader.h
+        src/Kraken/Platform/Vulkan/VKShader.cpp)
+
 ### Platform Support
 if(WIN32)
     message("KRAKEN SOURCES: Windows")
-    set(KRSources ${KRSources}
+    set(KRSources ${KRSources} ${GLSources} ${VKSources}
         src/Kraken/Platform/Windows/Windows.cpp)
-
-    set(KRSources ${KRSources}
-            src/Kraken/Platform/OpenGL/OpenGLContext.cpp
-            src/Kraken/Platform/OpenGL/OpenGLContext.h
-            src/Kraken/Platform/OpenGL/OpenGLShader.cpp
-            src/Kraken/Platform/OpenGL/OpenGLShader.h
-            "src/Kraken/Platform/OpenGL/OpenGLGraphicsAPI.cpp"
-            "src/Kraken/Platform/OpenGL/OpenGLGraphicsAPI.h"
-            src/Kraken/Platform/OpenGL/OpenGLBuffer.h
-            src/Kraken/Platform/OpenGL/OpenGLBuffer.cpp
-            src/Kraken/Platform/OpenGL/OpenGLVertexArray.cpp
-            src/Kraken/Platform/OpenGL/OpenGLVertexArray.h
-            src/Kraken/Platform/OpenGL/OpenGLFramebuffer.cpp
-            src/Kraken/Platform/OpenGL/OpenGLFramebuffer.h
-            src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.cpp
-            src/Kraken/Platform/OpenGL/OpenGLUniformBuffer.h
-            "src/Kraken/Platform/OpenGL/OpenGLTexture.h"
-            "src/Kraken/Platform/OpenGL/OpenGLTexture.cpp")
 elseif(APPLE)
     message("KRAKEN SOURCES: MacOS")
-    set(KRSources ${KRSources}
-        src/Kraken/Platform/OSX/OSX.cpp
-            src/Kraken/Platform/Vulkan/VKGraphicsAPI.cpp
-            src/Kraken/Platform/Vulkan/VKGraphicsAPI.h
-            src/Kraken/Platform/Vulkan/VKContext.cpp
-            src/Kraken/Platform/Vulkan/VKContext.h
-            src/Kraken/Platform/Vulkan/VKUtil.cpp
-            src/Kraken/Platform/Vulkan/VKUtil.h
-            src/Kraken/Platform/Vulkan/VKShader.h
-            src/Kraken/Platform/Vulkan/VKShader.cpp)
+    set(KRSources ${KRSources} ${VKSources}
+        src/Kraken/Platform/OSX/OSX.cpp)
 endif()
 
 # Add library with the corfect sources
@@ -126,6 +127,7 @@ if(WIN32)
 
     set(support_glfw TRUE)
     set(support_opengl TRUE)
+    set(support_vulkan TRUE)
 elseif(APPLE)
     message("KRAKEN PLATFORM: MacOS")
     target_compile_definitions(Kraken PUBLIC KR_PLATFORM_OSX)

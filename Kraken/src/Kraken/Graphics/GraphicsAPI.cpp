@@ -12,11 +12,11 @@
 #endif
 
 namespace Kraken {
-    #ifdef KR_SUPPORT_OPENGL
-        GraphicsAPI::API GraphicsAPI::s_API = GraphicsAPI::API::OpenGL;
-    #else
     #ifdef KR_SUPPORT_VULKAN
         GraphicsAPI::API GraphicsAPI::s_API = GraphicsAPI::API::Vulkan;
+    #else
+    #ifdef KR_SUPPORT_OPENGL
+        GraphicsAPI::API GraphicsAPI::s_API = GraphicsAPI::API::OpenGL;
 #else
         #error No GraphicsAPI is currently supported on this platform
     #endif
